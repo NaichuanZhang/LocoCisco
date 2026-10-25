@@ -1,0 +1,2485 @@
+{
+ "_comment": "Speech cases for build_speech_query. split was fixed before any tuning; tune on dev only. ok = acceptable actions (first = canonical). room = expected target room id when it differs from the speaker's room. Tag beyond_v0 = needs an action v0's options cannot express.",
+ "cases": [
+  {
+   "id": "sp01",
+   "category": "direct",
+   "tags": [
+    "direct"
+   ],
+   "utt": {
+    "room": "living",
+    "text": "Can you turn on the lights?",
+    "lang": "en",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Living room. Lights off, evening.",
+    "wake_word": false
+   },
+   "expected": "lights_on",
+   "ok": [
+    "lights_on"
+   ],
+   "split": "dev"
+  },
+  {
+   "id": "sp02",
+   "category": "direct",
+   "tags": [
+    "direct"
+   ],
+   "utt": {
+    "room": "bedroom_main",
+    "text": "Lights off, please.",
+    "lang": "en",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Parents' bedroom. Lights on, 23:00.",
+    "wake_word": false
+   },
+   "expected": "lights_off",
+   "ok": [
+    "lights_off"
+   ],
+   "split": "test"
+  },
+  {
+   "id": "sp03",
+   "category": "direct",
+   "tags": [
+    "direct"
+   ],
+   "utt": {
+    "room": "living",
+    "text": "Could you make it a bit warmer in here?",
+    "lang": "en",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Living room. Room 18 C, evening.",
+    "wake_word": false
+   },
+   "expected": "warmer",
+   "ok": [
+    "warmer"
+   ],
+   "split": "dev"
+  },
+  {
+   "id": "sp04",
+   "category": "direct",
+   "tags": [
+    "direct"
+   ],
+   "utt": {
+    "room": "living",
+    "text": "Turn the TV on, would you?",
+    "lang": "en",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Living room. TV off, lights on, evening.",
+    "wake_word": false
+   },
+   "expected": "tv_on",
+   "ok": [
+    "tv_on"
+   ],
+   "split": "test"
+  },
+  {
+   "id": "sp05",
+   "category": "direct",
+   "tags": [
+    "direct"
+   ],
+   "utt": {
+    "room": "living",
+    "text": "Turn off the TV.",
+    "lang": "en",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Living room. TV on, evening.",
+    "wake_word": false
+   },
+   "expected": "tv_off",
+   "ok": [
+    "tv_off"
+   ],
+   "split": "dev"
+  },
+  {
+   "id": "sp06",
+   "category": "direct",
+   "tags": [
+    "direct"
+   ],
+   "utt": {
+    "room": "hallway",
+    "text": "Unlock the front door please, my hands are full.",
+    "lang": "en",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Hallway. Front door locked, afternoon.",
+    "wake_word": false
+   },
+   "expected": "unlock_door",
+   "ok": [
+    "unlock_door"
+   ],
+   "split": "test"
+  },
+  {
+   "id": "sp07",
+   "category": "direct",
+   "tags": [
+    "direct"
+   ],
+   "utt": {
+    "room": "living",
+    "text": "Would you mind dimming the lights a little?",
+    "lang": "en",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Living room. Lights on at full brightness, evening.",
+    "wake_word": false
+   },
+   "expected": "lights_dim",
+   "ok": [
+    "lights_dim",
+    "lights_off"
+   ],
+   "split": "dev"
+  },
+  {
+   "id": "sp08",
+   "category": "direct",
+   "tags": [
+    "direct"
+   ],
+   "utt": {
+    "room": "bedroom_main",
+    "text": "Make it cooler in here.",
+    "lang": "en",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Parents' bedroom. Room 26 C, night.",
+    "wake_word": false
+   },
+   "expected": "cooler",
+   "ok": [
+    "cooler"
+   ],
+   "split": "test"
+  },
+  {
+   "id": "sp09",
+   "category": "direct",
+   "tags": [
+    "direct",
+    "slang"
+   ],
+   "utt": {
+    "room": "living",
+    "text": "Yo, kill the lights.",
+    "lang": "en",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Living room. Lights on, 23:30.",
+    "wake_word": false
+   },
+   "expected": "lights_off",
+   "ok": [
+    "lights_off"
+   ],
+   "split": "dev"
+  },
+  {
+   "id": "sp10",
+   "category": "direct",
+   "tags": [
+    "direct",
+    "slang"
+   ],
+   "utt": {
+    "room": "living",
+    "text": "Crank the heat up.",
+    "lang": "en",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Living room. Room 17 C, evening.",
+    "wake_word": false
+   },
+   "expected": "warmer",
+   "ok": [
+    "warmer"
+   ],
+   "split": "test"
+  },
+  {
+   "id": "sp11",
+   "category": "direct",
+   "tags": [
+    "direct",
+    "terse"
+   ],
+   "utt": {
+    "room": "kitchen",
+    "text": "Lights, please.",
+    "lang": "en",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Kitchen. Lights off, evening.",
+    "wake_word": false
+   },
+   "expected": "lights_on",
+   "ok": [
+    "lights_on"
+   ],
+   "split": "dev"
+  },
+  {
+   "id": "sp12",
+   "category": "direct",
+   "tags": [
+    "direct",
+    "slang"
+   ],
+   "utt": {
+    "room": "living",
+    "text": "Switch the telly on, the match is about to start.",
+    "lang": "en",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Living room. TV off, evening.",
+    "wake_word": false
+   },
+   "expected": "tv_on",
+   "ok": [
+    "tv_on"
+   ],
+   "split": "test"
+  },
+  {
+   "id": "sp13",
+   "category": "direct",
+   "tags": [
+    "direct"
+   ],
+   "utt": {
+    "room": "porch",
+    "text": "Open the door, I forgot my keys.",
+    "lang": "en",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Front porch. Front door locked, evening.",
+    "wake_word": false
+   },
+   "expected": "unlock_door",
+   "ok": [
+    "unlock_door"
+   ],
+   "split": "dev"
+  },
+  {
+   "id": "sp14",
+   "category": "direct",
+   "tags": [
+    "direct"
+   ],
+   "utt": {
+    "room": "living",
+    "text": "Hey, can you lower the temperature a couple of degrees?",
+    "lang": "en",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Living room. Room 25 C, afternoon.",
+    "wake_word": false
+   },
+   "expected": "cooler",
+   "ok": [
+    "cooler"
+   ],
+   "split": "test"
+  },
+  {
+   "id": "sp15",
+   "category": "direct",
+   "tags": [
+    "direct"
+   ],
+   "utt": {
+    "room": "living",
+    "text": "Shut it off, I can't focus with that noise.",
+    "lang": "en",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Living room. TV on, evening.",
+    "wake_word": false
+   },
+   "expected": "tv_off",
+   "ok": [
+    "tv_off"
+   ],
+   "split": "dev"
+  },
+  {
+   "id": "sp16",
+   "category": "direct",
+   "tags": [
+    "direct",
+    "beyond_v0"
+   ],
+   "utt": {
+    "room": "hallway",
+    "text": "Lock the front door, I'm heading to bed.",
+    "lang": "en",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Hallway. Front door unlocked, 23:00.",
+    "wake_word": false
+   },
+   "expected": "lock_door",
+   "ok": [
+    "lock_door"
+   ],
+   "split": "test"
+  },
+  {
+   "id": "sp17",
+   "category": "direct",
+   "tags": [
+    "direct",
+    "beyond_v0"
+   ],
+   "utt": {
+    "room": "living",
+    "text": "Can you lock up? Everyone's home now.",
+    "lang": "en",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Living room. Front door unlocked, 22:30.",
+    "wake_word": false
+   },
+   "expected": "lock_door",
+   "ok": [
+    "lock_door"
+   ],
+   "split": "dev"
+  },
+  {
+   "id": "sp18",
+   "category": "direct",
+   "tags": [
+    "direct",
+    "addressed_to_person"
+   ],
+   "utt": {
+    "room": "bedroom_maya",
+    "text": "Okay Maya, lights out, it's a school night.",
+    "lang": "en",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Maya's room. Lights on, 20:45, school night.",
+    "wake_word": false
+   },
+   "expected": "lights_off",
+   "ok": [
+    "lights_off"
+   ],
+   "split": "test"
+  },
+  {
+   "id": "sp19",
+   "category": "indirect",
+   "tags": [
+    "indirect"
+   ],
+   "utt": {
+    "room": "living",
+    "text": "I can't see a thing in here.",
+    "lang": "en",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Living room. Lights off, evening.",
+    "wake_word": false
+   },
+   "expected": "lights_on",
+   "ok": [
+    "lights_on"
+   ],
+   "split": "dev"
+  },
+  {
+   "id": "sp20",
+   "category": "indirect",
+   "tags": [
+    "indirect"
+   ],
+   "utt": {
+    "room": "bedroom_main",
+    "text": "It's freezing in here.",
+    "lang": "en",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Parents' bedroom. Room 17 C.",
+    "wake_word": false
+   },
+   "expected": "warmer",
+   "ok": [
+    "warmer"
+   ],
+   "split": "test"
+  },
+  {
+   "id": "sp21",
+   "category": "indirect",
+   "tags": [
+    "indirect"
+   ],
+   "utt": {
+    "room": "living",
+    "text": "Ugh, I'm sweating, it's so stuffy.",
+    "lang": "en",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Living room. Room 27 C.",
+    "wake_word": false
+   },
+   "expected": "cooler",
+   "ok": [
+    "cooler"
+   ],
+   "split": "dev"
+  },
+  {
+   "id": "sp22",
+   "category": "indirect",
+   "tags": [
+    "indirect"
+   ],
+   "utt": {
+    "room": "bedroom_main",
+    "text": "It's way too bright, my eyes hurt.",
+    "lang": "en",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Parents' bedroom. Lights on at full brightness, 23:00.",
+    "wake_word": false
+   },
+   "expected": "lights_off",
+   "ok": [
+    "lights_off",
+    "lights_dim"
+   ],
+   "split": "test"
+  },
+  {
+   "id": "sp23",
+   "category": "indirect",
+   "tags": [
+    "indirect"
+   ],
+   "utt": {
+    "room": "living",
+    "text": "It's like a cave in here.",
+    "lang": "en",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Living room. Lights off, afternoon, curtains closed.",
+    "wake_word": false
+   },
+   "expected": "lights_on",
+   "ok": [
+    "lights_on"
+   ],
+   "split": "dev"
+  },
+  {
+   "id": "sp24",
+   "category": "indirect",
+   "tags": [
+    "indirect"
+   ],
+   "utt": {
+    "room": "kitchen",
+    "text": "Man, it's a sauna in here.",
+    "lang": "en",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Kitchen. Room 28 C, afternoon.",
+    "wake_word": false
+   },
+   "expected": "cooler",
+   "ok": [
+    "cooler"
+   ],
+   "split": "test"
+  },
+  {
+   "id": "sp25",
+   "category": "indirect",
+   "tags": [
+    "indirect"
+   ],
+   "utt": {
+    "room": "living",
+    "text": "Where's the remote? The game starts in five minutes.",
+    "lang": "en",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Living room. TV off, evening.",
+    "wake_word": false
+   },
+   "expected": "tv_on",
+   "ok": [
+    "tv_on"
+   ],
+   "split": "dev"
+  },
+  {
+   "id": "sp26",
+   "category": "indirect",
+   "tags": [
+    "indirect"
+   ],
+   "utt": {
+    "room": "living",
+    "text": "Honestly I can't hear myself think with that TV.",
+    "lang": "en",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Living room. TV on, volume 30, evening.",
+    "wake_word": false
+   },
+   "expected": "tv_off",
+   "ok": [
+    "tv_off"
+   ],
+   "split": "test"
+  },
+  {
+   "id": "sp27",
+   "category": "indirect",
+   "tags": [
+    "indirect"
+   ],
+   "utt": {
+    "room": "hallway",
+    "text": "Brr, who turned the heat down?",
+    "lang": "en",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Hallway. Room 17 C, evening.",
+    "wake_word": false
+   },
+   "expected": "warmer",
+   "ok": [
+    "warmer"
+   ],
+   "split": "dev"
+  },
+  {
+   "id": "sp28",
+   "category": "indirect",
+   "tags": [
+    "indirect"
+   ],
+   "utt": {
+    "room": "bedroom_main",
+    "text": "I'm getting a headache from these lights.",
+    "lang": "en",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Parents' bedroom. Lights on at full brightness, 22:00.",
+    "wake_word": false
+   },
+   "expected": "lights_off",
+   "ok": [
+    "lights_off",
+    "lights_dim"
+   ],
+   "split": "test"
+  },
+  {
+   "id": "sp29",
+   "category": "indirect",
+   "tags": [
+    "indirect"
+   ],
+   "utt": {
+    "room": "kitchen",
+    "text": "Why is it so dark in here?",
+    "lang": "en",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Kitchen. Lights off, evening.",
+    "wake_word": false
+   },
+   "expected": "lights_on",
+   "ok": [
+    "lights_on"
+   ],
+   "split": "dev"
+  },
+  {
+   "id": "sp30",
+   "category": "indirect",
+   "tags": [
+    "indirect"
+   ],
+   "utt": {
+    "room": "bedroom_main",
+    "text": "It's too hot to sleep.",
+    "lang": "en",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Parents' bedroom. Room 26 C, 23:30.",
+    "wake_word": false
+   },
+   "expected": "cooler",
+   "ok": [
+    "cooler"
+   ],
+   "split": "test"
+  },
+  {
+   "id": "sp31",
+   "category": "indirect",
+   "tags": [
+    "indirect",
+    "slang"
+   ],
+   "utt": {
+    "room": "living",
+    "text": "I'm freezing my butt off in here.",
+    "lang": "en",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Living room. Room 16 C, evening.",
+    "wake_word": false
+   },
+   "expected": "warmer",
+   "ok": [
+    "warmer"
+   ],
+   "split": "dev"
+  },
+  {
+   "id": "sp32",
+   "category": "indirect",
+   "tags": [
+    "indirect"
+   ],
+   "utt": {
+    "room": "living",
+    "text": "Is it just me or is it kind of warm in here?",
+    "lang": "en",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Living room. Room 26 C, afternoon.",
+    "wake_word": false
+   },
+   "expected": "cooler",
+   "ok": [
+    "cooler"
+   ],
+   "split": "test"
+  },
+  {
+   "id": "sp33",
+   "category": "indirect",
+   "tags": [
+    "indirect"
+   ],
+   "utt": {
+    "room": "hallway",
+    "text": "Who left the kitchen light on?",
+    "lang": "en",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Hallway. Lights off, 23:30. Kitchen light on, nobody in the kitchen.",
+    "wake_word": false
+   },
+   "expected": "lights_off",
+   "ok": [
+    "lights_off"
+   ],
+   "room": "kitchen",
+   "split": "dev"
+  },
+  {
+   "id": "sp34",
+   "category": "indirect",
+   "tags": [
+    "indirect"
+   ],
+   "utt": {
+    "room": "living",
+    "text": "This TV is giving me a headache, I'm done.",
+    "lang": "en",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Living room. TV on, evening.",
+    "wake_word": false
+   },
+   "expected": "tv_off",
+   "ok": [
+    "tv_off"
+   ],
+   "split": "test"
+  },
+  {
+   "id": "sp35",
+   "category": "other_room",
+   "tags": [
+    "other_room"
+   ],
+   "utt": {
+    "room": "living",
+    "text": "Turn on the kitchen lights.",
+    "lang": "en",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Living room. Lights on, evening.",
+    "wake_word": false
+   },
+   "expected": "lights_on",
+   "ok": [
+    "lights_on"
+   ],
+   "room": "kitchen",
+   "split": "dev"
+  },
+  {
+   "id": "sp36",
+   "category": "other_room",
+   "tags": [
+    "other_room"
+   ],
+   "utt": {
+    "room": "bedroom_main",
+    "text": "Can you switch off the hallway light?",
+    "lang": "en",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Parents' bedroom. Lights off, 23:10.",
+    "wake_word": false
+   },
+   "expected": "lights_off",
+   "ok": [
+    "lights_off"
+   ],
+   "room": "hallway",
+   "split": "test"
+  },
+  {
+   "id": "sp37",
+   "category": "other_room",
+   "tags": [
+    "other_room"
+   ],
+   "utt": {
+    "room": "kitchen",
+    "text": "Turn the porch light on, Sam's coming home.",
+    "lang": "en",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Kitchen. Lights on, 21:00.",
+    "wake_word": false
+   },
+   "expected": "lights_on",
+   "ok": [
+    "lights_on"
+   ],
+   "room": "porch",
+   "split": "dev"
+  },
+  {
+   "id": "sp38",
+   "category": "other_room",
+   "tags": [
+    "other_room"
+   ],
+   "utt": {
+    "room": "hallway",
+    "text": "Lights on in Maya's room please.",
+    "lang": "en",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Hallway. Lights on, 19:30.",
+    "wake_word": false
+   },
+   "expected": "lights_on",
+   "ok": [
+    "lights_on"
+   ],
+   "room": "bedroom_maya",
+   "split": "test"
+  },
+  {
+   "id": "sp39",
+   "category": "other_room",
+   "tags": [
+    "other_room"
+   ],
+   "utt": {
+    "room": "living",
+    "text": "Turn on the light in my room.",
+    "lang": "en",
+    "speaker": {
+     "id": "maya",
+     "name": "Maya",
+     "role": "child",
+     "match": 0.92
+    },
+    "source": "person",
+    "context": "Living room. Lights on, evening.",
+    "wake_word": false
+   },
+   "expected": "lights_on",
+   "ok": [
+    "lights_on"
+   ],
+   "room": "bedroom_maya",
+   "split": "dev"
+  },
+  {
+   "id": "sp40",
+   "category": "other_room",
+   "tags": [
+    "other_room"
+   ],
+   "utt": {
+    "room": "kitchen",
+    "text": "Turn off the lights in our bedroom, I left them on.",
+    "lang": "en",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Kitchen. Lights on, evening.",
+    "wake_word": false
+   },
+   "expected": "lights_off",
+   "ok": [
+    "lights_off"
+   ],
+   "room": "bedroom_main",
+   "split": "test"
+  },
+  {
+   "id": "sp41",
+   "category": "other_room",
+   "tags": [
+    "other_room"
+   ],
+   "utt": {
+    "room": "kitchen",
+    "text": "Dim the living room lights.",
+    "lang": "en",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Kitchen. Lights on, evening.",
+    "wake_word": false
+   },
+   "expected": "lights_dim",
+   "ok": [
+    "lights_dim",
+    "lights_off"
+   ],
+   "room": "living",
+   "split": "dev"
+  },
+  {
+   "id": "sp42",
+   "category": "other_room",
+   "tags": [
+    "other_room",
+    "terse"
+   ],
+   "utt": {
+    "room": "living",
+    "text": "Kitchen lights off.",
+    "lang": "en",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Living room. Lights on, 22:00.",
+    "wake_word": false
+   },
+   "expected": "lights_off",
+   "ok": [
+    "lights_off"
+   ],
+   "room": "kitchen",
+   "split": "test"
+  },
+  {
+   "id": "sp43",
+   "category": "other_room",
+   "tags": [
+    "other_room"
+   ],
+   "utt": {
+    "room": "hallway",
+    "text": "Can you turn the porch light off? It's morning.",
+    "lang": "en",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Hallway. Lights off, 07:30.",
+    "wake_word": false
+   },
+   "expected": "lights_off",
+   "ok": [
+    "lights_off"
+   ],
+   "room": "porch",
+   "split": "dev"
+  },
+  {
+   "id": "sp44",
+   "category": "other_room",
+   "tags": [
+    "other_room"
+   ],
+   "utt": {
+    "room": "bedroom_main",
+    "text": "Turn on the hallway light, I don't want to trip.",
+    "lang": "en",
+    "speaker": {
+     "id": "sam",
+     "name": "Sam",
+     "role": "parent",
+     "match": 0.93
+    },
+    "source": "person",
+    "context": "Parents' bedroom. Lights off, 02:00.",
+    "wake_word": false
+   },
+   "expected": "lights_on",
+   "ok": [
+    "lights_on"
+   ],
+   "room": "hallway",
+   "split": "test"
+  },
+  {
+   "id": "sp45",
+   "category": "other_room",
+   "tags": [
+    "other_room"
+   ],
+   "utt": {
+    "room": "living",
+    "text": "It's really dark in the hallway.",
+    "lang": "en",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Living room. Lights on, 21:00.",
+    "wake_word": false
+   },
+   "expected": "lights_on",
+   "ok": [
+    "lights_on"
+   ],
+   "room": "hallway",
+   "split": "dev"
+  },
+  {
+   "id": "sp46",
+   "category": "other_room",
+   "tags": [
+    "other_room"
+   ],
+   "utt": {
+    "room": "kitchen",
+    "text": "My room is freezing.",
+    "lang": "en",
+    "speaker": {
+     "id": "maya",
+     "name": "Maya",
+     "role": "child",
+     "match": 0.92
+    },
+    "source": "person",
+    "context": "Kitchen. Room 21 C, evening.",
+    "wake_word": false
+   },
+   "expected": "warmer",
+   "ok": [
+    "warmer"
+   ],
+   "room": "bedroom_maya",
+   "split": "test"
+  },
+  {
+   "id": "sp47",
+   "category": "zh",
+   "tags": [
+    "zh"
+   ],
+   "utt": {
+    "room": "bedroom_main",
+    "text": "好冷啊。",
+    "lang": "zh",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Parents' bedroom. Room 16 C.",
+    "wake_word": false
+   },
+   "expected": "warmer",
+   "ok": [
+    "warmer"
+   ],
+   "split": "dev"
+  },
+  {
+   "id": "sp48",
+   "category": "zh",
+   "tags": [
+    "zh"
+   ],
+   "utt": {
+    "room": "bedroom_main",
+    "text": "把灯关了吧，我要睡了。",
+    "lang": "zh",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Parents' bedroom. Lights on, 23:30.",
+    "wake_word": false
+   },
+   "expected": "lights_off",
+   "ok": [
+    "lights_off"
+   ],
+   "split": "test"
+  },
+  {
+   "id": "sp49",
+   "category": "zh",
+   "tags": [
+    "zh",
+    "negation"
+   ],
+   "utt": {
+    "room": "living",
+    "text": "我还在看电视呢，别关。",
+    "lang": "zh",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Living room. TV on.",
+    "wake_word": false
+   },
+   "expected": "none",
+   "ok": [
+    "none"
+   ],
+   "split": "dev"
+  },
+  {
+   "id": "sp50",
+   "category": "zh",
+   "tags": [
+    "zh"
+   ],
+   "utt": {
+    "room": "hallway",
+    "text": "太黑了，什么都看不见。",
+    "lang": "zh",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Hallway. Lights off, night.",
+    "wake_word": false
+   },
+   "expected": "lights_on",
+   "ok": [
+    "lights_on"
+   ],
+   "split": "test"
+  },
+  {
+   "id": "sp51",
+   "category": "zh",
+   "tags": [
+    "zh"
+   ],
+   "utt": {
+    "room": "kitchen",
+    "text": "帮我开灯。",
+    "lang": "zh",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Kitchen. Lights off, evening.",
+    "wake_word": false
+   },
+   "expected": "lights_on",
+   "ok": [
+    "lights_on"
+   ],
+   "split": "dev"
+  },
+  {
+   "id": "sp52",
+   "category": "zh",
+   "tags": [
+    "zh"
+   ],
+   "utt": {
+    "room": "living",
+    "text": "太热了，受不了。",
+    "lang": "zh",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Living room. Room 28 C, afternoon.",
+    "wake_word": false
+   },
+   "expected": "cooler",
+   "ok": [
+    "cooler"
+   ],
+   "split": "test"
+  },
+  {
+   "id": "sp53",
+   "category": "zh",
+   "tags": [
+    "zh"
+   ],
+   "utt": {
+    "room": "living",
+    "text": "把电视打开，比赛开始了。",
+    "lang": "zh",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Living room. TV off, evening.",
+    "wake_word": false
+   },
+   "expected": "tv_on",
+   "ok": [
+    "tv_on"
+   ],
+   "split": "dev"
+  },
+  {
+   "id": "sp54",
+   "category": "zh",
+   "tags": [
+    "zh"
+   ],
+   "utt": {
+    "room": "living",
+    "text": "电视关了吧，太吵了。",
+    "lang": "zh",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Living room. TV on, evening.",
+    "wake_word": false
+   },
+   "expected": "tv_off",
+   "ok": [
+    "tv_off"
+   ],
+   "split": "test"
+  },
+  {
+   "id": "sp55",
+   "category": "zh",
+   "tags": [
+    "zh"
+   ],
+   "utt": {
+    "room": "hallway",
+    "text": "帮我把门开一下，我手上拿着东西。",
+    "lang": "zh",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Hallway. Front door locked, afternoon.",
+    "wake_word": false
+   },
+   "expected": "unlock_door",
+   "ok": [
+    "unlock_door"
+   ],
+   "split": "dev"
+  },
+  {
+   "id": "sp56",
+   "category": "zh",
+   "tags": [
+    "zh"
+   ],
+   "utt": {
+    "room": "bedroom_main",
+    "text": "这个灯太亮了，眼睛疼。",
+    "lang": "zh",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Parents' bedroom. Lights on at full brightness, 23:00.",
+    "wake_word": false
+   },
+   "expected": "lights_off",
+   "ok": [
+    "lights_off",
+    "lights_dim"
+   ],
+   "split": "test"
+  },
+  {
+   "id": "sp57",
+   "category": "zh",
+   "tags": [
+    "zh"
+   ],
+   "utt": {
+    "room": "living",
+    "text": "开一下厨房的灯。",
+    "lang": "zh",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Living room. Lights on, evening.",
+    "wake_word": false
+   },
+   "expected": "lights_on",
+   "ok": [
+    "lights_on"
+   ],
+   "room": "kitchen",
+   "split": "dev"
+  },
+  {
+   "id": "sp58",
+   "category": "zh",
+   "tags": [
+    "zh"
+   ],
+   "utt": {
+    "room": "bedroom_main",
+    "text": "把客厅的灯关掉。",
+    "lang": "zh",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Parents' bedroom. Lights off, 23:00.",
+    "wake_word": false
+   },
+   "expected": "lights_off",
+   "ok": [
+    "lights_off"
+   ],
+   "room": "living",
+   "split": "test"
+  },
+  {
+   "id": "sp59",
+   "category": "zh",
+   "tags": [
+    "zh"
+   ],
+   "utt": {
+    "room": "kitchen",
+    "text": "我房间的灯打开。",
+    "lang": "zh",
+    "speaker": {
+     "id": "maya",
+     "name": "Maya",
+     "role": "child",
+     "match": 0.92
+    },
+    "source": "person",
+    "context": "Kitchen. Lights on, evening.",
+    "wake_word": false
+   },
+   "expected": "lights_on",
+   "ok": [
+    "lights_on"
+   ],
+   "room": "bedroom_maya",
+   "split": "dev"
+  },
+  {
+   "id": "sp60",
+   "category": "zh",
+   "tags": [
+    "zh",
+    "past"
+   ],
+   "utt": {
+    "room": "kitchen",
+    "text": "昨天晚上我忘了关灯，电费又要多了。",
+    "lang": "zh",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Kitchen. Lights on, morning.",
+    "wake_word": false
+   },
+   "expected": "none",
+   "ok": [
+    "none"
+   ],
+   "split": "test"
+  },
+  {
+   "id": "sp61",
+   "category": "zh",
+   "tags": [
+    "zh",
+    "negation"
+   ],
+   "utt": {
+    "room": "bedroom_main",
+    "text": "别开灯，宝宝刚睡着。",
+    "lang": "zh",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Parents' bedroom. Lights off, 21:00.",
+    "wake_word": false
+   },
+   "expected": "none",
+   "ok": [
+    "none"
+   ],
+   "split": "dev"
+  },
+  {
+   "id": "sp62",
+   "category": "zh",
+   "tags": [
+    "zh",
+    "state_question"
+   ],
+   "utt": {
+    "room": "kitchen",
+    "text": "电视是开着的吗？",
+    "lang": "zh",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Kitchen. Lights on, evening.",
+    "wake_word": false
+   },
+   "expected": "none",
+   "ok": [
+    "none"
+   ],
+   "split": "test"
+  },
+  {
+   "id": "sp63",
+   "category": "zh",
+   "tags": [
+    "zh",
+    "mention"
+   ],
+   "utt": {
+    "room": "living",
+    "text": "我妈说她家暖气坏了。",
+    "lang": "zh",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Living room. Room 21 C.",
+    "wake_word": false
+   },
+   "expected": "none",
+   "ok": [
+    "none"
+   ],
+   "split": "dev"
+  },
+  {
+   "id": "sp64",
+   "category": "zh",
+   "tags": [
+    "zh",
+    "state_question"
+   ],
+   "utt": {
+    "room": "hallway",
+    "text": "门锁好了吗？",
+    "lang": "zh",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Hallway. Front door locked, 23:00.",
+    "wake_word": false
+   },
+   "expected": "none",
+   "ok": [
+    "none"
+   ],
+   "split": "test"
+  },
+  {
+   "id": "sp65",
+   "category": "code_switch",
+   "tags": [
+    "code_switch"
+   ],
+   "utt": {
+    "room": "living",
+    "text": "这里好 dark，开个灯吧。",
+    "lang": "zh",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Living room. Lights off, evening.",
+    "wake_word": false
+   },
+   "expected": "lights_on",
+   "ok": [
+    "lights_on"
+   ],
+   "split": "dev"
+  },
+  {
+   "id": "sp66",
+   "category": "code_switch",
+   "tags": [
+    "code_switch"
+   ],
+   "utt": {
+    "room": "living",
+    "text": "Can you 把暖气 turn up a bit? 太冷了。",
+    "lang": "zh",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Living room. Room 17 C, evening.",
+    "wake_word": false
+   },
+   "expected": "warmer",
+   "ok": [
+    "warmer"
+   ],
+   "split": "test"
+  },
+  {
+   "id": "sp67",
+   "category": "code_switch",
+   "tags": [
+    "code_switch"
+   ],
+   "utt": {
+    "room": "living",
+    "text": "TV 关掉, 我要写作业了。",
+    "lang": "zh",
+    "speaker": {
+     "id": "maya",
+     "name": "Maya",
+     "role": "child",
+     "match": 0.92
+    },
+    "source": "person",
+    "context": "Living room. TV on, 19:00.",
+    "wake_word": false
+   },
+   "expected": "tv_off",
+   "ok": [
+    "tv_off"
+   ],
+   "split": "dev"
+  },
+  {
+   "id": "sp68",
+   "category": "code_switch",
+   "tags": [
+    "code_switch",
+    "mention"
+   ],
+   "utt": {
+    "room": "kitchen",
+    "text": "我老板 said the office 灯 always on, 太浪费电了。",
+    "lang": "zh",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Kitchen. Lights on, evening.",
+    "wake_word": false
+   },
+   "expected": "none",
+   "ok": [
+    "none"
+   ],
+   "split": "test"
+  },
+  {
+   "id": "sp69",
+   "category": "code_switch",
+   "tags": [
+    "code_switch"
+   ],
+   "utt": {
+    "room": "kitchen",
+    "text": "Porch 的灯开一下，Sam 快到了。",
+    "lang": "zh",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Kitchen. Lights on, 21:00.",
+    "wake_word": false
+   },
+   "expected": "lights_on",
+   "ok": [
+    "lights_on"
+   ],
+   "room": "porch",
+   "split": "dev"
+  },
+  {
+   "id": "sp70",
+   "category": "code_switch",
+   "tags": [
+    "code_switch"
+   ],
+   "utt": {
+    "room": "bedroom_main",
+    "text": "好热，can you make it cooler?",
+    "lang": "zh",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Parents' bedroom. Room 27 C, night.",
+    "wake_word": false
+   },
+   "expected": "cooler",
+   "ok": [
+    "cooler"
+   ],
+   "split": "test"
+  },
+  {
+   "id": "sp71",
+   "category": "negative",
+   "tags": [
+    "negative",
+    "mention"
+   ],
+   "utt": {
+    "room": "kitchen",
+    "text": "I left the lights on at the office again, my boss is going to kill me.",
+    "lang": "en",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Kitchen. Lights on.",
+    "wake_word": false
+   },
+   "expected": "none",
+   "ok": [
+    "none"
+   ],
+   "split": "dev"
+  },
+  {
+   "id": "sp72",
+   "category": "negative",
+   "tags": [
+    "negative",
+    "negation"
+   ],
+   "utt": {
+    "room": "living",
+    "text": "Don't turn off the TV, I'm still watching.",
+    "lang": "en",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Living room. TV on.",
+    "wake_word": false
+   },
+   "expected": "none",
+   "ok": [
+    "none"
+   ],
+   "split": "test"
+  },
+  {
+   "id": "sp73",
+   "category": "negative",
+   "tags": [
+    "negative",
+    "past"
+   ],
+   "utt": {
+    "room": "living",
+    "text": "That movie was so dark I could barely see anything.",
+    "lang": "en",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Living room. TV off, lights on.",
+    "wake_word": false
+   },
+   "expected": "none",
+   "ok": [
+    "none"
+   ],
+   "split": "dev"
+  },
+  {
+   "id": "sp74",
+   "category": "negative",
+   "tags": [
+    "negative",
+    "mention"
+   ],
+   "utt": {
+    "room": "kitchen",
+    "text": "My sister said her heater broke last night.",
+    "lang": "en",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Kitchen. Room 21 C.",
+    "wake_word": false
+   },
+   "expected": "none",
+   "ok": [
+    "none"
+   ],
+   "split": "test"
+  },
+  {
+   "id": "sp75",
+   "category": "negative",
+   "tags": [
+    "negative",
+    "quoted"
+   ],
+   "utt": {
+    "room": "kitchen",
+    "text": "The guy on the radio just said to turn off your lights to save energy.",
+    "lang": "en",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Kitchen. Lights on, evening.",
+    "wake_word": false
+   },
+   "expected": "none",
+   "ok": [
+    "none"
+   ],
+   "split": "dev"
+  },
+  {
+   "id": "sp76",
+   "category": "negative",
+   "tags": [
+    "negative",
+    "quoted"
+   ],
+   "utt": {
+    "room": "living",
+    "text": "In the movie she yells 'turn on the lights!' and the monster is just standing there.",
+    "lang": "en",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Living room. Lights on, TV on, evening.",
+    "wake_word": false
+   },
+   "expected": "none",
+   "ok": [
+    "none"
+   ],
+   "split": "test"
+  },
+  {
+   "id": "sp77",
+   "category": "negative",
+   "tags": [
+    "negative",
+    "state_question"
+   ],
+   "utt": {
+    "room": "kitchen",
+    "text": "Is the TV still on in there?",
+    "lang": "en",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Kitchen. Lights on, evening.",
+    "wake_word": false
+   },
+   "expected": "none",
+   "ok": [
+    "none"
+   ],
+   "split": "dev"
+  },
+  {
+   "id": "sp78",
+   "category": "negative",
+   "tags": [
+    "negative",
+    "state_question"
+   ],
+   "utt": {
+    "room": "bedroom_main",
+    "text": "Did you lock the front door?",
+    "lang": "en",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Parents' bedroom. Lights on, 23:00.",
+    "wake_word": false
+   },
+   "expected": "none",
+   "ok": [
+    "none"
+   ],
+   "split": "test"
+  },
+  {
+   "id": "sp79",
+   "category": "negative",
+   "tags": [
+    "negative",
+    "past"
+   ],
+   "utt": {
+    "room": "living",
+    "text": "We turned the heat way up last winter and the bill was insane.",
+    "lang": "en",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Living room. Room 21 C, evening.",
+    "wake_word": false
+   },
+   "expected": "none",
+   "ok": [
+    "none"
+   ],
+   "split": "dev"
+  },
+  {
+   "id": "sp80",
+   "category": "negative",
+   "tags": [
+    "negative",
+    "sarcasm"
+   ],
+   "utt": {
+    "room": "living",
+    "text": "Yeah, let's turn on every light in the house, electricity is free, right?",
+    "lang": "en",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Living room. Lights on, evening.",
+    "wake_word": false
+   },
+   "expected": "none",
+   "ok": [
+    "none"
+   ],
+   "split": "test"
+  },
+  {
+   "id": "sp81",
+   "category": "negative",
+   "tags": [
+    "negative",
+    "sarcasm"
+   ],
+   "utt": {
+    "room": "hallway",
+    "text": "Great idea, unlock the door for the whole neighborhood.",
+    "lang": "en",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Hallway. Front door locked, 23:00.",
+    "wake_word": false
+   },
+   "expected": "none",
+   "ok": [
+    "none"
+   ],
+   "split": "dev"
+  },
+  {
+   "id": "sp82",
+   "category": "negative",
+   "tags": [
+    "negative",
+    "negation",
+    "addressed_to_person"
+   ],
+   "utt": {
+    "room": "living",
+    "text": "Don't you dare turn on that TV before your homework is done.",
+    "lang": "en",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Living room. TV off, 17:00.",
+    "wake_word": false
+   },
+   "expected": "none",
+   "ok": [
+    "none"
+   ],
+   "split": "test"
+  },
+  {
+   "id": "sp83",
+   "category": "negative",
+   "tags": [
+    "negative",
+    "negation"
+   ],
+   "utt": {
+    "room": "hallway",
+    "text": "Don't unlock the door for anyone while I'm out.",
+    "lang": "en",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Hallway. Front door locked, morning.",
+    "wake_word": false
+   },
+   "expected": "none",
+   "ok": [
+    "none"
+   ],
+   "split": "dev"
+  },
+  {
+   "id": "sp84",
+   "category": "negative",
+   "tags": [
+    "negative",
+    "negation"
+   ],
+   "utt": {
+    "room": "living",
+    "text": "No, leave the lights on, I'm reading.",
+    "lang": "en",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Living room. Lights on, evening.",
+    "wake_word": false
+   },
+   "expected": "none",
+   "ok": [
+    "none"
+   ],
+   "split": "test"
+  },
+  {
+   "id": "sp85",
+   "category": "negative",
+   "tags": [
+    "negative",
+    "negation"
+   ],
+   "utt": {
+    "room": "living",
+    "text": "I'm not cold, don't touch the thermostat.",
+    "lang": "en",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Living room. Room 20 C, evening.",
+    "wake_word": false
+   },
+   "expected": "none",
+   "ok": [
+    "none"
+   ],
+   "split": "dev"
+  },
+  {
+   "id": "sp86",
+   "category": "negative",
+   "tags": [
+    "negative",
+    "state_question"
+   ],
+   "utt": {
+    "room": "living",
+    "text": "What's the temperature in here, like 25?",
+    "lang": "en",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Living room. Room 24 C, afternoon.",
+    "wake_word": false
+   },
+   "expected": "none",
+   "ok": [
+    "none"
+   ],
+   "split": "test"
+  },
+  {
+   "id": "sp87",
+   "category": "negative",
+   "tags": [
+    "negative",
+    "addressed_to_person"
+   ],
+   "utt": {
+    "room": "living",
+    "text": "Could you pass me the remote?",
+    "lang": "en",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Living room. TV on, evening.",
+    "wake_word": false
+   },
+   "expected": "none",
+   "ok": [
+    "none"
+   ],
+   "split": "dev"
+  },
+  {
+   "id": "sp88",
+   "category": "negative",
+   "tags": [
+    "negative",
+    "mention"
+   ],
+   "utt": {
+    "room": "bedroom_main",
+    "text": "The neighbors left their porch light on again, it's shining right into our window.",
+    "lang": "en",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Parents' bedroom. Lights off, 23:30.",
+    "wake_word": false
+   },
+   "expected": "none",
+   "ok": [
+    "none"
+   ],
+   "split": "test"
+  },
+  {
+   "id": "sp89",
+   "category": "negative",
+   "tags": [
+    "negative",
+    "conditional"
+   ],
+   "utt": {
+    "room": "living",
+    "text": "If it gets any colder tonight we should turn the heat up.",
+    "lang": "en",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Living room. Room 20 C, evening.",
+    "wake_word": false
+   },
+   "expected": "none",
+   "ok": [
+    "none"
+   ],
+   "split": "dev"
+  },
+  {
+   "id": "sp90",
+   "category": "negative",
+   "tags": [
+    "negative",
+    "retraction"
+   ],
+   "utt": {
+    "room": "living",
+    "text": "I'm so cold... just kidding, it's actually perfect in here.",
+    "lang": "en",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Living room. Room 21 C, evening.",
+    "wake_word": false
+   },
+   "expected": "none",
+   "ok": [
+    "none"
+   ],
+   "split": "test"
+  },
+  {
+   "id": "sp91",
+   "category": "negative",
+   "tags": [
+    "negative",
+    "retraction"
+   ],
+   "utt": {
+    "room": "living",
+    "text": "Turn on the... no wait, never mind, leave it.",
+    "lang": "en",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Living room. Lights off, evening.",
+    "wake_word": false
+   },
+   "expected": "none",
+   "ok": [
+    "none"
+   ],
+   "split": "dev"
+  },
+  {
+   "id": "sp92",
+   "category": "negative",
+   "tags": [
+    "negative",
+    "negation"
+   ],
+   "utt": {
+    "room": "living",
+    "text": "Nah, we're good, leave the TV.",
+    "lang": "en",
+    "speaker": {
+     "id": "alex",
+     "name": "Alex",
+     "role": "parent",
+     "match": 0.95
+    },
+    "source": "person",
+    "context": "Living room. TV on, evening.",
+    "wake_word": false
+   },
+   "expected": "none",
+   "ok": [
+    "none"
+   ],
+   "split": "test"
+  },
+  {
+   "id": "sp93",
+   "category": "negative",
+   "tags": [
+    "negative",
+    "addressed_to_pet"
+   ],
+   "utt": {
+    "room": "living",
+    "text": "Mochi, get off the TV stand!",
+    "lang": "en",
+    "speaker": {
+     "id": "maya",
+     "name": "Maya",
+     "role": "child",
+     "match": 0.92
+    },
+    "source": "person",
+    "context": "Living room. TV on, evening.",
+    "wake_word": false
+   },
+   "expected": "none",
+   "ok": [
+    "none"
+   ],
+   "split": "dev"
+  }
+ ]
+}

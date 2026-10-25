@@ -1,0 +1,48 @@
+{
+  "id": "reg_s01_dark_kitchen",
+  "title": "Dark kitchen at 23:40",
+  "blurb": "Adult walks into a dark kitchen at night: lights on (reflex).",
+  "tags": [
+    "regression",
+    "scene",
+    "seed:s1",
+    "reflex"
+  ],
+  "steps": [
+    {
+      "do": "set_time",
+      "time": "23:40",
+      "weekday": "Tuesday"
+    },
+    {
+      "do": "leave",
+      "who": "sam"
+    },
+    {
+      "do": "set_env",
+      "room": "kitchen",
+      "lux": 2
+    },
+    {
+      "do": "move",
+      "who": "alex",
+      "to": "kitchen"
+    },
+    {
+      "do": "expect",
+      "what": "device",
+      "device": "light_kitchen",
+      "state": {
+        "on": true
+      },
+      "within": 3
+    },
+    {
+      "do": "expect",
+      "what": "proposal",
+      "by": "reflex",
+      "action": "lights_on",
+      "within": 3
+    }
+  ]
+}

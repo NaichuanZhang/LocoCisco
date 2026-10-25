@@ -1,0 +1,69 @@
+{
+ "id": "reg_15_undo_task",
+ "title": "Undo removes a task",
+ "blurb": "A Discord ❌ (undo) marks the last task undone and says so in #tasks.",
+ "tags": [
+  "regression"
+ ],
+ "steps": [
+  {
+   "do": "start",
+   "title": "Pricing sync",
+   "owner": "Priya",
+   "agenda": [
+    "Q3 pricing",
+    "Launch"
+   ],
+   "minutes": 30
+  },
+  {
+   "do": "join",
+   "who": "priya",
+   "seat": "s1",
+   "voice": "voice-A",
+   "checkin": "Priya"
+  },
+  {
+   "do": "join",
+   "who": "sam",
+   "seat": "s2",
+   "voice": "voice-B",
+   "checkin": "Sam"
+  },
+  {
+   "do": "say",
+   "who": "priya",
+   "text": "Sam, can you send the deck to the press team by Friday?",
+   "lang": "en"
+  },
+  {
+   "do": "expect",
+   "what": "item",
+   "kind": "task",
+   "owner": "Sam",
+   "within": 45
+  },
+  {
+   "do": "react",
+   "command": "undo",
+   "user": "Sam",
+   "args": {
+    "item_id": "$last_task"
+   }
+  },
+  {
+   "do": "expect",
+   "what": "item",
+   "kind": "task",
+   "status": "undone",
+   "within": 3
+  },
+  {
+   "do": "expect",
+   "what": "post",
+   "channel": "tasks",
+   "text_contains": "removed",
+   "within": 3
+  }
+ ]
+}

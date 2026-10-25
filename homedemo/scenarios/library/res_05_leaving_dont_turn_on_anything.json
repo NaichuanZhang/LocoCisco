@@ -1,0 +1,54 @@
+{
+  "id": "res_05_leaving_dont_turn_on_anything",
+  "title": "“我不在家，don't turn on anything.”",
+  "blurb": "Code-switched negation said on the way out (designed): nothing happens, and nothing happens when the house empties either.",
+  "tags": [
+    "research",
+    "speech",
+    "code-switch",
+    "negation",
+    "f2:18"
+  ],
+  "steps": [
+    {
+      "do": "set_time",
+      "time": "08:10",
+      "weekday": "Wednesday"
+    },
+    {
+      "do": "say",
+      "who": "alex",
+      "text": "我不在家，don't turn on anything.",
+      "lang": "zh"
+    },
+    {
+      "do": "expect",
+      "what": "proposal",
+      "by": "keyword",
+      "action": "none",
+      "within": 5
+    },
+    {
+      "do": "expect",
+      "what": "verdict",
+      "verdict": "ignore",
+      "within": 15
+    },
+    {
+      "do": "expect",
+      "what": "no_command",
+      "device": "any",
+      "within": 6
+    },
+    {
+      "do": "leave",
+      "who": "alex"
+    },
+    {
+      "do": "expect",
+      "what": "no_command",
+      "device": "any",
+      "within": 4
+    }
+  ]
+}

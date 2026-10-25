@@ -1,0 +1,58 @@
+{
+ "id": "reg_09_mandarin_off_record",
+ "title": "这个不要记",
+ "blurb": "Mandarin off-the-record phrase is a reflex too.",
+ "tags": [
+  "regression"
+ ],
+ "steps": [
+  {
+   "do": "start",
+   "title": "Pricing sync",
+   "owner": "Priya",
+   "agenda": [
+    "Q3 pricing",
+    "Launch"
+   ],
+   "minutes": 30
+  },
+  {
+   "do": "join",
+   "who": "priya",
+   "seat": "s1",
+   "voice": "voice-A",
+   "checkin": "Priya"
+  },
+  {
+   "do": "join",
+   "who": "sam",
+   "seat": "s2",
+   "voice": "voice-B",
+   "checkin": "Sam"
+  },
+  {
+   "do": "say",
+   "who": "priya",
+   "text": "这个不要记。",
+   "lang": "zh"
+  },
+  {
+   "do": "expect",
+   "what": "privacy",
+   "state": "off_record",
+   "within": 3
+  },
+  {
+   "do": "say",
+   "who": "priya",
+   "text": "可以记了，继续。",
+   "lang": "zh"
+  },
+  {
+   "do": "expect",
+   "what": "privacy",
+   "state": "on",
+   "within": 3
+  }
+ ]
+}

@@ -1,0 +1,48 @@
+{
+ "id": "reg_19_mixed_zh_en_task",
+ "title": "Mixed Mandarin and English task",
+ "blurb": "'Sam，你周三前把报告发我' is a task for Sam with a date.",
+ "tags": [
+  "regression"
+ ],
+ "steps": [
+  {
+   "do": "start",
+   "title": "Pricing sync",
+   "owner": "Priya",
+   "agenda": [
+    "Q3 pricing",
+    "Launch"
+   ],
+   "minutes": 30
+  },
+  {
+   "do": "join",
+   "who": "priya",
+   "seat": "s1",
+   "voice": "voice-A",
+   "checkin": "Priya"
+  },
+  {
+   "do": "join",
+   "who": "sam",
+   "seat": "s2",
+   "voice": "voice-B",
+   "checkin": "Sam"
+  },
+  {
+   "do": "say",
+   "who": "priya",
+   "text": "Sam，你周三前把报告发我。",
+   "lang": "zh"
+  },
+  {
+   "do": "expect",
+   "what": "item",
+   "kind": "task",
+   "owner": "Sam",
+   "has_due": true,
+   "within": 45
+  }
+ ]
+}

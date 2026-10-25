@@ -1,0 +1,40 @@
+# LocoCisco meeting brain (owner: meeting workstream). No secrets here, ever.
+
+[meeting]
+title = "Pricing sync"
+owner = "Priya"                 # meeting owner: gets approval DMs and the recap
+docs_dir = "examples/docs"      # local .md/.txt company docs for answer_question / share_docs
+act_threshold = 0.60            # decider confidence at or above: act (eval/MEETING_RESULTS.md: 2B v3 acc@0.6 = 89% at 75% coverage)
+ask_threshold = 0.40            # below act and at or above this: escalate to the local LLM; below: ignore
+escalate = true                 # false = decider only (no LLM)
+wipe_seconds = 60.0             # "off the record" deletes this much recent transcript
+caption_lines = 6
+owner_threshold = 0.50          # owner-choice probability needed to pin a task on a named person
+approval_ttl_seconds = 300.0    # a high-risk ask to the owner expires after this
+catch_up_after_seconds = 120.0  # a check-in this long after the start gets a catch_up card
+absent_after_seconds = 3.0      # a face unseen for this long has left the room
+clock_tick_seconds = 10.0       # live mode publishes meeting.clock this often
+banner_minutes = 2.0            # "N min left" banner from this many minutes left
+
+[devices]                        # device ids from config/room.toml
+lamp = "lamp"
+fan = "fan"
+
+[channels]                       # logical channel keys from config/bridge.toml
+tasks = "tasks"
+notes = "notes"
+
+[scenes]                         # lamp scene per room mode
+start = "talk"
+slides = "slides"
+board = "talk"
+break = "break"
+off_record = "off_record"
+paused = "privacy"
+
+[screen]                         # the room screen (unspoken/meeting/web); loopback only, 8780 on the GB10, 8781 on the dev box
+host = "127.0.0.1"
+port = 8780
+
+[questions]
+version = "v3"                  # act gate + 6 kinds + room question on demand; see eval/MEETING_RESULTS.md

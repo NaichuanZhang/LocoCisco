@@ -1,0 +1,84 @@
+{
+  "id": "hero_asleep_tv_on",
+  "title": "Fell asleep with the TV on",
+  "blurb": "40 minutes without movement at 01:30, TV still playing. The scene decider weighs turning it off. At-risk: measured 12B confidence was 39%.",
+  "tags": [
+    "hero",
+    "scene",
+    "at-risk"
+  ],
+  "steps": [
+    {
+      "do": "note",
+      "text": "01:30. Alex fell asleep on the couch with a movie still playing.",
+      "wait": 4
+    },
+    {
+      "do": "set_time",
+      "time": "01:30",
+      "weekday": "Wednesday"
+    },
+    {
+      "do": "set_device",
+      "device": "tv_living",
+      "state": {
+        "on": true,
+        "volume": 30,
+        "playing": "a late movie"
+      }
+    },
+    {
+      "do": "set_env",
+      "room": "living",
+      "lux": 15
+    },
+    {
+      "do": "activity",
+      "who": "alex",
+      "text": "lying on the couch, eyes closed",
+      "attrs": {
+        "pose": "lying down"
+      }
+    },
+    {
+      "do": "idle",
+      "who": "alex",
+      "minutes": 40
+    },
+    {
+      "do": "expect",
+      "what": "outcome",
+      "action": "tv_off",
+      "accept": [
+        "done",
+        "asked"
+      ],
+      "within": 20,
+      "room": "living"
+    },
+    {
+      "do": "note",
+      "text": "40 minutes without movement. Perception reports 'idle' and the scene decider weighs turning the TV off.",
+      "wait": 6
+    },
+    {
+      "do": "reply",
+      "answer": "Yes",
+      "if_asked": true
+    },
+    {
+      "do": "expect",
+      "what": "device",
+      "device": "tv_living",
+      "state": {
+        "on": false
+      },
+      "within": 6
+    },
+    {
+      "do": "note",
+      "text": "Measured on 2026-10-20 the 12B picked 'turn off TV' at only 39%, below the ask band. This scenario tracks the question tuning and fails until the wording improves.",
+      "wait": 6
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "id": "reg_w03_guest_warmer",
+  "title": "Guest: \"Could you make it a bit warmer?\"",
+  "blurb": "An unknown guest at the table asks for heat: warmer (guests may change the heat).",
+  "tags": [
+    "regression",
+    "who",
+    "seed:w3",
+    "permissions"
+  ],
+  "steps": [
+    {
+      "do": "set_time",
+      "time": "19:00",
+      "weekday": "Saturday"
+    },
+    {
+      "do": "set_env",
+      "room": "living",
+      "lux": 300
+    },
+    {
+      "do": "arrive",
+      "who": "guest1",
+      "to": "living"
+    },
+    {
+      "do": "say",
+      "who": "guest1",
+      "text": "Could you make it a bit warmer?",
+      "lang": "en"
+    },
+    {
+      "do": "expect",
+      "what": "outcome",
+      "action": "warmer",
+      "accept": [
+        "done",
+        "asked"
+      ],
+      "within": 12
+    }
+  ]
+}

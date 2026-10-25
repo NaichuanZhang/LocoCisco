@@ -1,0 +1,77 @@
+{
+ "id": "reg_12_sensitive_pause",
+ "title": "Pay talk pauses the notes",
+ "blurb": "A real salary remark pauses the notes; the owner resumes.",
+ "tags": [
+  "regression"
+ ],
+ "steps": [
+  {
+   "do": "start",
+   "title": "Pricing sync",
+   "owner": "Priya",
+   "agenda": [
+    "Q3 pricing",
+    "Launch"
+   ],
+   "minutes": 30
+  },
+  {
+   "do": "join",
+   "who": "priya",
+   "seat": "s1",
+   "voice": "voice-A",
+   "checkin": "Priya"
+  },
+  {
+   "do": "join",
+   "who": "sam",
+   "seat": "s2",
+   "voice": "voice-B",
+   "checkin": "Sam"
+  },
+  {
+   "do": "say",
+   "who": "priya",
+   "text": "Her salary is 120k and she wants 140.",
+   "lang": "en"
+  },
+  {
+   "do": "expect",
+   "what": "privacy",
+   "state": "paused",
+   "within": 45
+  },
+  {
+   "do": "expect",
+   "what": "device",
+   "device_id": "lamp",
+   "state": {
+    "scene": "privacy"
+   },
+   "within": 3
+  },
+  {
+   "do": "say",
+   "who": "sam",
+   "text": "Can we lock the launch date to the 16th?",
+   "lang": "en"
+  },
+  {
+   "do": "expect",
+   "what": "no_item",
+   "within": 3
+  },
+  {
+   "do": "chat",
+   "command": "resume",
+   "user": "Priya"
+  },
+  {
+   "do": "expect",
+   "what": "privacy",
+   "state": "on",
+   "within": 3
+  }
+ ]
+}

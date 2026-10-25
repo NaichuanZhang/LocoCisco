@@ -1,0 +1,14 @@
+# tx-vlm: a vision LLM as the judge of who is talking (unspoken/transcribe/vlm_*.py). Exact pins, resolved
+# 2026-10-25 on the x86_64 dev box, Python 3.12. The judge itself needs NO extra Python packages: the client is
+# stdlib (urllib/json/base64); frames come from opencv-python-headless + numpy already pinned in
+# requirements/sensors.txt (both have manylinux aarch64 cp312 wheels). Install sensors.txt + transcribe-eval.txt
+# first; this file only adds what the model download helper uses.
+huggingface-hub==2.3.0            # pure python; `hf download` of the GGUFs below (same pin as sensors.txt)
+# Runtime that is NOT pip: llama.cpp llama-server with --mmproj (dev box: dev-models/llama.cpp/llama-b11869,
+# x86_64 CPU build; GB10: build with -DGGML_CUDA=ON for aarch64 / sm_121, or use the main Qwen3.6 server).
+# Models (public GGUFs, downloaded to dev-models/vlm/<model>/):
+#   Qwen3-VL-2B-Instruct     ggml-org/Qwen3-VL-2B-Instruct-GGUF   Q8_0 + mmproj Q8_0   Apache-2.0
+#   Qwen3-VL-4B-Instruct     Qwen/Qwen3-VL-4B-Instruct-GGUF       Q4_K_M + mmproj Q8_0 Apache-2.0
+#   SmolVLM2-500M-Video      ggml-org/SmolVLM2-500M-Video-Instruct-GGUF  Q8_0 + mmproj f16  Apache-2.0
+#   NOT used: Qwen2.5-VL-3B-Instruct (Qwen Research licence: non-commercial), gemma-3-4b-it (Gemma terms:
+#   commercial use allowed with use restrictions; skipped for time, not licence).

@@ -1,0 +1,45 @@
+{
+  "id": "reg_w07_weekend_tv",
+  "title": "Maya at 16:00 Saturday: \"Turn on the TV.\"",
+  "blurb": "Child asks for TV on a weekend afternoon: TV on (or an ask).",
+  "tags": [
+    "regression",
+    "who",
+    "seed:w7",
+    "permissions"
+  ],
+  "steps": [
+    {
+      "do": "set_time",
+      "time": "16:00",
+      "weekday": "Saturday"
+    },
+    {
+      "do": "set_env",
+      "room": "living",
+      "lux": 300
+    },
+    {
+      "do": "move",
+      "who": "maya",
+      "to": "living"
+    },
+    {
+      "do": "say",
+      "who": "maya",
+      "text": "Turn on the TV.",
+      "lang": "en"
+    },
+    {
+      "do": "expect",
+      "what": "outcome",
+      "action": "tv_on",
+      "accept": [
+        "done",
+        "asked"
+      ],
+      "within": 12,
+      "room": "living"
+    }
+  ]
+}

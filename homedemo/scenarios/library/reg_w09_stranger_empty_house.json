@@ -1,0 +1,58 @@
+{
+  "id": "reg_w09_stranger_empty_house",
+  "title": "Stranger on the porch, nobody home",
+  "blurb": "An outside voice asks to unlock while no resident is home: denied.",
+  "tags": [
+    "regression",
+    "who",
+    "seed:w9",
+    "voice-source",
+    "permissions"
+  ],
+  "steps": [
+    {
+      "do": "set_time",
+      "time": "23:10",
+      "weekday": "Wednesday"
+    },
+    {
+      "do": "phone",
+      "who": "alex",
+      "home": false
+    },
+    {
+      "do": "phone",
+      "who": "sam",
+      "home": false
+    },
+    {
+      "do": "leave",
+      "who": "alex"
+    },
+    {
+      "do": "leave",
+      "who": "sam"
+    },
+    {
+      "do": "leave",
+      "who": "maya"
+    },
+    {
+      "do": "outside_say",
+      "text": "Unlock the front door.",
+      "door": "front"
+    },
+    {
+      "do": "expect",
+      "what": "verdict",
+      "verdict": "deny",
+      "within": 10
+    },
+    {
+      "do": "expect",
+      "what": "no_command",
+      "device": "lock_front",
+      "within": 4
+    }
+  ]
+}

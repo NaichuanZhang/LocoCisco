@@ -1,0 +1,19 @@
+# tx-live workstream (unspoken/transcribe/live): real-time per-person captions, live viewer, demo renderer.
+# Resolved 2026-10-25 on the x86_64 dev box, Python 3.12. The engine adds NO Python dependency of its own: it
+# runs on the sensors providers (requirements/sensors.txt) and is scored with requirements/transcribe-eval.txt.
+# Install: uv pip install --python .venv/bin/python -r requirements/sensors.txt -r requirements/transcribe-eval.txt \
+#             -r requirements/transcribe-live.txt
+#
+# Used from requirements/sensors.txt (same pins, repeated here so this file alone resolves the live path);
+# aarch64 (GB10) wheel status as recorded in requirements/sensors.txt:
+numpy==2.5.4                     # manylinux aarch64 cp312: yes
+onnxruntime==1.31.0              # Silero VAD + WeSpeaker CAM++ (CPU); aarch64 cp312: yes
+opencv-python-headless==4.14.0.94  # mp4/camera frames, YuNet, JPEG for the viewer, demo rendering; aarch64: yes
+faster-whisper==1.2.1            # pure python (ctranslate2 4.8.3 aarch64 wheel: CPU only, no CUDA)
+ctranslate2==4.8.3
+kaldi-native-fbank==1.22.4       # fbank for the speaker model; aarch64: yes
+av==19.0.2                       # decodes the mp4's AAC track when --audio is not given; aarch64: yes
+#
+# The live viewer (unspoken/transcribe/live/web.py) is standard library only (http.server + threads).
+# System binary, not pip: ffmpeg (any build with aac; libx264 preferred, mpeg4 fallback) for the demo renderer's
+# audio mux. On the GB10 (DGX OS / Ubuntu 24.04): apt install ffmpeg.

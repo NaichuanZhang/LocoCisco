@@ -1,6 +1,6 @@
 # LocoCisco — Build Specification
 
-- **Version:** 0.3
+- **Version:** 0.4
 - **Date:** 2026-10-25
 - **Status:** recording frontend, official-video replay and privacy export verified; final native capture and semantic-quality evaluation remain open
 - **Target:** Dell Pro Max with NVIDIA GB10, ARM64 Linux, 128 GB unified memory
@@ -402,6 +402,12 @@ or question forms. A read-only progress/time display, privacy state, recording
 indicator, readiness/error status and provenance remain visible. Model activity
 and outcomes are primary content, not a hidden debug panel.
 
+Normal visits start the replay automatically once all required models and browser
+media are ready. A browser that denies audible autoplay receives muted playback;
+the sound state stays visible, and a click or Space enables sound. Existing
+paused/private sessions are preserved. `?autoplay=0` disables automatic startup
+for setup and recording automation; the Firefox recorder selects it automatically.
+
 Reference `story.js`/`explainer-story.js` data are design samples. Do not copy
 sample participants, decisions, timings, model activity, voice clusters, or
 confirmed integrations into the real recording view. If the models produce no
@@ -411,7 +417,7 @@ task, show that result instead of manufacturing a better story.
 
 | Key | Action |
 |---|---|
-| Space | Start or pause/continue the current take |
+| Space | Enable sound after muted autoplay; otherwise start or pause/continue |
 | R | Start browser capture; press again to stop |
 | Shift+R | Restart a take when no recording is active |
 | O | Open/close operator setup outside the default canvas |
@@ -419,8 +425,8 @@ task, show that result instead of manufacturing a better story.
 
 Detailed X-ray and legacy help remain available for inspection, but normal
 recording should not depend on opening them. Shortcuts must not trigger while
-typing in a form. Browser autoplay restrictions may require the initial user
-activation; do not silently claim audible playback before it succeeds.
+typing in a form. Browser autoplay restrictions may require user activation for
+sound; the page does not claim audible playback while its fallback is muted.
 
 ### Capture and export
 
@@ -446,6 +452,17 @@ activation; do not silently claim audible playback before it succeeds.
   Screenshot validation alone is not recording acceptance.
 
 Internal package/CLI names may remain `unspoken`; the product name is LocoCisco.
+
+The application snapshot now ships in this repository alongside the reference
+designs and presentation. [Source provenance](docs/SOURCE_PROVENANCE.md) identifies
+the imported baseline and bundled dependencies; the inherited USB Git history,
+runtime recordings, credentials and large downloaded models are excluded.
+
+After the autoplay update, 428 meeting, sensor, browser and branding checks pass
+(three optional sensor checks skipped). Fresh-profile Firefox verification confirms
+automatic muted playback without user activation and sound activation on the first
+Space without pausing. The recorded timing table below remains evidence from the
+earlier complete review take, not a new performance benchmark for this update.
 
 ## 9. Deployment and remaining integration checks
 

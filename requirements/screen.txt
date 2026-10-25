@@ -1,0 +1,12 @@
+# SCREEN workstream (unspoken/meeting/web). Pinned to what the dev venv resolved on 2026-10-24.
+# aarch64: fastapi/starlette/uvicorn/httpx/anyio/h11 are pure Python; pydantic-core and websockets ship
+# manylinux aarch64 wheels on PyPI (websockets also falls back to its pure-Python implementation).
+fastapi==0.162.0
+starlette==1.10.0
+uvicorn==0.54.0
+websockets==15.0.1          # uvicorn's WebSocket backend for /ws (uvicorn has none without it)
+pydantic==2.14.1
+pydantic-core==2.50.1
+httpx==0.28.1               # tests (ASGITransport); also used by the models workstream
+anyio==4.15.1
+h11==0.16.0

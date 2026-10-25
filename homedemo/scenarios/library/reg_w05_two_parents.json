@@ -1,0 +1,56 @@
+{
+  "id": "reg_w05_two_parents",
+  "title": "Alex: \"It's cold\" / Sam: \"No, it's fine\"",
+  "blurb": "Alex asks for heat, Sam overrules: the house acts (or asks) on Alex and does nothing on Sam's words.",
+  "tags": [
+    "regression",
+    "who",
+    "seed:w5"
+  ],
+  "steps": [
+    {
+      "do": "set_time",
+      "time": "10:00",
+      "weekday": "Sunday"
+    },
+    {
+      "do": "set_env",
+      "room": "living",
+      "lux": 400,
+      "celsius": 19
+    },
+    {
+      "do": "say",
+      "who": "alex",
+      "text": "It's cold in here.",
+      "lang": "en"
+    },
+    {
+      "do": "expect",
+      "what": "outcome",
+      "action": "warmer",
+      "accept": [
+        "done",
+        "asked"
+      ],
+      "within": 12
+    },
+    {
+      "do": "move",
+      "who": "sam",
+      "to": "living"
+    },
+    {
+      "do": "say",
+      "who": "sam",
+      "text": "No, it's fine, leave it.",
+      "lang": "en"
+    },
+    {
+      "do": "expect",
+      "what": "no_command",
+      "device": "thermostat_main",
+      "within": 4
+    }
+  ]
+}

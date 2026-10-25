@@ -1,0 +1,53 @@
+{
+  "id": "reg_p13_mandarin_too_dark",
+  "title": "“太黑了，什么都看不见。”",
+  "blurb": "Mandarin 'too dark, can't see anything' in the night hallway: lights on. Keyword misses.",
+  "tags": [
+    "regression",
+    "speech",
+    "seed:p13",
+    "mandarin",
+    "keyword-misses"
+  ],
+  "steps": [
+    {
+      "do": "set_time",
+      "time": "23:00",
+      "weekday": "Tuesday"
+    },
+    {
+      "do": "set_env",
+      "room": "hallway",
+      "lux": 12
+    },
+    {
+      "do": "move",
+      "who": "alex",
+      "to": "hallway"
+    },
+    {
+      "do": "say",
+      "who": "alex",
+      "text": "太黑了，什么都看不见。",
+      "lang": "zh"
+    },
+    {
+      "do": "expect",
+      "what": "proposal",
+      "by": "keyword",
+      "action": "none",
+      "within": 5
+    },
+    {
+      "do": "expect",
+      "what": "outcome",
+      "action": "lights_on",
+      "accept": [
+        "done",
+        "asked"
+      ],
+      "within": 12,
+      "room": "hallway"
+    }
+  ]
+}

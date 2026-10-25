@@ -1,0 +1,37 @@
+{
+  "id": "reg_p14_sisters_heater",
+  "title": "\"My sister said her heater broke last night.\"",
+  "blurb": "Small talk about heating: nothing.",
+  "tags": [
+    "regression",
+    "speech",
+    "seed:p14"
+  ],
+  "steps": [
+    {
+      "do": "set_env",
+      "room": "kitchen",
+      "lux": 300,
+      "celsius": 21
+    },
+    {
+      "do": "say",
+      "who": "sam",
+      "text": "My sister said her heater broke last night.",
+      "lang": "en"
+    },
+    {
+      "do": "expect",
+      "what": "proposal",
+      "by": "keyword",
+      "action": "none",
+      "within": 5
+    },
+    {
+      "do": "expect",
+      "what": "no_command",
+      "device": "thermostat_main",
+      "within": 5
+    }
+  ]
+}

@@ -1,0 +1,57 @@
+{
+ "id": "reg_14_banner_no_owner",
+ "title": "Two minutes left, one task has no owner",
+ "blurb": "The timer banner counts tasks without an owner.",
+ "tags": [
+  "regression"
+ ],
+ "steps": [
+  {
+   "do": "start",
+   "title": "Pricing sync",
+   "owner": "Priya",
+   "agenda": [
+    "Q3 pricing",
+    "Launch"
+   ],
+   "minutes": 30
+  },
+  {
+   "do": "join",
+   "who": "priya",
+   "seat": "s1",
+   "voice": "voice-A",
+   "checkin": "Priya"
+  },
+  {
+   "do": "join",
+   "who": "sam",
+   "seat": "s2",
+   "voice": "voice-B",
+   "checkin": "Sam"
+  },
+  {
+   "do": "say",
+   "who": "priya",
+   "text": "Someone needs to update the pricing page by next week.",
+   "lang": "en"
+  },
+  {
+   "do": "expect",
+   "what": "item",
+   "kind": "task",
+   "owner": null,
+   "within": 45
+  },
+  {
+   "do": "clock",
+   "minutes_left": 2
+  },
+  {
+   "do": "expect",
+   "what": "screen",
+   "banner_contains": "1 task has no owner",
+   "within": 3
+  }
+ ]
+}

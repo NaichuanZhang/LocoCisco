@@ -1,0 +1,51 @@
+{
+  "id": "res_13_grandmas_heater",
+  "title": "\"Grandma's heater is always cranked up, it's so much warmer at her place.\"",
+  "blurb": "Small talk about someone else's heating (designed): nothing. The keyword baseline hears 'warmer'. At-risk: measured 2026-10-20 the 12B read it as 'warmer' at 58%, so the house asks Sam 'Make it warmer?'.",
+  "tags": [
+    "research",
+    "speech",
+    "mention",
+    "keyword-wrong",
+    "at-risk",
+    "f2:6"
+  ],
+  "steps": [
+    {
+      "do": "set_time",
+      "time": "19:00",
+      "weekday": "Tuesday"
+    },
+    {
+      "do": "set_env",
+      "room": "kitchen",
+      "lux": 300,
+      "celsius": 21
+    },
+    {
+      "do": "say",
+      "who": "sam",
+      "text": "Grandma's heater is always cranked up, it's so much warmer at her place.",
+      "lang": "en"
+    },
+    {
+      "do": "expect",
+      "what": "proposal",
+      "by": "keyword",
+      "action": "warmer",
+      "within": 5
+    },
+    {
+      "do": "expect",
+      "what": "verdict",
+      "verdict": "ignore",
+      "within": 15
+    },
+    {
+      "do": "expect",
+      "what": "no_command",
+      "device": "thermostat_main",
+      "within": 6
+    }
+  ]
+}

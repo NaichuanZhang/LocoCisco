@@ -1,0 +1,96 @@
+{
+ "sample_rate": 16000,
+ "duration": 36.197,
+ "speakers": {
+  "Priya": "en_US-lessac-medium",
+  "Sam": "en_US-ryan-medium",
+  "Lee": "en_GB-alba-medium"
+ },
+ "tts": "piper-tts 1.8.0 (https://github.com/OHF-Voice/piper1-gpl), voices from rhasspy/piper-voices",
+ "lines": [
+  {
+   "speaker": "Priya",
+   "voice": "en_US-lessac-medium",
+   "text": "Hi, I'm Priya. Let's get started with the pricing sync.",
+   "start": 0.5,
+   "end": 3.666
+  },
+  {
+   "speaker": "Sam",
+   "voice": "en_US-ryan-medium",
+   "text": "Hi, I'm Sam. I have the numbers from last quarter.",
+   "start": 4.566,
+   "end": 7.248
+  },
+  {
+   "speaker": "Lee",
+   "voice": "en_GB-alba-medium",
+   "text": "Hi, I'm Lee. I'm joining from the design team.",
+   "start": 8.148,
+   "end": 10.924
+  },
+  {
+   "speaker": "Priya",
+   "voice": "en_US-lessac-medium",
+   "text": "Sam, send the deck by Friday.",
+   "start": 11.824,
+   "end": 13.617
+  },
+  {
+   "speaker": "Sam",
+   "voice": "en_US-ryan-medium",
+   "text": "Sure, I will send the deck by Friday.",
+   "start": 14.517,
+   "end": 16.433
+  },
+  {
+   "speaker": "Lee",
+   "voice": "en_GB-alba-medium",
+   "text": "Should we keep the launch date in March?",
+   "start": 17.333,
+   "end": 19.254
+  },
+  {
+   "speaker": "Priya",
+   "voice": "en_US-lessac-medium",
+   "text": "Let's decide. We keep the March launch.",
+   "start": 20.154,
+   "end": 22.355
+  },
+  {
+   "speaker": "Sam",
+   "voice": "en_US-ryan-medium",
+   "text": "One question. Who owns the pricing page?",
+   "start": 23.255,
+   "end": 25.31
+  },
+  {
+   "speaker": "Lee",
+   "voice": "en_GB-alba-medium",
+   "text": "I can own the pricing page.",
+   "start": 26.21,
+   "end": 27.779
+  },
+  {
+   "speaker": "Priya",
+   "voice": "en_US-lessac-medium",
+   "text": "Great. Lee owns the pricing page.",
+   "start": 28.679,
+   "end": 30.829
+  },
+  {
+   "speaker": "Sam",
+   "voice": "en_US-ryan-medium",
+   "text": "Can we turn the lamp down a bit?",
+   "start": 31.729,
+   "end": 33.087
+  },
+  {
+   "speaker": "Priya",
+   "voice": "en_US-lessac-medium",
+   "text": "Off the record for a minute.",
+   "start": 33.987,
+   "end": 35.297
+  }
+ ]
+}

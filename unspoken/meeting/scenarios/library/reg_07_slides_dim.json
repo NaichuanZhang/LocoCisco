@@ -1,0 +1,48 @@
+{
+ "id": "reg_07_slides_dim",
+ "title": "Slides dim the lamp",
+ "blurb": "The camera's slides mode is a reflex: lamp scene slides.",
+ "tags": [
+  "regression"
+ ],
+ "steps": [
+  {
+   "do": "start",
+   "title": "Pricing sync",
+   "owner": "Priya",
+   "agenda": [
+    "Q3 pricing",
+    "Launch"
+   ],
+   "minutes": 30
+  },
+  {
+   "do": "join",
+   "who": "priya",
+   "seat": "s1",
+   "voice": "voice-A",
+   "checkin": "Priya"
+  },
+  {
+   "do": "scene",
+   "mode": "slides"
+  },
+  {
+   "do": "expect",
+   "what": "proposal",
+   "by": "reflex",
+   "action": "set_light",
+   "route": "rule",
+   "within": 3
+  },
+  {
+   "do": "expect",
+   "what": "device",
+   "device_id": "lamp",
+   "state": {
+    "scene": "slides"
+   },
+   "within": 3
+  }
+ ]
+}

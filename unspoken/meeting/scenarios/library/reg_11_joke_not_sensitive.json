@@ -1,0 +1,52 @@
+{
+ "id": "reg_11_joke_not_sensitive",
+ "title": "A joke about firing Bob",
+ "blurb": "Small talk is nothing: no item, no pause.",
+ "tags": [
+  "regression"
+ ],
+ "steps": [
+  {
+   "do": "start",
+   "title": "Pricing sync",
+   "owner": "Priya",
+   "agenda": [
+    "Q3 pricing",
+    "Launch"
+   ],
+   "minutes": 30
+  },
+  {
+   "do": "join",
+   "who": "priya",
+   "seat": "s1",
+   "voice": "voice-A",
+   "checkin": "Priya"
+  },
+  {
+   "do": "join",
+   "who": "sam",
+   "seat": "s2",
+   "voice": "voice-B",
+   "checkin": "Sam"
+  },
+  {
+   "do": "say",
+   "who": "sam",
+   "text": "Let's just fire Bob, ha ha.",
+   "lang": "en"
+  },
+  {
+   "do": "expect",
+   "what": "proposal",
+   "by": "decider",
+   "action": "none",
+   "within": 45
+  },
+  {
+   "do": "expect",
+   "what": "no_item",
+   "within": 2
+  }
+ ]
+}

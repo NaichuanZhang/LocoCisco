@@ -20,8 +20,9 @@ recording must work without internet; Discord connectivity is reported separatel
 
 The recording canvas shows the source video, captions, model activity and
 interactions, decision scores, policy outcomes, and retained meeting items.
-Playback and setup controls are hidden by default; keyboard shortcuts operate
-repeatable takes and local recording/export. Device and notification outputs
+Playback starts automatically once the local pipeline is ready; browsers may
+start muted until a click or Space enables sound. Setup controls are hidden by
+default; keyboard shortcuts operate repeatable takes and local recording/export. Device and notification outputs
 are local previews; real device and Discord integrations require separate checks.
 
 ## Build specification
@@ -33,9 +34,21 @@ that still needs evidence. Repeated official-video review captures, the recordin
 layout and privacy masking/muting have been verified. Final native capture quality
 and bilingual transcription/intent accuracy still need evaluation.
 
-This public repository contains the build specification,
+This repository contains the application source, build specification,
 [design references](design-reference/dashboard/), and
 [presentation materials](Presentation/), including the official source video.
-Reference dashboards use scripted example data. Application source, model
-weights, credentials, and deployment-specific configuration remain outside
-this repository.
+Reference dashboards use scripted example data. The executable demo uses real
+local inference. Large model weights, credentials and generated recordings remain
+outside Git; small licensed Silero/YuNet assets and test fixtures are included.
+
+## Run the prepared demo
+
+On the prepared Dell box, follow [docs/BROWSER_DEMO.md](docs/BROWSER_DEMO.md) to
+configure the credential-file path and run `deploy/demo/up.sh`. Open
+`http://127.0.0.1:8780/`; use `?autoplay=0` for intentionally idle setup.
+The guide documents the existing offline model kit and local services required
+by the launcher. It does not download models or install packages at startup.
+
+The implementation is under `unspoken/`; `homedemo/` is the earlier smart-home
+prototype. See [source provenance](docs/SOURCE_PROVENANCE.md) for the imported
+snapshot and retained dependency notices.

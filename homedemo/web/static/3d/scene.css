@@ -1,0 +1,133 @@
+/* 3D house view: container, HUD, and the CSS2D labels three.js positions over the canvas. */
+.view-toggle { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; background: var(--bg); }
+.view-toggle button { border: 0; background: transparent; color: var(--muted); padding: 4px 12px; font-size: 13px; cursor: pointer; }
+.view-toggle button[aria-checked="true"] { background: var(--accent); color: var(--accent-ink); }
+.view-toggle button:disabled { opacity: .45; cursor: default; }
+
+.house3d {
+  position: relative; width: 100%; height: min(62vw, 580px); min-height: 300px;
+  border-radius: 10px; overflow: hidden; background: #0b1330; touch-action: none; isolation: isolate;
+}
+.house3d[hidden] { display: none; }
+.house3d-canvas { display: block; width: 100% !important; height: 100% !important; }
+.house3d-labels { position: absolute; inset: 0; pointer-events: none; overflow: hidden; font-family: var(--sans); }
+.house3d-labels > div { pointer-events: none; }
+.house3d-status { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); color: #e6eaf0; font-size: 14px; background: rgba(11, 19, 48, .7); padding: 6px 12px; border-radius: 8px; }
+.house3d-status[hidden] { display: none; }
+.house3d-bar { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 6px; }
+.house3d-bar[hidden] { display: none; }
+.hud { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+.hud .btn[aria-pressed="true"] { background: var(--warn-bg); border-color: var(--warn); }
+.house3d-caption { font-size: 13px; color: var(--muted); }
+.house3d-note { font-size: 12px; color: var(--muted); margin-top: 6px; }
+
+/* ---------------------------------------------------------------- labels */
+.fading { opacity: 0 !important; transition: opacity .5s; }
+.room-label3d { font-size: 12px; color: #fff; text-shadow: 0 1px 2px rgba(0, 0, 0, .7); text-align: center; white-space: nowrap; opacity: .9; }
+.room-label3d b { display: block; font-weight: 650; letter-spacing: .01em; }
+.room-label3d .env { display: block; font-size: 10.5px; opacity: .8; }
+.room-label3d.lit b { color: #ffe9a8; }
+.room-label3d.outdoor { opacity: .8; }
+
+.person-label3d { text-align: center; white-space: nowrap; font-size: 12px; color: #fff; text-shadow: 0 1px 2px rgba(0, 0, 0, .75); }
+.person-label3d b { display: block; font-size: 13px; padding: 1px 7px; border-radius: 999px; background: rgba(37, 99, 235, .85); }
+.person-label3d.role-child b { background: rgba(219, 39, 119, .85); }
+.person-label3d.pet b { background: rgba(161, 98, 7, .85); font-size: 11px; }
+.person-label3d .act { display: block; margin-top: 2px; opacity: .9; max-width: 200px; overflow: hidden; text-overflow: ellipsis; }
+.person-label3d.away { opacity: .55; }
+.person-label3d .zzz { display: none; font-weight: 700; letter-spacing: .2em; color: #c7d2fe; animation: zzz 2.4s ease-in-out infinite; }
+.person-label3d.asleep .zzz { display: block; }
+.person-label3d.asleep .act { display: none; }
+@keyframes zzz { 0% { transform: translateY(0); opacity: .4; } 50% { transform: translateY(-6px); opacity: 1; } 100% { transform: translateY(-12px); opacity: .2; } }
+
+.bubble3d { --src: #2563eb; max-width: 240px; background: #fff; color: #1d2430; border: 2px solid var(--src); border-radius: 12px; padding: 6px 10px; font-size: 13px; box-shadow: 0 2px 8px rgba(0, 0, 0, .35); position: relative; transform: translateY(-50%); }
+.bubble3d::after { content: ""; position: absolute; left: 50%; bottom: -9px; width: 12px; height: 12px; background: #fff; border-right: 2px solid var(--src); border-bottom: 2px solid var(--src); transform: translateX(-50%) rotate(45deg); }
+.bubble3d .who { display: block; font-size: 11px; color: var(--src); font-weight: 700; text-transform: uppercase; letter-spacing: .04em; }
+.bubble3d .said { display: block; white-space: normal; line-height: 1.3; }
+
+.det3d { font-size: 11px; font-weight: 700; color: #22c55e; background: rgba(0, 0, 0, .55); padding: 2px 7px; border-radius: 6px; border: 1px dashed currentColor; white-space: nowrap; }
+.det3d.child { color: #f472b6; }
+.det3d.hazard { color: #fca5a5; border-style: solid; background: rgba(127, 29, 29, .75); animation: pulse3d 1s ease-in-out infinite; font-size: 12px; }
+@keyframes pulse3d { 50% { transform: scale(1.06); } }
+
+.chip3d { font-size: 11px; color: #fff; background: rgba(0, 0, 0, .55); padding: 1px 7px; border-radius: 999px; white-space: nowrap; }
+.chip3d b { font-weight: 700; }
+.chip3d.hub { background: rgba(14, 116, 144, .8); }
+.door-label3d { font-size: 12px; color: #fff; background: rgba(0, 0, 0, .55); padding: 2px 8px; border-radius: 999px; white-space: nowrap; display: inline-flex; gap: 6px; align-items: center; }
+.door-label3d .dot { width: 9px; height: 9px; border-radius: 50%; background: #ef4444; box-shadow: 0 0 6px #ef4444; }
+.door-label3d.unlocked .dot { background: #22c55e; box-shadow: 0 0 6px #22c55e; }
+
+/* ---------------------------------------------------------------- decision card */
+.card3d { width: 250px; background: rgba(255, 255, 255, .96); color: #1d2430; border-radius: 12px; padding: 8px 10px 7px; font-size: 12px; box-shadow: 0 4px 16px rgba(0, 0, 0, .4); border-left: 4px solid #0891b2; transition: opacity .5s; }
+.card3d.kind-scene { border-left-color: #0f766e; }
+.card3d.v-deny { border-left-color: #b91c1c; }
+.card3d.v-allow { border-left-color: #15803d; }
+.card3d.v-ask_parent, .card3d.v-ask_speaker { border-left-color: #b45309; }
+.card3d .head { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; margin-bottom: 5px; }
+.card3d .q { font-weight: 700; font-size: 12.5px; }
+.card3d .model { font-size: 11px; font-weight: 700; padding: 0 7px; border-radius: 999px; border: 1px solid #0891b2; color: #0891b2; white-space: nowrap; }
+.card3d .model.route-12b { border-color: #7c3aed; color: #7c3aed; }
+.card3d .model.route-bedrock { border-color: #d97706; color: #b45309; }
+.card3d .model.rule { border-color: #0f766e; color: #0f766e; }
+.card3d .model.pending { border-color: #9aa5b8; color: #9aa5b8; }
+.card3d .bars { display: grid; gap: 3px; }
+.card3d .row { display: grid; grid-template-columns: 74px minmax(0, 1fr) 36px; gap: 6px; align-items: center; color: #4b5563; }
+.card3d .row.pick { color: #1d2430; font-weight: 700; }
+.card3d .lbl { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.card3d .track { position: relative; height: 10px; background: #eef1f5; border-radius: 3px; border: 1px solid #dfe4ec; }
+.card3d .fill { position: absolute; left: 0; top: 0; bottom: 0; background: #b8c1d1; border-radius: 2px; }
+.card3d .row.pick .fill { background: #2563eb; }
+.card3d .th { position: absolute; top: -3px; bottom: -3px; width: 0; border-left: 2px dashed; }
+.card3d .th.act { border-color: #15803d; }
+.card3d .th.ask { border-color: #b45309; }
+.card3d .val { text-align: right; font-variant-numeric: tabular-nums; }
+.card3d .cascade { margin-top: 5px; font-size: 11.5px; color: #b45309; font-weight: 600; }
+.card3d .cascade.pending { color: #0891b2; animation: blink3d 1.2s ease-in-out infinite; }
+.card3d .cascade.local { color: #0e7490; }
+.card3d .tools { margin-top: 3px; font-family: var(--mono); font-size: 11px; color: #92400e; overflow-wrap: anywhere; }
+@keyframes blink3d { 50% { opacity: .45; } }
+.bubble3d.hub-bubble { max-width: 260px; background: #ecfeff; }
+.bubble3d.hub-bubble::after { background: #ecfeff; }
+.card3d .reflex { color: #0f766e; }
+.card3d .foot { display: flex; flex-wrap: wrap; gap: 4px 6px; margin-top: 6px; align-items: center; }
+.card3d .kw { font-size: 11px; padding: 0 6px; border-radius: 999px; border: 1px solid #9aa5b8; color: #647084; font-family: var(--mono); }
+.card3d .kw.wrong { border-color: #b91c1c; color: #b91c1c; background: #fde8e8; }
+.card3d .kw.ok { border-color: #15803d; color: #15803d; }
+.card3d .badge { font-size: 11px; font-weight: 700; padding: 1px 7px; border-radius: 6px; color: #fff; background: #6b7280; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.card3d .badge.v-allow { background: #15803d; }
+.card3d .badge.v-deny { background: #b91c1c; }
+.card3d .badge.v-ask_parent, .card3d .badge.v-ask_speaker { background: #b45309; }
+.card3d .badge.v-ignore { background: #6b7280; }
+.card3d .ask, .card3d .reply, .card3d .outcome { font-size: 11px; color: #4b5563; width: 100%; }
+.card3d .reply { color: #15803d; font-weight: 600; }
+
+/* narrow canvases: decision cards stack in a dock at the bottom of the canvas */
+.card-dock { position: absolute; left: 6px; bottom: 6px; width: min(240px, 72%); display: flex; flex-direction: column; gap: 4px; z-index: 3; pointer-events: none; max-height: 72%; overflow: hidden; }
+.card-dock[hidden] { display: none; }
+.card-dock .card3d { width: auto; }
+.card3d .room { font-size: 10px; text-transform: uppercase; letter-spacing: .05em; color: #647084; margin-bottom: 2px; }
+
+@media (max-width: 600px) {
+  .house3d { height: 88vw; min-height: 300px; }
+  .hud .btn { padding: 3px 8px; font-size: 12px; }
+}
+/* smaller cards while the camera shows the whole house */
+.house3d.overview .card3d { width: 200px; font-size: 11px; padding: 6px 8px; }
+.house3d.overview .card3d .q { font-size: 11.5px; }
+.house3d.overview .card3d .row { grid-template-columns: 60px minmax(0, 1fr) 32px; }
+
+/* compact labels when the canvas itself is narrow (phones, or a squeezed desktop column) */
+.house3d.narrow .room-label3d { font-size: 10px; opacity: .8; }
+.house3d.narrow .room-label3d .env { display: none; }
+.house3d.narrow .person-label3d { font-size: 10px; }
+.house3d.narrow .person-label3d b { font-size: 10.5px; padding: 0 5px; }
+.house3d.narrow .person-label3d .act { display: none; }
+.house3d.narrow .chip3d, .house3d.narrow .door-label3d { font-size: 10px; padding: 0 5px; }
+.house3d.narrow .card3d { width: 196px; font-size: 11px; padding: 6px 8px; }
+.house3d.narrow .card3d .row { grid-template-columns: 58px minmax(0, 1fr) 30px; }
+.house3d.narrow .bubble3d { max-width: 170px; font-size: 12px; }
+.house3d.narrow .det3d { font-size: 10px; }
+.house3d.narrow .det3d:not(.hazard), .house3d.narrow .chip3d.hub, .house3d.narrow .chip3d.thermo { display: none; }
+@media (prefers-reduced-motion: reduce) {
+  .person-label3d .zzz, .det3d.hazard, .card3d .cascade.pending { animation: none; }
+}

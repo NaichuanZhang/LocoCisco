@@ -1,0 +1,67 @@
+{
+  "id": "res_10_sauna",
+  "title": "\"Man, it's a sauna in here.\"",
+  "blurb": "Slang complaint in a 28 °C kitchen (eval case sp24, where the 2B answered 'none' at 85%): cooler. The keyword baseline hears nothing.",
+  "tags": [
+    "research",
+    "speech",
+    "indirect",
+    "keyword-misses",
+    "eval:sp24"
+  ],
+  "steps": [
+    {
+      "do": "set_time",
+      "time": "15:00",
+      "weekday": "Tuesday"
+    },
+    {
+      "do": "set_env",
+      "room": "kitchen",
+      "lux": 500,
+      "celsius": 28
+    },
+    {
+      "do": "move",
+      "who": "alex",
+      "to": "kitchen"
+    },
+    {
+      "do": "say",
+      "who": "alex",
+      "text": "Man, it's a sauna in here.",
+      "lang": "en"
+    },
+    {
+      "do": "expect",
+      "what": "proposal",
+      "by": "keyword",
+      "action": "none",
+      "within": 5
+    },
+    {
+      "do": "expect",
+      "what": "outcome",
+      "action": "cooler",
+      "accept": [
+        "done",
+        "asked"
+      ],
+      "within": 20
+    },
+    {
+      "do": "reply",
+      "answer": "Yes",
+      "if_asked": true
+    },
+    {
+      "do": "expect",
+      "what": "outcome",
+      "action": "cooler",
+      "accept": [
+        "done"
+      ],
+      "within": 6
+    }
+  ]
+}

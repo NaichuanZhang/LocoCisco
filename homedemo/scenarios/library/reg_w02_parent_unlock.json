@@ -1,0 +1,54 @@
+{
+  "id": "reg_w02_parent_unlock",
+  "title": "Alex: \"Unlock the front door.\"",
+  "blurb": "A parent with a strong voice match asks to unlock: unlocked (after a confirmation if the decider was unsure).",
+  "tags": [
+    "regression",
+    "who",
+    "seed:w2",
+    "permissions",
+    "model-wrong"
+  ],
+  "steps": [
+    {
+      "do": "set_time",
+      "time": "15:30",
+      "weekday": "Tuesday"
+    },
+    {
+      "do": "set_env",
+      "room": "living",
+      "lux": 300
+    },
+    {
+      "do": "say",
+      "who": "alex",
+      "text": "Unlock the front door.",
+      "lang": "en"
+    },
+    {
+      "do": "expect",
+      "what": "outcome",
+      "action": "unlock_door",
+      "accept": [
+        "done",
+        "asked"
+      ],
+      "within": 12
+    },
+    {
+      "do": "reply",
+      "answer": "Yes",
+      "if_asked": true
+    },
+    {
+      "do": "expect",
+      "what": "device",
+      "device": "lock_front",
+      "state": {
+        "locked": false
+      },
+      "within": 6
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "id": "reg_w08_kid_lights_own_room",
+  "title": "Maya in her room: \"Turn on the lights in my room.\"",
+  "blurb": "Child asks for her own lights at 20:30: lights on (anyone may change the lights).",
+  "tags": [
+    "regression",
+    "who",
+    "seed:w8",
+    "permissions"
+  ],
+  "steps": [
+    {
+      "do": "set_time",
+      "time": "20:30",
+      "weekday": "Tuesday"
+    },
+    {
+      "do": "set_env",
+      "room": "bedroom_maya",
+      "lux": 15
+    },
+    {
+      "do": "say",
+      "who": "maya",
+      "text": "Turn on the lights in my room.",
+      "lang": "en"
+    },
+    {
+      "do": "expect",
+      "what": "proposal",
+      "by": "keyword",
+      "action": "lights_on",
+      "within": 5
+    },
+    {
+      "do": "expect",
+      "what": "outcome",
+      "action": "lights_on",
+      "accept": [
+        "done",
+        "asked"
+      ],
+      "within": 12,
+      "room": "bedroom_maya"
+    }
+  ]
+}

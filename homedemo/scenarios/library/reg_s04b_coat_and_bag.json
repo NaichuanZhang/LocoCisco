@@ -1,0 +1,42 @@
+{
+  "id": "reg_s04b_coat_and_bag",
+  "title": "Coat and bag, hunting at 07:50",
+  "blurb": "Adult in a coat with a bag lifts cushions on Monday morning: nothing (12B wrongly offered lights).",
+  "tags": [
+    "regression",
+    "scene",
+    "seed:s4b",
+    "model-wrong"
+  ],
+  "steps": [
+    {
+      "do": "set_time",
+      "time": "07:50",
+      "weekday": "Monday"
+    },
+    {
+      "do": "set_env",
+      "room": "living",
+      "lux": 300
+    },
+    {
+      "do": "activity",
+      "who": "alex",
+      "text": "in a coat, holding a bag, lifting couch cushions and looking around the coffee table",
+      "attrs": {
+        "wearing": [
+          "coat"
+        ],
+        "holding": [
+          "bag"
+        ]
+      }
+    },
+    {
+      "do": "expect",
+      "what": "no_command",
+      "device": "tv_living",
+      "within": 5
+    }
+  ]
+}

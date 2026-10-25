@@ -1,0 +1,78 @@
+{
+  "id": "hero_maya_stove",
+  "title": "Maya on a chair by the stove",
+  "blurb": "A child next to a lit burner with no adult in the kitchen. Perception flags a hazard, the decider agrees, a parent is alerted.",
+  "tags": [
+    "hero",
+    "scene",
+    "safety"
+  ],
+  "steps": [
+    {
+      "do": "note",
+      "text": "Tuesday, 17:20. Sam is cooking; a pot is on the stove.",
+      "wait": 4
+    },
+    {
+      "do": "set_time",
+      "time": "17:20",
+      "weekday": "Tuesday"
+    },
+    {
+      "do": "set_env",
+      "room": "kitchen",
+      "lux": 400
+    },
+    {
+      "do": "set_device",
+      "device": "stove_kitchen",
+      "state": {
+        "burner_on": true
+      }
+    },
+    {
+      "do": "note",
+      "text": "The doorbell rings and Sam steps out to the living room. Maya wanders in.",
+      "wait": 3
+    },
+    {
+      "do": "move",
+      "who": "sam",
+      "to": "living"
+    },
+    {
+      "do": "move",
+      "who": "maya",
+      "to": "kitchen"
+    },
+    {
+      "do": "activity",
+      "who": "maya",
+      "text": "standing on a chair next to the stove, reaching for the pot",
+      "attrs": {
+        "age_group": "child",
+        "pose": "standing on chair",
+        "near": "stove"
+      }
+    },
+    {
+      "do": "expect",
+      "what": "outcome",
+      "action": "alert_parent",
+      "accept": [
+        "done"
+      ],
+      "within": 15
+    },
+    {
+      "do": "note",
+      "text": "Perception flagged a hazard: a child next to a lit burner with no adult in the room. The scene decider agreed (2B 92%, 12B 98%) and the policy always allows a safety alert.",
+      "wait": 7
+    },
+    {
+      "do": "note",
+      "text": "Sam's phone buzzes with the camera frame.",
+      "wait": 4
+    }
+  ]
+}

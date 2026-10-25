@@ -1,0 +1,7 @@
+# Meeting workstream runtime deps (exact pins; resolved 2026-10-24 on the x86_64 dev box, Python 3.12).
+# Everything the meeting brain imports is pure Python or already pinned by requirements-dev.txt / the other
+# workstreams (strands-agents, httpx, fastapi, uvicorn, pydantic). Nothing here needs a compiled aarch64 wheel.
+strands-agents==1.62.0           # pure python; Agent + tools + interventions (DeciderToolRouter path)
+httpx==0.28.1                    # pure python; the Strands Decider HTTP client (unspoken.core.decider)
+# NOT included: openai (the models workstream's OpenAI-compatible provider pins it for the llm role);
+# python-dateutil is NOT needed: due dates are parsed in unspoken/meeting/dates.py.

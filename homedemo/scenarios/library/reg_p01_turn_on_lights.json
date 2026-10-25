@@ -1,0 +1,46 @@
+{
+  "id": "reg_p01_turn_on_lights",
+  "title": "\"Can you turn on the lights?\"",
+  "blurb": "Direct request in a dim living room: lights on. Keyword agrees.",
+  "tags": [
+    "regression",
+    "speech",
+    "seed:p1"
+  ],
+  "steps": [
+    {
+      "do": "set_time",
+      "time": "19:00",
+      "weekday": "Tuesday"
+    },
+    {
+      "do": "set_env",
+      "room": "living",
+      "lux": 15
+    },
+    {
+      "do": "say",
+      "who": "alex",
+      "text": "Can you turn on the lights?",
+      "lang": "en"
+    },
+    {
+      "do": "expect",
+      "what": "proposal",
+      "by": "keyword",
+      "action": "lights_on",
+      "within": 5
+    },
+    {
+      "do": "expect",
+      "what": "outcome",
+      "action": "lights_on",
+      "accept": [
+        "done",
+        "asked"
+      ],
+      "within": 12,
+      "room": "living"
+    }
+  ]
+}

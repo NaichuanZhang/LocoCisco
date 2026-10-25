@@ -1,0 +1,8 @@
+# tx-fuse: post-processing fusion (unspoken/transcribe/fuse*.py, render.py). Exact pins, resolved 2026-10-25 on the
+# x86_64 dev box with Python 3.12. Everything here is already in requirements/transcribe-eval.txt / sensors.txt;
+# listed again so the fuser can be installed alone (e.g. on the GB10 without the eval stack).
+numpy==2.5.4            # manylinux aarch64 cp312 wheel: yes
+scipy==1.18.1           # Hungarian assignment (linear_sum_assignment), rankdata; manylinux aarch64 cp312 wheel: yes
+httpx==0.28.1           # Strands Decider / llama-server clients (pure python; same pin as requirements/models.txt)
+# Not required: torch, onnxruntime, any model. The decider (methods decider/all) talks to the shared Strands Decider
+# servers over loopback; the llm method talks to a llama-server you start yourself (llama.cpp, Qwen3-4B-Q4_K_M.gguf).

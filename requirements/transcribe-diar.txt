@@ -1,0 +1,14 @@
+# tx-diar (who spoke when, audio only) runtime deps. Exact pins, resolved 2026-10-25 on the x86_64 dev box, py3.12.
+# Install on top of requirements/sensors.txt (onnxruntime, kaldi-native-fbank, numpy, av) and
+# requirements/transcribe-eval.txt (scipy). The window / online methods need NOTHING beyond those two files:
+# Silero VAD + WeSpeaker CAM++/ResNet34 ONNX (dev-models/sensors, Apache-2.0 / MIT) + scipy clustering.
+sherpa-onnx==2.0.0               # --method pyannote: OfflineSpeakerDiarization (pyannote/segmentation-3.0 ONNX, MIT, from the
+                                 # sherpa-onnx "speaker-segmentation-models" release) + WeSpeaker embedding + its AHC.
+                                 # PyPI wheels: cp312 manylinux x86_64 AND manylinux2014 aarch64 (checked 2026-10-25).
+# --method sortformer (nvidia/diar_streaming_sortformer_4spk-v2, CC-BY-4.0) is NOT installed by this file: nemo_toolkit[asr]
+# pulls torch + lightning + lhotse (~2 GB). Measured here in a separate venv with these pins (all on PyPI, torch from the
+# CPU index https://download.pytorch.org/whl/cpu):
+#   nemo_toolkit[asr]==3.0.0     # py3-none-any wheel (pure python)
+#   torch==2.9.0                 # manylinux_2_28 aarch64 cp312 wheel exists on PyPI; on the GB10 use the CUDA 13 build instead
+#   torchaudio==2.9.0
+# On the GB10 the shipped path for this model is NeMo-Speech.cpp (`nemo-speech diarize`, GGUF q8_0 of the same weights), not NeMo.

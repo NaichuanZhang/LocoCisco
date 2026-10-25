@@ -1,0 +1,76 @@
+{
+ "id": "reg_10_guest_blocks_docs",
+ "title": "A guest blocks the docs",
+ "blurb": "share_docs is denied while a face without a check-in is in the room, allowed once they leave.",
+ "tags": [
+  "regression"
+ ],
+ "steps": [
+  {
+   "do": "start",
+   "title": "Pricing sync",
+   "owner": "Priya",
+   "agenda": [
+    "Q3 pricing",
+    "Launch"
+   ],
+   "minutes": 30
+  },
+  {
+   "do": "join",
+   "who": "priya",
+   "seat": "s1",
+   "voice": "voice-A",
+   "checkin": "Priya"
+  },
+  {
+   "do": "join",
+   "who": "sam",
+   "seat": "s2",
+   "voice": "voice-B",
+   "checkin": "Sam"
+  },
+  {
+   "do": "enter",
+   "who": "visitor",
+   "seat": "s4"
+  },
+  {
+   "do": "say",
+   "who": "sam",
+   "text": "Can you share the pricing doc in the channel?",
+   "lang": "en"
+  },
+  {
+   "do": "expect",
+   "what": "verdict",
+   "verdict": "deny",
+   "action": "share_docs",
+   "rule_contains": "guest",
+   "within": 45
+  },
+  {
+   "do": "expect",
+   "what": "screen",
+   "card": "notice",
+   "within": 3
+  },
+  {
+   "do": "leave",
+   "who": "visitor"
+  },
+  {
+   "do": "say",
+   "who": "sam",
+   "text": "Can you share the pricing doc in the channel?",
+   "lang": "en"
+  },
+  {
+   "do": "expect",
+   "what": "post",
+   "channel": "notes",
+   "text_contains": "pricing",
+   "within": 45
+  }
+ ]
+}

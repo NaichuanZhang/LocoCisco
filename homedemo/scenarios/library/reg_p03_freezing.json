@@ -1,0 +1,52 @@
+{
+  "id": "reg_p03_freezing",
+  "title": "\"It's freezing in here.\"",
+  "blurb": "Complaint in a 17 °C bedroom: warmer. Keyword misses.",
+  "tags": [
+    "regression",
+    "speech",
+    "seed:p3",
+    "keyword-misses"
+  ],
+  "steps": [
+    {
+      "do": "set_time",
+      "time": "19:00",
+      "weekday": "Tuesday"
+    },
+    {
+      "do": "set_env",
+      "room": "bedroom_main",
+      "lux": 200,
+      "celsius": 17
+    },
+    {
+      "do": "move",
+      "who": "alex",
+      "to": "bedroom_main"
+    },
+    {
+      "do": "say",
+      "who": "alex",
+      "text": "It's freezing in here.",
+      "lang": "en"
+    },
+    {
+      "do": "expect",
+      "what": "proposal",
+      "by": "keyword",
+      "action": "none",
+      "within": 5
+    },
+    {
+      "do": "expect",
+      "what": "outcome",
+      "action": "warmer",
+      "accept": [
+        "done",
+        "asked"
+      ],
+      "within": 12
+    }
+  ]
+}

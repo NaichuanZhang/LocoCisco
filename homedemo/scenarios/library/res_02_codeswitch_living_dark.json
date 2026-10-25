@@ -1,0 +1,61 @@
+{
+  "id": "res_02_codeswitch_living_dark",
+  "title": "“客厅有点暗，turn on the lights.”",
+  "blurb": "Mandarin complaint plus an English request in one breath (designed): lights on in the living room. The keyword baseline gets this one right by luck, on the English half.",
+  "tags": [
+    "research",
+    "speech",
+    "code-switch",
+    "f2:17"
+  ],
+  "steps": [
+    {
+      "do": "set_time",
+      "time": "18:45",
+      "weekday": "Tuesday"
+    },
+    {
+      "do": "set_env",
+      "room": "living",
+      "lux": 15
+    },
+    {
+      "do": "say",
+      "who": "alex",
+      "text": "客厅有点暗，turn on the lights.",
+      "lang": "zh"
+    },
+    {
+      "do": "expect",
+      "what": "proposal",
+      "by": "keyword",
+      "action": "lights_on",
+      "within": 5
+    },
+    {
+      "do": "expect",
+      "what": "outcome",
+      "action": "lights_on",
+      "accept": [
+        "done",
+        "asked"
+      ],
+      "within": 20,
+      "room": "living"
+    },
+    {
+      "do": "reply",
+      "answer": "Yes",
+      "if_asked": true
+    },
+    {
+      "do": "expect",
+      "what": "device",
+      "device": "light_living",
+      "state": {
+        "on": true
+      },
+      "within": 6
+    }
+  ]
+}

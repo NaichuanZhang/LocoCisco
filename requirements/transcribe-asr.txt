@@ -1,0 +1,5 @@
+# ASR workstream (unspoken/transcribe/asr*.py). Exact pins, resolved 2026-10-25 on the x86_64 dev box, Python 3.12,
+# on top of requirements/sensors.txt (faster-whisper 1.2.1, ctranslate2 4.8.3, onnxruntime 1.31.0, numpy 2.5.4,
+# huggingface-hub 2.3.0, av 19.0.2) and requirements/transcribe-eval.txt. No torch anywhere in this stage.
+onnx-asr==0.12.0                 # py3-none-any (pure python; numpy + onnxruntime + huggingface-hub): Parakeet TDT 0.6B v3 ONNX
+                                 # inference with token timestamps/log-probs. aarch64: yes. MIT licence; model files CC-BY-4.0.

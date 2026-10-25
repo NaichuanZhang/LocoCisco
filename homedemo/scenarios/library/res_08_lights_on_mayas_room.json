@@ -1,0 +1,76 @@
+{
+  "id": "res_08_lights_on_mayas_room",
+  "title": "\"Lights on in Maya's room please.\" (from the living room)",
+  "blurb": "A request about another room (eval case sp38): the light in Maya's room, not where Alex stands. The keyword baseline would switch the living room light, which is already on.",
+  "tags": [
+    "research",
+    "speech",
+    "other-room",
+    "keyword-wrong",
+    "eval:sp38"
+  ],
+  "steps": [
+    {
+      "do": "set_time",
+      "time": "19:40",
+      "weekday": "Tuesday"
+    },
+    {
+      "do": "set_device",
+      "device": "light_living",
+      "state": {
+        "on": true,
+        "brightness": 100
+      }
+    },
+    {
+      "do": "set_env",
+      "room": "living",
+      "lux": 300
+    },
+    {
+      "do": "set_env",
+      "room": "bedroom_maya",
+      "lux": 8
+    },
+    {
+      "do": "say",
+      "who": "alex",
+      "text": "Lights on in Maya's room please.",
+      "lang": "en"
+    },
+    {
+      "do": "expect",
+      "what": "proposal",
+      "by": "keyword",
+      "action": "lights_on",
+      "room": "living",
+      "within": 5
+    },
+    {
+      "do": "expect",
+      "what": "outcome",
+      "action": "lights_on",
+      "accept": [
+        "done",
+        "asked"
+      ],
+      "within": 20,
+      "room": "bedroom_maya"
+    },
+    {
+      "do": "reply",
+      "answer": "Yes",
+      "if_asked": true
+    },
+    {
+      "do": "expect",
+      "what": "device",
+      "device": "light_bedroom_maya",
+      "state": {
+        "on": true
+      },
+      "within": 6
+    }
+  ]
+}
