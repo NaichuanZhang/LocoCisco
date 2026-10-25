@@ -1,5 +1,7 @@
 # LocoCisco — animated demo presentation
 
+**[Open the live slides on GitHub Pages](https://naichuanzhang.github.io/LocoCisco/)**
+
 Open **[index.html](index.html)** in a desktop browser. It is a five-slide, 16:9
 presentation with local fonts, a vendored GSAP animation library, model explanations,
 presenter notes and a local video player. No build step, CDN, backend or internet
@@ -94,3 +96,14 @@ certification for regulated settings.
 - The Dell device is a stylized vector illustration, not a hardware photograph.
 
 Existing source media, PowerPoint and outline files are preserved.
+
+## GitHub Pages
+
+The hosted deck is published from the [`lococisco` branch](https://github.com/NaichuanZhang/LocoCisco/tree/lococisco),
+using `/ (root)` as the Pages source. That branch contains the static presentation
+and `.nojekyll`; the editable source stays here on `main`.
+
+The publishing branch's README records the source revision and release steps.
+Changes on `main` need a new release to `lococisco` to update the hosted slides.
+The hosted evidence and full-notes links open the matching source revision on
+GitHub. Local video selection still stays in the browser without uploading.

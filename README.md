@@ -8,6 +8,7 @@
 </p>
 
 <p align="center">
+  <a href="https://naichuanzhang.github.io/LocoCisco/">Open the live slides</a> ·
   <a href="Presentation/README.md">Explore the presentation</a> ·
   <a href="docs/BROWSER_DEMO.md">Run the demo</a> ·
   <a href="BUILD_SPEC.md">Read the build spec</a> ·
@@ -132,6 +133,9 @@ confident `none` still means no action, and policy can deny a model's proposal.
 ## Take it for a spin
 
 ### The presentation · no models required
+
+**[Open the hosted presentation](https://naichuanzhang.github.io/LocoCisco/)**,
+or run it locally:
 
 Five light-themed HTML slides with playful animations, a two-minute demo-video
 slot, the model story, and business-to-home use cases. From the repository root:
