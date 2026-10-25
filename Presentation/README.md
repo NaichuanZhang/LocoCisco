@@ -22,7 +22,7 @@ next build, then advances to the next slide. **Left arrow** moves back.
 |---|---|
 | 1–5 or bottom navigation | Jump to a slide |
 | Shift + Right / Left | Next / previous slide, skipping builds |
-| A | Auto-advance one build every 8.5 seconds; pauses on the opening demo and final logo |
+| A | Auto-advance one build every 8.5 seconds; pauses on the opening demo and final build |
 | F | Fullscreen |
 | N | Notes for the current slide |
 | R | Replay the current slide from its first build |
@@ -34,9 +34,10 @@ On slide 3, click any of the **seven models** to reveal its mechanism, model-cho
 rationale and runtime placement. The four buttons below the graph walk through the
 pipeline. A small Decider threshold diagram describes the conditional Qwen route.
 
-The deck uses a daylight palette, springy reveals, playful avatar motion and a confetti thank-you. The deck scales to the viewport without cropping. Present in landscape, ideally
-1920×1080. System reduced-motion settings are respected. Browser printing shows
-the five main slides with their content revealed (the closing animated scenes are for the live deck); enable background graphics for the colors.
+The deck uses a daylight palette, springy reveals and playful motion. It scales to
+the viewport without cropping. Present in landscape, ideally 1920×1080. System
+reduced-motion settings are respected. Browser printing shows all five slides with
+their content revealed; enable background graphics for the colors.
 
 ## Demo video
 
@@ -61,13 +62,20 @@ not the earlier broad `PRESENTATION_OUTLINE.md`. It covers:
 2. Local-first, privacy-driven smart office product.
 3. All seven enabled models and their decision/policy pipeline.
 4. Dell GB10 compute placement and measured sensor timings.
-5. Business case → local-development fun facts and memory allocation → sponsor thanks → the updated animated logo with Dell and NVIDIA avatars.
+5. **Use cases and market opportunity:** confidential conversations across businesses
+   and government in the near term, then a private smart-home hub in the long term.
+
+The final slide has three builds: near-term business and government use cases,
+customer value and a pilot path, then the long-term smart-home vision. It ends on
+the opportunity to bring private local intelligence wherever people talk.
 
 [PRESENTER_NOTES.md](PRESENTER_NOTES.md) contains the talk track, exact source references
 and evidence limits. The deck does not claim measured Cisco cost savings, certified
-replacement compatibility, unlimited compute headroom or semantic accuracy. Speech timings are attributed to a small recorded review sample; the memory
-figure comes from a separately timestamped GPU-allocation snapshot. The model diagram
-is explanatory; it is not live runtime telemetry.
+replacement compatibility, unlimited compute headroom or semantic accuracy. Speech
+timings are attributed to a small recorded review sample. The model diagram is
+explanatory; it is not live runtime telemetry. The final slide describes customer
+opportunities and a product roadmap, rather than current production deployments or
+certification for regulated settings.
 
 ## Files and credits
 
@@ -78,9 +86,11 @@ is explanatory; it is not live runtime telemetry.
   upstream license notice retained in the file.
 - `assets/*.woff2`: existing Figtree and JetBrains Mono fonts, SIL OFL licenses included.
 - `assets/lococisco-*.svg`: existing project brand assets.
-- `assets/logo/`: the complete ribbon + Dell/NVIDIA avatar finale adapted from mainline `6de9ded`, with local dependencies and a one-shot message-controlled player.
+- `assets/logo/`: the earlier ribbon + Dell/NVIDIA avatar finale, preserved as a
+  standalone optional asset. It is outside the current five-slide sequence.
 - `assets/avatar-*.svg`: current mainline character artwork.
-- `assets/memory-snapshot.json`: point-in-time GPU allocations and scope for the ≈64% fun fact.
+- `assets/memory-snapshot.json`: the earlier point-in-time GPU allocation evidence,
+  preserved for reference; the current closing slide focuses on use cases.
 - The Dell device is a stylized vector illustration, not a hardware photograph.
 
 Existing source media, PowerPoint and outline files are preserved.

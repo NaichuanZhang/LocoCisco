@@ -57,3 +57,60 @@
 @keyframes avatar-hello{0%,70%,100%{transform:rotate(-5deg) translateY(0)}78%{transform:rotate(4deg) translateY(-6px)}86%{transform:rotate(-3deg) translateY(0)}92%{transform:rotate(2deg) translateY(-3px)}}
 .demo-time-card>img{animation:avatar-hello 5s ease-in-out infinite}
 .replace-video{position:absolute;right:0;top:0;margin-top:0}
+
+/* 05 — Customer opportunities now, private smart-home intelligence next. */
+.slide-usecases .slide-heading{padding-top:7px}
+.slide-usecases .slide-heading h2{font-size:52px;margin-top:14px}
+.slide-usecases .heading-sub{font-size:20px;margin-top:11px}
+.usecase-grid{display:grid;grid-template-columns:930px 506px;gap:28px;margin-top:27px}
+.horizon-label{display:flex;align-items:center;gap:15px}
+.horizon-label>span{font-family:var(--mono);font-size:10px;letter-spacing:1px;background:#e0ebcd;color:#5c793e;border-radius:5px;padding:8px 11px}
+.horizon-label>p{font-size:20px;letter-spacing:-.3px;font-weight:500}
+.customer-cards{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:16px}
+.customer-card{border:1px solid #d9dfce;border-radius:15px;padding:23px 25px;background:#fbfcf7;height:306px}
+.government-customer{background:#f4f0e7;border-color:#e2d8c4}
+.customer-icon{width:42px;height:42px;border-radius:11px;background:#e8f0dc;display:grid;place-items:center;float:right;transform:rotate(5deg)}
+.government-customer .customer-icon{background:#eee0ce;transform:rotate(-5deg)}
+.customer-icon svg{width:28px;height:28px;fill:none;stroke:#7c9661;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.government-customer .customer-icon svg{stroke:#aa8c61}
+.customer-card h3{font-size:28px;font-weight:500;letter-spacing:-.6px;margin-top:4px}
+.customer-need{font-size:15px;color:#7b8770;margin-top:9px;line-height:1.4}
+.customer-card ul{list-style:none;padding:0;margin:22px 0 0}
+.customer-card li{font-size:16px;line-height:1.45;margin-top:9px;padding-left:16px;position:relative}
+.customer-card li:before{content:'';position:absolute;left:0;top:9px;width:5px;height:5px;border-radius:50%;background:#a5bc82}
+.government-customer li:before{background:#c8ad83}
+.customer-outcome{font-size:14px;line-height:1.45;color:#77846c;border-top:1px solid #dfe5d4;padding-top:15px;margin-top:19px}
+.government-customer .customer-outcome{border-color:#e1d8c6;color:#8a806b}
+.customer-value{margin-top:18px;border:1px solid #d5ddc6;background:#e9efdd;border-radius:11px;padding:17px 20px;position:relative}
+.customer-value>.mono{font-size:9px;color:#84956b;margin-right:15px}
+.customer-value>strong{font-size:18px;font-weight:500;letter-spacing:-.2px}
+.customer-value>p{font-size:13px;line-height:1.55;color:#718161;margin-top:8px}
+.customer-value>p>span{color:#849276}
+.future-opportunity{position:relative;min-height:455px}
+.future-teaser{position:absolute;inset:0;border:1px dashed #d5deca;border-radius:16px;padding:39px 35px;color:#9bac89;background:#f0f3e9}
+.future-teaser>.mono{font-size:10px}.future-teaser>p{font-size:55px;line-height:1.03;letter-spacing:-2px;margin-top:69px}
+.future-arrow{position:absolute;bottom:28px;right:34px;font-size:65px;font-weight:400;color:#c1cfae}
+.home-opportunity{position:relative;border:1px solid #d0dcc0;border-radius:16px;background:#eaf0df;min-height:455px;padding:22px 27px;overflow:hidden}
+.home-opportunity .horizon-label>span{background:#d8e6c1;color:#648047}
+.home-opportunity .horizon-label>p{font-family:var(--mono);font-size:9px;letter-spacing:1.2px;color:#8e9b78}
+.home-opportunity h3{font-size:31px;line-height:1.08;letter-spacing:-.7px;font-weight:500;margin-top:17px}
+.home-opportunity h3 .serif{letter-spacing:-.7px}
+.home-sketch{height:163px;position:relative;margin:4px -10px 0}
+.home-sketch>svg{display:block;width:100%;height:100%;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.home-outline{stroke:#b5c79f;stroke-width:2;fill:#f3f7ec}
+.home-wire{stroke:#a0b783;stroke-width:2;stroke-dasharray:4 7;animation:home-signal 2s linear infinite}
+.home-room{fill:#e6efd9;stroke:#bfcea9;stroke-width:1.3}
+.home-symbol{stroke:#8da86d;stroke-width:2}
+.home-hub{position:absolute;height:69px;width:76px;left:50%;bottom:13px;transform:translateX(-50%) rotate(-3deg)}
+.home-hub-label{position:absolute;left:0;right:0;bottom:0;text-align:center;font-family:var(--mono);font-size:8px;letter-spacing:1px;color:#7a9060}
+.home-purpose{font-size:16px;line-height:1.45;margin-top:10px;color:#768767}
+.home-privacy{display:flex;gap:15px;align-items:center;border-top:1px solid #ccd8ba;margin-top:17px;padding-top:17px}
+.home-privacy>.lock-icon{margin-left:3px;color:#72944e}
+.home-privacy strong{font-size:18px;line-height:1.35;font-weight:500;letter-spacing:-.2px}
+.usecase-close{display:flex;align-items:center;gap:19px;border-top:1px solid var(--line);padding-top:16px;margin-top:20px}
+.usecase-close>.mono{font-size:9px;color:#849473}
+.usecase-close>strong{font-size:20px;font-weight:500;letter-spacing:-.4px}
+.usecase-close .serif{letter-spacing:-.4px}
+.usecase-scope{margin-left:auto;color:#929c82;font-size:10px}
+@keyframes home-signal{to{stroke-dashoffset:-22}}
+@media print{.future-teaser{display:none!important}}

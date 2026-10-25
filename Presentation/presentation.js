@@ -7,11 +7,11 @@
   const deck = $('#deck');
   const indexOf = id => slides.findIndex(slide => slide.id === id);
   const currentId = () => slides[state.slide].id;
+  const atEnd = () => state.slide === slides.length - 1 && state.build === Number(slides[state.slide].dataset.builds);
   const motionQuery = matchMedia('(prefers-reduced-motion: reduce)');
   const state = { slide: 0, build: 0, auto: false, model: 'silero' };
-  let animation, autoTimer, toastTimer, videoURL, closingAnimation;
+  let animation, autoTimer, toastTimer, videoURL;
   let metricAnimations = [];
-  let closingMode = '';
   const demoTargetSeconds = 120;
   const video = $('#demo-video');
   const modelOrder = ['silero', 'parakeet', 'campp', 'yunet', 'lightasd', 'decider', 'qwen'];
@@ -91,11 +91,12 @@
   const notes = [originalNotes[4], originalNotes[0], originalNotes[1], originalNotes[2], originalNotes[3]];
   notes[0][0] = 'Opening demo — two minutes';
   notes[0][2] = 'Open with the video. Target two minutes; the on-screen timer follows video playback without stretching or looping shorter recordings. Then advance to the product vision.';
-  const closingNotes = {
-    funfacts: ['Design fun facts', 'Once the local model was set up, the team used it for some development as well, saving cloud tokens. This is a user-provided behind-the-scenes fact; no numeric token saving is claimed.', 'The selected GPU processes allocated 78.2 GiB, about 64% of 121.6 GiB OS-visible unified memory at the recorded snapshot. Includes reserved caches, excludes CPU allocations and unrelated services. This does not mean 36% of the host is free; host available memory was about 19%.', 'The model stack can support more ideas; additional use cases and capacity still need validation.'],
-    thanks: ['Thank you, sponsors', 'Thank our sponsors and everyone who made the event possible. We had a lot of fun building this.', 'Pause on the thank-you, then advance one last time for the playful animated logo.', 'No need to name unconfirmed sponsors; the final brand artwork comes from the project’s updated Dell × NVIDIA logo asset.'],
-    logo: ['The happy ending', 'Let the complete ribbon and avatar animation play once. The Dell box and NVIDIA NemoClaw avatars hop in and bump fist to claw.', 'The animation holds on its final frame. Use the replay control if you want to show it again.', 'The final animation is adapted from mainline 6de9ded; all assets run locally and reduced-motion viewers see the completed frame.']
-  };
+  notes[4] = [
+    'Private intelligence, wherever people talk',
+    'Near term: any business or government entity where people communicate and confidentiality is critical. Examples include team and HR conversations, legal or financial consultations, sensitive customer discussions, citizen services, casework and internal agency briefings.',
+    'Advance to the buyer value: useful conversation records and follow-through, local data control and owned compute. Sell an edge appliance, software and support. Start with one confidential room or service point, prove workflow value, then expand.',
+    'Advance again to the long-term vision: the same local intelligence becomes the center of the smart home, coordinating voice requests, routines, lighting and comfort without sending household audio to big tech. These are customer opportunities and product direction, not claims of production deployment or certified compliance.'
+  ];
 
   function resize() {
     const scale = Math.min(innerWidth / 1600, innerHeight / 900);
@@ -133,12 +134,12 @@
       else button.removeAttribute('aria-current');
     });
     const max = Number(slides[state.slide].dataset.builds);
-    $('#build-count').textContent = currentId() === 'demo' ? 'DEMO · 02:00' : currentId() === 'business' && state.build === 5 ? 'THANK YOU' : `BUILD ${state.build + 1} / ${max + 1}`;
+    $('#build-count').textContent = currentId() === 'demo' ? 'DEMO · 02:00' : `BUILD ${state.build + 1} / ${max + 1}`;
     $('#previous-button').disabled = state.slide === 0 && state.build === 0;
     $('#next-button').disabled = state.slide === slides.length - 1 && state.build === max;
     $('#deck-progress-fill').style.width = `${((state.slide + (state.build + 1) / (max + 1)) / slides.length) * 100}%`;
     $('#slide-announcer').textContent = `Slide ${state.slide + 1} of 5: ${slides[state.slide].dataset.title}. Build ${state.build + 1} of ${max + 1}.`;
-    const [title, ...paragraphs] = (currentId() === 'business' && state.build >= 3) ? closingNotes[['funfacts','thanks','logo'][state.build - 3]] : notes[state.slide];
+    const [title, ...paragraphs] = notes[state.slide];
     $('#notes-title').textContent = title;
     $('#notes-content').replaceChildren(...paragraphs.map((text, index) => {
       const p = document.createElement('p'); p.textContent = text;
@@ -204,41 +205,6 @@
     const remaining = Math.max(0, demoTargetSeconds - Math.floor(video.currentTime || 0));
     $('#demo-time').textContent = `${String(Math.floor(remaining / 60)).padStart(2, '0')}:${String(remaining % 60).padStart(2, '0')}`;
   }
-  function logoCommand(action) {
-    const frame = $('#logo-frame');
-    if (frame.contentWindow && frame.getAttribute('src')) frame.contentWindow.postMessage({type: 'loco-logo', action}, '*');
-  }
-  function renderClosing(withAnimation) {
-    const active = currentId() === 'business';
-    const mode = active && state.build >= 3 ? ['funfacts', 'thanks', 'logo'][state.build - 3] : '';
-    const changed = mode !== closingMode;
-    if (changed && closingAnimation) {closingAnimation.progress(1); closingAnimation.kill(); closingAnimation = null;}
-    $('#business-main').hidden = active && state.build >= 3;
-    ['funfacts', 'thanks', 'logo'].forEach(key => {
-      const view = $(`#${key}-view`);
-      view.hidden = key !== mode;
-      view.inert = key !== mode;
-    });
-    if (mode !== 'logo') logoCommand('pause');
-    if (mode === 'logo' && changed) {
-      const frame = $('#logo-frame');
-      if (!frame.getAttribute('src')) frame.src = frame.dataset.src;
-      else logoCommand(motionQuery.matches || !withAnimation ? 'finish' : 'play');
-    }
-    if (changed && mode && mode !== 'logo') {
-      const view = $(`#${mode}-view`);
-      if (withAnimation) closingAnimation = animate($$('.closing-pop', view), {opacity: 0, y: 26, scale: .95, rotation: -1}, {opacity: 1, y: 0, scale: 1, rotation: 0, duration: .8, stagger: .085, ease: 'back.out(1.4)'});
-      else if (window.gsap) gsap.set($$('.closing-pop', view), {opacity: 1, x: 0, y: 0, scale: 1, rotation: 0});
-      if (mode === 'funfacts' && withAnimation) {
-        animate($$('.fun-memory-meter .allocated'), {scaleY: .1, opacity: 0}, {scaleY: 1, opacity: 1, duration: .45, stagger: .05, ease: 'back.out(2)', delay: .35});
-        animate($('.avatar-pair'), {y: 22, rotation: -3}, {y: 0, rotation: 0, duration: .95, ease: 'elastic.out(1,.5)', delay: .2});
-      }
-      if (mode === 'thanks' && withAnimation) {
-        animate($$('#confetti-field i'), {y: -180, rotation: -90, opacity: 0}, {y: 0, rotation: i => (i % 2 ? 25 : -35), opacity: .75, duration: 1.5, stagger: .035, ease: 'back.out(1)', delay: .12});
-      }
-    }
-    closingMode = mode;
-  }
   function render(withAnimation = true, entering = false) {
     const current = slides[state.slide];
     // Finish interrupted entrances so fast navigation never leaves a slide transparent.
@@ -253,8 +219,7 @@
     if (currentId() === 'models') setPhase(state.build, withAnimation);
     if (currentId() === 'hardware') animateHardware(state.build, withAnimation);
     if (currentId() !== 'demo') video.pause();
-    if ((currentId() === 'demo' || (currentId() === 'business' && state.build === 5)) && state.auto) setAuto(false);
-    renderClosing(withAnimation);
+    if ((currentId() === 'demo' || atEnd()) && state.auto) setAuto(false);
     updateControls();
   }
   function goTo(index, build = 0, withAnimation = true) {
@@ -275,10 +240,10 @@
   }
   function restartAutoTimer() {
     clearTimeout(autoTimer);
-    if (state.auto && currentId() !== 'demo' && !(currentId() === 'business' && state.build === 5) && !document.hidden && !$$('dialog[open]').length) autoTimer = setTimeout(next, 8500);
+    if (state.auto && currentId() !== 'demo' && !atEnd() && !document.hidden && !$$('dialog[open]').length) autoTimer = setTimeout(next, 8500);
   }
   function setAuto(enabled) {
-    state.auto = enabled && currentId() !== 'demo' && !(currentId() === 'business' && state.build === 5);
+    state.auto = enabled && currentId() !== 'demo' && !atEnd();
     const button = $('#autoplay-button');
     button.setAttribute('aria-pressed', String(state.auto));
     button.setAttribute('aria-label', state.auto ? 'Pause auto-advance' : 'Start auto-advance');
@@ -383,27 +348,12 @@
     else if (key === '?') {event.preventDefault(); toggleDialog('#help-dialog');}
   });
   window.addEventListener('resize', resize);
-  $('#replay-logo').addEventListener('click', () => logoCommand(motionQuery.matches ? 'finish' : 'play'));
-  window.addEventListener('message', event => {
-    if (event.source === $('#logo-frame').contentWindow && event.data?.type === 'loco-logo-ready') {
-      logoCommand(closingMode === 'logo' ? (motionQuery.matches ? 'finish' : 'play') : 'pause');
-    }
-  });
   window.addEventListener('hashchange', () => {const route = readHash(); goTo(route.index, route.build);});
   document.addEventListener('visibilitychange', () => {deck.classList.toggle('motion-paused', document.hidden); restartAutoTimer();});
   document.addEventListener('fullscreenchange', () => {$('#fullscreen-button').setAttribute('aria-label', document.fullscreenElement ? 'Exit fullscreen' : 'Enter fullscreen'); resize();});
   window.addEventListener('pagehide', releaseVideoURL);
   window.addEventListener('beforeprint', () => {if (window.gsap) gsap.globalTimeline.getChildren().forEach(tween => tween.progress(1));});
   window.Deck = Object.freeze({goTo, next, previous, selectModel, get state() {return {...state};}});
-  let confettiSeed = 29;
-  const confettiRandom = () => ((confettiSeed = (Math.imul(confettiSeed, 1664525) + 1013904223) >>> 0) / 4294967296);
-  $('#confetti-field').replaceChildren(...Array.from({length: 28}, (_, index) => {
-    const piece = document.createElement('i');
-    piece.style.left = `${5 + confettiRandom() * 90}%`;
-    piece.style.top = `${4 + confettiRandom() * 87}%`;
-    piece.style.transform = `rotate(${index * 19}deg)`;
-    return piece;
-  }));
   resize();
   const route = readHash(); state.slide = route.index; state.build = Math.min(route.build, Number(slides[route.index].dataset.builds));
   render(false);

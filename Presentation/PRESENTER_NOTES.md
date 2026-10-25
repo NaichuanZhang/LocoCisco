@@ -97,50 +97,46 @@ of 2.15–2.79 seconds, anonymous identities, no committed task/decision items a
 unsupported fake-lamp action. Avoid combining measurements across fixtures.
 
 
-## 5. Rethink the room. Own the intelligence. (~45 seconds)
+## 5. Private intelligence, wherever people talk. (~60 seconds)
 
-“Our commercial direction is an edge appliance that can replace traditional Cisco
-room hardware over time. We intend to sell Dell hardware, LocoCisco software, and
-deployment and support. The value is private local intelligence, software updates
-on general-purpose compute, and a path to lower total cost.”
+“The opportunity extends beyond meeting rooms. In the near term, we see a fit
+across businesses and government entities wherever people communicate and
+confidentiality is critical. The shared need is to understand the conversation,
+capture useful follow-through, and keep sensitive audio under local control.”
 
-Advance to reveal model upgrades; advance again to the cost thesis and first
-customer. A reasonable first pilot is a privacy-conscious team modernizing one room.
-Reuse compatible microphones, cameras and displays where practical. The core local
-inference path has no per-call cloud inference bill.
+**Build 0 — near-term customer opportunity.** Use concrete settings to make the
+market tangible. Businesses include confidential team and HR conversations, legal
+or financial client consultations, and sensitive customer-service interactions.
+Government examples include citizen-service appointments, case discussions,
+interviews and internal agency meetings. These are examples of one broad need,
+not a claim that every organization is already served by the current demo.
 
-There is no validated price, Cisco TCO comparison, replacement qualification,
-multi-room capacity, production SLA or compliance certification. “Lower-cost” is
-intended positioning, not a measured saving. Do not imply all Cisco deployments
-require cloud transcription or lack privacy controls. Product privacy includes
-explicit off-record barriers; it is not automatic redaction of everything, and it
-does not erase original source media or already-saved/exported recordings.
+**Build 1 — why customers would buy, and where to start.** The value is useful
+conversation intelligence without requiring sensitive audio to leave the premises:
+captions, supported tasks and decisions, and answers grounded in retained meeting
+text. Start with one confidential room or service point, validate the customer's
+workflow, then expand through an edge appliance, software, deployment and support.
+The core local inference path has no per-call cloud inference bill. Pricing,
+measured savings and multi-room capacity still need validation.
 
-### Closing builds on slide 5 (~40 seconds)
+**Build 2 — long-term smart-home vision.** “Over time, the same local intelligence
+could become the center of the smart home: a private hub that understands spoken
+requests and coordinates household devices, without sending household audio to
+big-tech services. We want a helpful home while keeping family conversations at
+home.” Frame this as the long-term product direction, not a feature-complete home
+automation product being delivered today.
 
-After the three commercial builds, advance to **design fun facts**:
+Close on the common idea: **private local intelligence, wherever people talk** —
+at work, in public service, and eventually at home.
 
-- Once the local model was set up, we used it for some development, saving cloud
-  tokens. This story comes directly from the team; no numeric saving is asserted.
-- The local GPU stack allocated **78.23 GiB**, or **64.32% of 121.63 GiB**
-  OS-visible unified memory, in the October 25, 22:29:47 UTC snapshot.
-  Say “about 64% allocated to our local GPU model stack.” This includes reserved
-  model caches; it excludes CPU allocations and other applications. It is not a
-  peak memory benchmark and does not mean the remaining 36% is free. Host available
-  memory at that moment was approximately 19.3%.
-- “One meeting room is just the beginning” describes the product direction, not
-  measured multi-room capacity.
+The near-term examples are customer opportunities, not production deployment or
+compliance claims. Sensitive and regulated settings require customer-specific
+validation. The current demo's device actions remain local previews. Privacy
+controls do not automatically redact everything or erase original or previously
+exported recordings.
 
-The public [memory snapshot](assets/memory-snapshot.json) records the method and
-per-role allocations: Qwen 51.09 GiB, Decider 25.33 GiB, Parakeet 1.42 GiB and
-Demo/Light-ASD 0.39 GiB. The separate Nemotron service is excluded.
-
-Advance again: **thank the sponsors** and say “We had a lot of fun building this.”
-Then advance one last time for the complete **animated logo** from mainline
-`6de9ded`: a satin ribbon writes LocoCisco, the Dell box and NVIDIA NemoClaw avatars
-hop in and bump fist to claw, and the real brand marks settle between them.
-The animation plays once and holds the completed frame. It is silent; reduced-motion
-viewers see the finished artwork. The replay control repeats the ending.
+The earlier fun facts, sponsor thank-you and logo scenes are outside the current
+five-slide sequence. Their supporting assets remain available separately.
 
 
 ## Evidence references
