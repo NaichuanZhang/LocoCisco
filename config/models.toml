@@ -1,0 +1,296 @@
+# LocoCisco model registry: which model serves which ROLE, per PROFILE.
+#
+# Pick a profile with UNSPOKEN_PROFILE=gb10 (or --profile gb10 on the CLIs). Change a model by editing ONE
+# block below, or override one key without editing: UNSPOKEN_LLM_URL=... UNSPOKEN_LLM_MODEL=... (any role,
+# keys PROVIDER / URL / MODEL / LABEL). Check every role: python -m unspoken.models check --profile gb10
+#
+# Roles (unspoken/contracts.py): decider, decider_big, llm, vlm, asr, vad, diarization, faces, asd, tts,
+# embed, pii. A role missing from a profile is disabled (provider "none"). Keys of a role block:
+#   provider  which code serves the role (see docs/MODELS.md for the list)
+#   url       base URL of the server (OpenAI-style servers: include the /v1)
+#   model     the model id the server expects in the request
+#   label     the human name the room screen and the home demo's X-ray show
+#   options   provider-specific knobs (inline table): max_tokens, temperature, api_key, timeout, voice, ...
+# `extends = "name"` starts from another profile's blocks; `local_only = true` refuses anything not on this
+# box or its LAN (loopback, RFC 1918, *.local, inference.local) and refuses the bedrock provider outright.
+
+# ---------------------------------------------------------------------------------------------------- dev
+# The cloud dev desktop: x86_64, CPU only. The two Strands Decider servers already run here; the chat model
+# is Claude on Bedrock because the old smart-home demo used it. Nothing sensory is real: hearing/vision are
+# fakes so tests and the simulator run with no hardware.
+[profiles.dev]
+local_only = false
+
+[profiles.dev.decider]                       # fast typed yes/no + multiple-choice decisions (first opinion)
+provider = "strands-decider"
+url = "http://127.0.0.1:8765"
+model = "decider-2b"                         # the name the decider client reports in its answers
+label = "Strands Decider 2B (CPU)"
+
+[profiles.dev.decider_big]                   # second opinion when the small decider is unsure
+provider = "strands-decider"
+url = "http://127.0.0.1:8766"
+model = "decider-12b"
+label = "Strands Decider 12B (CPU)"
+
+[profiles.dev.llm]                           # tool-calling chat model for escalations (remote, dev only)
+provider = "bedrock"
+model = "us.anthropic.claude-haiku-4-5-20251001-v1:0"
+label = "Claude Haiku 4.5 on Bedrock"
+options = { region = "us-west-2", profile = "bedrock", max_tokens = 200, temperature = 0 }
+
+[profiles.dev.vlm]                           # no image model on the dev box
+provider = "none"
+
+[profiles.dev.asr]                           # speech -> text: fake (returns scripted text)
+provider = "fake"
+
+[profiles.dev.vad]                           # speech segments: energy gate, deterministic
+provider = "fake"
+
+[profiles.dev.diarization]                   # which voice: session-only labels voice-A, voice-B
+provider = "fake"
+
+[profiles.dev.faces]                         # faces in the camera: one fake face in the middle of the frame
+provider = "fake"
+
+[profiles.dev.asd]                           # who is talking: the first face, whenever there is sound
+provider = "fake"
+
+[profiles.dev.tts]                           # spoken replies: a short fake tone as WAV
+provider = "fake"
+
+[profiles.dev.embed]                         # text embeddings for doc search: hashed bag of words
+provider = "fake"
+
+[profiles.dev.pii]                           # personal details before anything leaves the box: regexes
+provider = "regex"
+
+# ---------------------------------------------------------------------------------------------- dev-local
+# Same desktop, nothing remote: the chat model is a small Qwen3 on a local llama.cpp server
+# (scripts/dev-llm.sh starts it on :8010). This is the profile that proves the OpenAI tool-calling path
+# works before we point it at vLLM on the GB10.
+[profiles.dev-local]
+extends = "dev"
+local_only = true
+
+[profiles.dev-local.llm]
+provider = "openai"                          # any OpenAI-compatible server: llama.cpp here, vLLM on the GB10
+url = "http://127.0.0.1:8010/v1"
+model = "qwen3-4b"                           # the --alias scripts/dev-llm.sh gives llama-server
+label = "Qwen3 4B on llama.cpp (CPU)"
+# enable_thinking=false: answer at once instead of reasoning first (fast escalations; the tools still work)
+options = { max_tokens = 300, temperature = 0, timeout = 120, extra_body = { chat_template_kwargs = { enable_thinking = false } } }
+
+# -------------------------------------------------------------------------------------------- dev-sensors
+# dev-local plus the REAL in-process hearing/vision providers from the sensors workstream, all on the CPU
+# (ONNX / faster-whisper int8). `python -m unspoken.models check --profile dev-sensors` loads every one of
+# them (first run downloads the WeSpeaker ONNX and the faster-whisper model into ~/.cache). Needs
+# requirements/sensors.txt installed.
+[profiles.dev-sensors]
+extends = "dev-local"
+local_only = true
+
+[profiles.dev-sensors.vad]
+provider = "python:unspoken.sensors.vad:SileroVAD"
+label = "Silero VAD v5 (ONNX, CPU)"
+options = { threshold = 0.5, min_silence_ms = 500 }
+
+[profiles.dev-sensors.asr]
+provider = "python:unspoken.sensors.asr_local:FasterWhisperASR"
+model = "Systran/faster-whisper-base.en"
+label = "faster-whisper base.en (CPU int8)"
+options = { device = "cpu", compute_type = "int8", language = "en", threads = 4 }
+
+[profiles.dev-sensors.diarization]
+provider = "python:unspoken.sensors.diar:EmbeddingDiarizer"
+label = "WeSpeaker CAM++ (ONNX, CPU)"
+options = { threshold = 0.55, max_voices = 8 }
+
+[profiles.dev-sensors.faces]
+provider = "python:unspoken.sensors.faces:YuNetFaces"
+label = "YuNet 2023mar (OpenCV)"
+
+[profiles.dev-sensors.asd]
+provider = "python:unspoken.sensors.asd:MotionASD"
+label = "MotionASD (heuristic)"
+
+# ---------------------------------------------------------------------------------------------- dev-best
+# The winners of the per-person transcriber real test (docs/TRANSCRIBE.md), on this CPU: Parakeet for words,
+# causal CAM++ window labels for voices, Light-ASD for who is talking on camera. Live: python -m
+# unspoken.transcribe.live --profile dev-best ...  (the gb10 profile carries the same choices on the GPU).
+[profiles.dev-best]
+extends = "dev-sensors"
+local_only = true
+
+[profiles.dev-best.vad]                      # live cut at pauses, 8 s cap (tx-live measured 400 ms / 8 s)
+provider = "python:unspoken.sensors.vad:SileroVAD"
+label = "Silero VAD v5 (ONNX, CPU)"
+options = { threshold = 0.5, min_silence_ms = 400, max_segment_s = 8 }
+
+[profiles.dev-best.asr]
+provider = "python:unspoken.transcribe.asr_parakeet:ParakeetASR"
+label = "Parakeet TDT 0.6B v3 (onnx-asr, CPU fp32)"
+options = { threads = 4 }
+
+[profiles.dev-best.diarization]
+provider = "python:unspoken.transcribe.diar:OnlineWindowDiarizer"
+label = "WeSpeaker CAM++ (ONNX, CPU) + online window labelling"
+options = { embedder = "campp", join = 0.6, mint = 0.4, max_voices = 4, win_s = 1.5, hop_s = 0.75, threads = 2 }
+
+[profiles.dev-best.asd]
+provider = "python:unspoken.transcribe.asd_live:LightASDLive"
+label = "Light-ASD (AVA, MIT), 1 s window, CPU"
+options = { device = "cpu", window_s = 1.0, every_s = 0.2, threads = 4 }
+
+# --------------------------------------------------------------------------------------------------- gb10
+# The Dell Pro Max with GB10 on the day. ALL inference local; local_only makes the registry refuse anything
+# else. Ports follow docs/PLAN.md s4. The sensing roles are in-process providers from the sensors
+# workstream (torch / onnxruntime are imported only when the role is first used).
+[profiles.gb10]
+local_only = true
+
+[profiles.gb10.decider]                      # the 12B is fast on the GPU, so it is the FIRST opinion here
+provider = "strands-decider"                 # (deploy/gb10/up.sh starts it on :8765; health GET /health)
+url = "http://127.0.0.1:8765"
+model = "decider-12b"                        # the name the decider client reports in its answers
+label = "Strands Decider 12B (GPU)"
+options = { max_concurrency = 4 }
+
+[profiles.gb10.decider_big]                  # OPTIONAL second decider: off by default (the 12B already is the
+provider = "none"                            # big one). To run the 2B on :8766 as the fallback, use instead:
+# provider = "strands-decider"
+# url = "http://127.0.0.1:8766"
+# model = "decider-2b"
+# label = "Strands Decider 2B (GPU)"
+# options = { max_concurrency = 4 }
+
+[profiles.gb10.llm]                          # Qwen3.6 on the NemoClaw-managed vLLM, Chat Completions + tools
+provider = "openai"                          # (tool parser qwen3_xml is server-side; health GET /v1/models)
+url = "http://127.0.0.1:8000/v1"
+model = "nvidia/Qwen3.6-35B-A3B-NVFP4"
+label = "Qwen3.6 35B-A3B NVFP4 on vLLM (GPU)"
+# vLLM uses the chat template option to disable thinking; 400 tokens caps the tool call or reply.
+options = { api_key = "none", max_tokens = 400, temperature = 0, timeout_s = 120, tool_choice = "auto", chat_template_kwargs = { enable_thinking = false } }
+
+[profiles.gb10.vlm]                          # same server, same model: Qwen3.6 reads the whiteboard too
+provider = "openai"
+url = "http://127.0.0.1:8000/v1"
+model = "nvidia/Qwen3.6-35B-A3B-NVFP4"
+label = "Qwen3.6 35B-A3B NVFP4 on vLLM (vision, GPU)"
+options = { api_key = "none", max_tokens = 400, temperature = 0, timeout_s = 120 }
+
+[profiles.gb10.asr]                          # NeMo-Speech.cpp speech server: POST /v1/audio/transcriptions
+provider = "openai-audio"                    # (multipart WAV, verbose_json gives words + timestamps);
+url = "http://127.0.0.1:8770/v1"             # health GET /ready (200 loaded, 503 loading)
+model = "parakeet-tdt-0.6b-v3"               # accepted for compatibility; the server uses its one loaded model
+label = "Parakeet TDT 0.6B v3 (GPU, NeMo-Speech.cpp)"
+# diarization = true would tag words with the server's Nemotron speaker ids; off: the sensors workstream's own
+# session-only voice labels are used instead
+options = { response_format = "verbose_json", language = "en", diarization = false, timeout_s = 20, health = "/ready" }
+
+[profiles.gb10.tts]                          # NeMo-Speech.cpp TTS: POST /v1/audio/speech -> WAV
+provider = "openai-speech"                   # (health GET /ready)
+url = "http://127.0.0.1:8771/v1"
+model = "magpie-tts-multilingual-357m"
+label = "MagpieTTS Multilingual 357M (GPU, NeMo-Speech.cpp)"
+options = { voice = "default", response_format = "wav", timeout_s = 10, health = "/ready" }
+
+[profiles.gb10.vad]                          # in-process Silero VAD v5 (ONNX, CPU); live cut at pauses, 8 s cap
+provider = "python:unspoken.sensors.vad:SileroVAD"   # (the transcriber test: 400 ms / 8 s beat 500 ms / 20 s)
+label = "Silero VAD v5 (ONNX, CPU)"
+options = { threshold = 0.5, min_silence_ms = 400, max_segment_s = 8 }
+
+[profiles.gb10.diarization]                  # WeSpeaker CAM++ on 1.5 s windows, causal labels (session-only), CPU
+provider = "python:unspoken.transcribe.diar:OnlineWindowDiarizer"   # DER 0.185 vs 0.204 per-segment (AMI test)
+label = "WeSpeaker CAM++ (ONNX, CPU) + online window labelling"
+options = { embedder = "campp", join = 0.6, mint = 0.4, max_voices = 4, win_s = 1.5, hop_s = 0.75, threads = 2 }
+
+[profiles.gb10.faces]                        # in-process YuNet face detector (OpenCV), no recognition
+provider = "python:unspoken.sensors.faces:YuNetFaces"
+label = "YuNet 2023mar (OpenCV)"
+
+[profiles.gb10.asd]                          # Light-ASD (AVA-ActiveSpeaker weights, MIT) on the GPU, 1 s window,
+provider = "python:unspoken.transcribe.asd_live:LightASDLive"   # 5 Hz updates. MotionASD was at chance on AMI
+label = "Light-ASD (AVA, MIT), 1 s window, GPU"                    # (which-seat 0.47-0.56 vs 0.72-0.95)
+options = { device = "cuda", window_s = 1.0, every_s = 0.2, threads = 4 }
+
+[profiles.gb10.embed]                        # fake until deploy picks an embedding server; swap to
+provider = "fake"                            # provider = "openai", url = "http://127.0.0.1:8000/v1", model = "..."
+label = "Hashed bag-of-words embeddings (fake, CPU)"
+
+[profiles.gb10.pii]                          # regex personal-detail spans, in-process
+provider = "regex"
+label = "Regex PII spans (CPU)"
+
+# --------------------------------------------------------------------------------------------------- fake
+# Unit tests and the simulator: no servers, no hardware, deterministic answers everywhere.
+[profiles.fake]
+local_only = true
+
+[profiles.fake.decider]
+provider = "fake"
+model = "decider-2b"
+label = "fake decider"
+
+[profiles.fake.decider_big]
+provider = "fake"
+model = "decider-12b"
+label = "fake decider (big)"
+
+[profiles.fake.llm]                          # a strands model that answers with scripted tool calls
+provider = "scripted"
+label = "scripted model"
+options = { tool_calls = [["no_action", {}]], reply = "Nothing to do." }
+
+[profiles.fake.vlm]
+provider = "scripted"
+label = "scripted vision model"
+options = { reply = "A whiteboard with three boxes." }
+
+[profiles.fake.asr]
+provider = "fake"
+
+[profiles.fake.vad]
+provider = "fake"
+
+[profiles.fake.diarization]
+provider = "fake"
+
+[profiles.fake.faces]
+provider = "fake"
+
+[profiles.fake.asd]
+provider = "fake"
+
+[profiles.fake.tts]
+provider = "fake"
+
+[profiles.fake.embed]
+provider = "fake"
+
+[profiles.fake.pii]
+provider = "fake"
+options = { words = { "SECRET" = "secret" } }
+
+# --------------------------------------------------------------------------------------------------- sim
+# The meeting-room simulator and its scenario library: the meeting's keyword decider (plain code that
+# answers the meeting questions), no LLM, fakes for the rest. `python -m unspoken.meeting --profile fake`
+# uses this profile.
+[profiles.sim]
+extends = "fake"
+local_only = true
+
+[profiles.sim.decider]
+provider = "python:unspoken.meeting.fakes:keyword_decider"
+label = "keyword decider (fake)"
+
+[profiles.sim.decider_big]
+provider = "python:unspoken.meeting.fakes:keyword_decider"
+label = "keyword decider (fake, big)"
+
+[profiles.sim.llm]
+provider = "none"
+
+[profiles.sim.vlm]
+provider = "none"

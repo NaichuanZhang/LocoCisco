@@ -1,0 +1,8 @@
+# tx-asd (who is talking on camera) runtime deps on top of requirements/sensors.txt (numpy, opencv-python-headless,
+# av). Exact pins, resolved 2026-10-25 on the x86_64 dev box with Python 3.12. aarch64 status per PyPI /
+# download.pytorch.org listings on 2026-10-25.
+#
+# torch==2.14.1 and python_speech_features==0.6 (Light-ASD) live in requirements/gpu/transcribe-asd-torch.txt:
+# torch needs a per-machine index (CPU here, cu130 on the GB10) and python_speech_features is sdist-only, so neither
+# may be resolved into the USB's aarch64 wheelhouse from this directory. Install them as that file says.
+# Model weights (not pip): python -m unspoken.transcribe.asd_lightasd fetch   -> $UNSPOKEN_MODELS_DIR (sha256-pinned, MIT)

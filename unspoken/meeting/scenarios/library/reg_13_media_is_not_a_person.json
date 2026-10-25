@@ -1,0 +1,50 @@
+{
+ "id": "reg_13_media_is_not_a_person",
+ "title": "The screen talks",
+ "blurb": "Words from a video on the room screen are captioned as Screen and never acted on.",
+ "tags": [
+  "regression"
+ ],
+ "steps": [
+  {
+   "do": "start",
+   "title": "Pricing sync",
+   "owner": "Priya",
+   "agenda": [
+    "Q3 pricing",
+    "Launch"
+   ],
+   "minutes": 30
+  },
+  {
+   "do": "join",
+   "who": "priya",
+   "seat": "s1",
+   "voice": "voice-A",
+   "checkin": "Priya"
+  },
+  {
+   "do": "join",
+   "who": "sam",
+   "seat": "s2",
+   "voice": "voice-B",
+   "checkin": "Sam"
+  },
+  {
+   "do": "media_say",
+   "text": "Sam, send the deck by Friday."
+  },
+  {
+   "do": "expect",
+   "what": "verdict",
+   "verdict": "deny",
+   "rule_contains": "screen",
+   "within": 45
+  },
+  {
+   "do": "expect",
+   "what": "no_item",
+   "within": 2
+  }
+ ]
+}

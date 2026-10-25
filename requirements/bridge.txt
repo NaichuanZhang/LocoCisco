@@ -1,0 +1,10 @@
+# bridge workstream (Notifiers, MCP server, TLS proxy). Pinned; all pure-Python wheels except where noted.
+# mcp 2.1.x is the newest line strands-agents accepts (it requires mcp<2.2).
+mcp==2.1.1               # py3-none-any
+mcp-types==2.1.1         # py3-none-any (pulled by mcp; pinned so the resolver cannot drift)
+httpx2==2.16.0           # py3-none-any (mcp 2.x client/server HTTP layer; coexists with httpx 0.x used by the rest of the repo)
+sse-starlette==3.5.1     # py3-none-any
+starlette==1.10.0        # py3-none-any (fastapi/mcp both accept this line)
+uvicorn==0.54.0          # py3-none-any
+httpx==0.28.1            # py3-none-any (DiscordRestNotifier, TLS proxy upstream client)
+# cryptography (via mcp -> pyjwt[crypto]) ships manylinux aarch64 wheels: no build step on the GB10.

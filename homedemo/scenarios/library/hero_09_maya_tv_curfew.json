@@ -1,0 +1,73 @@
+{
+  "id": "hero_maya_tv_curfew",
+  "title": "Maya asks for TV on a school night",
+  "blurb": "21:15 on a Tuesday. The decider understands 'turn on the TV'; the policy knows who asked and checks with a parent first.",
+  "tags": [
+    "hero",
+    "policy",
+    "permissions"
+  ],
+  "steps": [
+    {
+      "do": "note",
+      "text": "Tuesday, 21:15, a school night. Maya is supposed to be in bed.",
+      "wait": 4
+    },
+    {
+      "do": "set_time",
+      "time": "21:15",
+      "weekday": "Tuesday"
+    },
+    {
+      "do": "set_env",
+      "room": "living",
+      "lux": 150
+    },
+    {
+      "do": "move",
+      "who": "maya",
+      "to": "living"
+    },
+    {
+      "do": "say",
+      "who": "maya",
+      "text": "Turn on the TV.",
+      "lang": "en"
+    },
+    {
+      "do": "expect",
+      "what": "ask",
+      "to": "parents",
+      "action": "tv_on",
+      "within": 10
+    },
+    {
+      "do": "note",
+      "text": "The decider understood the request, but the policy knows who asked: a child, after 20:00, on a school night. It asks a parent's phone instead of acting.",
+      "wait": 7
+    },
+    {
+      "do": "reply",
+      "answer": "Yes"
+    },
+    {
+      "do": "expect",
+      "what": "device",
+      "device": "tv_living",
+      "state": {
+        "on": true
+      },
+      "within": 6
+    },
+    {
+      "do": "note",
+      "text": "Alex said yes from the bedroom, so the TV came on. A 'No' would have left it off.",
+      "wait": 5
+    },
+    {
+      "do": "note",
+      "text": "Permissions live in plain code, where they can be read and audited.",
+      "wait": 3
+    }
+  ]
+}

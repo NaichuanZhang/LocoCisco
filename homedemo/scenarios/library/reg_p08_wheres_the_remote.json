@@ -1,0 +1,42 @@
+{
+  "id": "reg_p08_wheres_the_remote",
+  "title": "\"Where's the remote? The game starts in five minutes.\"",
+  "blurb": "Indirect request: TV on (or an ask). Keyword misses.",
+  "tags": [
+    "regression",
+    "speech",
+    "seed:p8",
+    "keyword-misses"
+  ],
+  "steps": [
+    {
+      "do": "set_env",
+      "room": "living",
+      "lux": 200
+    },
+    {
+      "do": "say",
+      "who": "alex",
+      "text": "Where's the remote? The game starts in five minutes.",
+      "lang": "en"
+    },
+    {
+      "do": "expect",
+      "what": "proposal",
+      "by": "keyword",
+      "action": "none",
+      "within": 5
+    },
+    {
+      "do": "expect",
+      "what": "outcome",
+      "action": "tv_on",
+      "accept": [
+        "done",
+        "asked"
+      ],
+      "within": 12,
+      "room": "living"
+    }
+  ]
+}

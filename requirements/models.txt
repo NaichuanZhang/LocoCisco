@@ -1,0 +1,8 @@
+# models workstream: the registry (unspoken/models) and its HTTP providers. All pure-Python wheels
+# (aarch64 OK). The registry itself only needs the stdlib + httpx; the extras below are imported lazily
+# by the provider that uses them.
+strands-agents[openai]==1.62.0     # strands Agent + OpenAIModel/BedrockModel (the "openai" and "bedrock" llm providers)
+openai==2.54.0                     # OpenAI SDK used by strands OpenAIModel against vLLM / llama.cpp (pure Python)
+aws-bedrock-token-generator==1.1.0 # pulled in by strands-agents[openai]; unused on the GB10 (dev profile only)
+httpx==0.28.1                      # decider client, ASR/TTS/embedding HTTP providers, probes
+boto3==1.43.118                    # "bedrock" llm provider only (dev profile; refused in local_only profiles)

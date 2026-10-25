@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>LocoCisco · meeting intelligence</title>
+<link rel="icon" href="data:,">
+<link rel="preload" href="static/fonts/figtree-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="static/fonts/figtree-600.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="static/screen.css">
+<link rel="stylesheet" href="static/replay.css">
+</head>
+<body>
+<a class="skip" href="#captions">Skip to captions</a>
+
+<header class="top" aria-label="Meeting state">
+  <!-- privacy state: text + icon, never colour alone; matches the physical lamp -->
+  <div id="privacy" class="privacy state-on" role="status" aria-live="assertive" aria-atomic="true">
+    <span class="p-icon" aria-hidden="true"></span>
+    <span class="p-text">NOTES ON</span>
+    <span class="p-sub">captions and notes are being written</span>
+  </div>
+
+  <div class="agenda" aria-label="Agenda">
+    <div class="ag-row">
+      <span id="ag-title" class="ag-title">No meeting yet</span>
+      <span id="ag-topic" class="ag-topic"></span>
+      <span id="ag-left" class="ag-left"></span>
+    </div>
+    <div class="ag-bar" role="progressbar" aria-label="Time left in the meeting" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="ag-bar">
+      <div id="ag-fill" class="ag-fill"></div>
+    </div>
+    <div id="ag-topics" class="ag-topics" aria-label="Topics"></div>
+  </div>
+
+  <div class="brand">
+    <img class="brand-bars" src="static/assets/lococisco-bars.svg" width="48" height="30" alt="">
+    <img class="brand-word" src="static/assets/lococisco-wordmark.svg" width="143" height="44" alt="LocoCisco">
+    <span class="b-name">LocoCisco</span>
+    <span id="clock" class="b-clock" aria-live="off">--:--</span>
+    <span id="conn" class="b-conn" title="Connection to the room brain">● connecting</span>
+  </div>
+</header>
+
+<div id="banner" class="banner" role="status" aria-live="polite" hidden></div>
+
+<main class="main">
+  <section class="captions-wrap" aria-labelledby="cap-h">
+    <h2 id="cap-h" class="cap-label">Live captions · named by voice and seat</h2>
+    <ol id="captions" class="captions" aria-live="polite" aria-relevant="additions text" aria-atomic="false">
+      <li class="cap empty" id="cap-empty">Waiting for someone to speak…</li>
+    </ol>
+    <p id="wiped" class="wiped" hidden><span class="w-icon" aria-hidden="true">⌫</span> <span id="wiped-text">Last 1 min wiped</span></p>
+    <p id="people" class="people" aria-label="Who is here"></p>
+  </section>
+
+  <section class="cards-wrap" aria-labelledby="cards-h">
+    <h2 id="cards-h" class="sr-only">Cards</h2>
+    <div id="cards" class="cards" aria-live="polite" aria-relevant="additions">
+      <p class="muted" id="cards-empty">Tasks, decisions and answers appear here.</p>
+    </div>
+  </section>
+</main>
+
+<footer class="bottom" aria-label="What leaves the box">
+  <div class="egress" id="egress" aria-live="polite">
+    <span class="eg"><span class="eg-k">Audio out</span> <b id="eg-audio">0 B</b></span>
+    <span class="dot" aria-hidden="true">·</span>
+    <span class="eg"><span class="eg-k">Video out</span> <b id="eg-video">0 B</b></span>
+    <span class="dot" aria-hidden="true">·</span>
+    <span class="eg"><span class="eg-k" id="eg-dest">Text to Discord</span> <b id="eg-text">0 B</b></span>
+  </div>
+  <ul id="models" class="models" aria-label="Models, all running on this box"></ul>
+  <p class="keys" aria-label="Keyboard shortcuts">
+    <kbd>x</kbd> X-ray <kbd>p</kbd> presenter <kbd>c</kbd> how it works <kbd>s</kbd> stage <kbd>?</kbd> help
+  </p>
+</footer>
+
+<!-- Decider X-ray (key x) -->
+<aside id="xray" class="xray" hidden aria-label="Decider X-ray: how the room decided">
+  <div class="xr-head">
+    <h2>How the room decided</h2>
+    <div class="xr-status">
+      <span id="xr-route" class="xr-badge waiting">waiting</span>
+      <span id="xr-clock" class="xr-clock" title="latency">–</span>
+    </div>
+    <button id="xr-close" class="btn tiny" type="button" aria-label="Close X-ray">close (x)</button>
+  </div>
+  <div id="xr-body" class="xr-body">
+    <p class="muted">The newest decision appears here: what was heard, the exact typed request sent to the Strands Decider, its answer against the act threshold, and where the decision was made. The local LLM is only asked when the decider is unsure.</p>
+  </div>
+  <div class="xr-hist-head"><h3>Recent decisions</h3></div>
+  <ol id="xr-history" class="xr-history" aria-label="Recent decisions"></ol>
+</aside>
+
+<!-- how it works (key c) -->
+<div id="how" class="overlay" hidden role="dialog" aria-modal="true" aria-labelledby="how-h">
+  <div class="dialog">
+    <div class="dlg-head">
+      <h2 id="how-h">How it works</h2>
+      <button id="how-close" class="btn tiny" type="button" aria-label="Close">close (c)</button>
+    </div>
+    <ol class="flow">
+      <li><b>Sensors</b><span>USB mic and camera. VAD, speech-to-text, voice labels and who-is-talking run on this box. Audio is dropped once it is text.</span></li>
+      <li><b>Strands Decider</b><span>Answers a typed question in about 100 ms: task, decision, question, room, nothing? With a probability for every option.</span></li>
+      <li><b>Local LLM, only when unsure</b><span>Below the act threshold the local Qwen reads the transcript and the docs folder, with tools. Tokens never leave the box.</span></li>
+      <li><b>Policy</b><span>Plain code. Guests hide the docs. “Off the record” always wins. The owner approves the recap.</span></li>
+      <li><b>Devices and Discord</b><span>Lamp and fan on the LAN. Tasks, decisions and the recap go to Discord as text through OpenClaw.</span></li>
+    </ol>
+    <p class="how-foot">Nothing but text leaves the box. The meter in the footer counts every byte.</p>
+  </div>
+</div>
+
+<!-- help (key ?) -->
+<div id="help" class="overlay" hidden role="dialog" aria-modal="true" aria-labelledby="help-h">
+  <div class="dialog narrow">
+    <div class="dlg-head">
+      <h2 id="help-h">Keyboard</h2>
+      <button id="help-close" class="btn tiny" type="button" aria-label="Close">close</button>
+    </div>
+    <dl class="keylist">
+      <dt><kbd>Space</kbd> / <kbd>R</kbd></dt><dd>Recording view: start or pause the take / record or stop recording</dd>
+      <dt><kbd>Shift R</kbd> / <kbd>O</kbd></dt><dd>Recording view: restart / open operator setup</dd>
+      <dt><kbd>x</kbd></dt><dd>Decider X-ray panel</dd>
+      <dt><kbd>p</kbd></dt><dd>Presenter mode (projector layout, captions overlay). Also <code>?present=1</code></dd>
+      <dt><kbd>c</kbd></dt><dd>“How it works” card</dd>
+      <dt><kbd>s</kbd></dt><dd>Stage controls: scenarios, reset, inject a Discord command (rehearsal)</dd>
+      <dt><kbd>t</kbd></dt><dd>Toggle light / dark. Also <code>?theme=dark</code></dd>
+      <dt><kbd>Esc</kbd></dt><dd>Close any panel</dd>
+    </dl>
+    <p class="muted small">Loopback only, no login: this page is reachable from this machine alone.</p>
+  </div>
+</div>
+
+<!-- stage controls (key s): rehearsal only, hidden on the TV by default -->
+<section id="stage" class="stage" hidden aria-label="Stage controls">
+  <div class="st-row">
+    <label>Scenario <select id="st-scenario" aria-label="Scenario"></select></label>
+    <button id="st-run" class="btn primary" type="button">Run</button>
+    <button id="st-stop" class="btn" type="button">Stop</button>
+    <button id="st-reset" class="btn" type="button">Reset</button>
+    <span id="st-state" class="chip idle">idle</span>
+    <button id="st-close" class="btn tiny" type="button" aria-label="Close stage controls">close (s)</button>
+  </div>
+  <div class="st-row">
+    <label>Discord command
+      <select id="st-cmd" aria-label="Command">
+        <option value="here">/here (check in)</option>
+        <option value="offrecord">/offrecord</option>
+        <option value="resume">/resume</option>
+        <option value="recap">/recap</option>
+        <option value="undo">❌ undo last task</option>
+        <option value="approve">✅ approve</option>
+        <option value="deny">❌ deny</option>
+        <option value="ask">@LocoCisco ask…</option>
+      </select>
+    </label>
+    <input id="st-user" type="text" value="Priya" maxlength="64" aria-label="Discord user">
+    <input id="st-text" type="text" placeholder="name for /here, question for ask" maxlength="200" aria-label="Argument">
+    <button id="st-send" class="btn" type="button">Send</button>
+    <span id="st-reply" class="small muted" aria-live="polite"></span>
+  </div>
+  <ol id="st-log" class="st-log" aria-label="Trace log, newest first"></ol>
+</section>
+
+<script src="static/xray.js"></script>
+<script src="static/presenter.js"></script>
+<script src="static/screen.js"></script>
+<script src="static/replay.js"></script>
+</body>
+</html>

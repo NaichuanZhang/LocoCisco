@@ -1,0 +1,112 @@
+{
+ "id": "reg_08_off_record_wipe",
+ "title": "Off the record wipes the transcript",
+ "blurb": "The reflex deletes the last minute and the lamp goes red; back on the record resumes.",
+ "tags": [
+  "regression"
+ ],
+ "steps": [
+  {
+   "do": "start",
+   "title": "Pricing sync",
+   "owner": "Priya",
+   "agenda": [
+    "Q3 pricing",
+    "Launch"
+   ],
+   "minutes": 30
+  },
+  {
+   "do": "join",
+   "who": "priya",
+   "seat": "s1",
+   "voice": "voice-A",
+   "checkin": "Priya"
+  },
+  {
+   "do": "join",
+   "who": "sam",
+   "seat": "s2",
+   "voice": "voice-B",
+   "checkin": "Sam"
+  },
+  {
+   "do": "say",
+   "who": "priya",
+   "text": "We should raise the Team price next year.",
+   "lang": "en"
+  },
+  {
+   "do": "expect",
+   "what": "screen",
+   "caption_contains": "Team price",
+   "within": 3
+  },
+  {
+   "do": "say",
+   "who": "sam",
+   "text": "Let's go off the record for a second.",
+   "lang": "en"
+  },
+  {
+   "do": "expect",
+   "what": "privacy",
+   "state": "off_record",
+   "min_wiped": 1,
+   "within": 3
+  },
+  {
+   "do": "expect",
+   "what": "device",
+   "device_id": "lamp",
+   "state": {
+    "scene": "off_record"
+   },
+   "within": 3
+  },
+  {
+   "do": "expect",
+   "what": "screen",
+   "no_caption_contains": "Team price",
+   "within": 3
+  },
+  {
+   "do": "say",
+   "who": "sam",
+   "text": "Their salaries are way above band.",
+   "lang": "en"
+  },
+  {
+   "do": "expect",
+   "what": "no_item",
+   "within": 3
+  },
+  {
+   "do": "expect",
+   "what": "screen",
+   "no_caption_contains": "salaries",
+   "within": 2
+  },
+  {
+   "do": "say",
+   "who": "priya",
+   "text": "Back on the record.",
+   "lang": "en"
+  },
+  {
+   "do": "expect",
+   "what": "privacy",
+   "state": "on",
+   "within": 3
+  },
+  {
+   "do": "expect",
+   "what": "device",
+   "device_id": "lamp",
+   "state": {
+    "scene": "talk"
+   },
+   "within": 3
+  }
+ ]
+}

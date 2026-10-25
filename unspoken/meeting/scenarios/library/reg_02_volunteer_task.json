@@ -1,0 +1,47 @@
+{
+ "id": "reg_02_volunteer_task",
+ "title": "I'll do it",
+ "blurb": "The speaker volunteering is the owner.",
+ "tags": [
+  "regression"
+ ],
+ "steps": [
+  {
+   "do": "start",
+   "title": "Pricing sync",
+   "owner": "Priya",
+   "agenda": [
+    "Q3 pricing",
+    "Launch"
+   ],
+   "minutes": 30
+  },
+  {
+   "do": "join",
+   "who": "priya",
+   "seat": "s1",
+   "voice": "voice-A",
+   "checkin": "Priya"
+  },
+  {
+   "do": "join",
+   "who": "sam",
+   "seat": "s2",
+   "voice": "voice-B",
+   "checkin": "Sam"
+  },
+  {
+   "do": "say",
+   "who": "sam",
+   "text": "I'll draft the launch email tomorrow.",
+   "lang": "en"
+  },
+  {
+   "do": "expect",
+   "what": "item",
+   "kind": "task",
+   "owner": "Sam",
+   "within": 45
+  }
+ ]
+}

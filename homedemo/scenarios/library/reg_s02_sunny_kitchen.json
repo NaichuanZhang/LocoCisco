@@ -1,0 +1,39 @@
+{
+  "id": "reg_s02_sunny_kitchen",
+  "title": "Sunny kitchen at 14:10",
+  "blurb": "Adult walks into a bright kitchen: nothing (both models wanted lights on).",
+  "tags": [
+    "regression",
+    "scene",
+    "seed:s2",
+    "reflex",
+    "model-wrong"
+  ],
+  "steps": [
+    {
+      "do": "set_time",
+      "time": "14:10",
+      "weekday": "Tuesday"
+    },
+    {
+      "do": "leave",
+      "who": "sam"
+    },
+    {
+      "do": "set_env",
+      "room": "kitchen",
+      "lux": 900
+    },
+    {
+      "do": "move",
+      "who": "alex",
+      "to": "kitchen"
+    },
+    {
+      "do": "expect",
+      "what": "no_command",
+      "device": "light_kitchen",
+      "within": 4
+    }
+  ]
+}

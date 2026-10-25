@@ -1,0 +1,61 @@
+{
+ "id": "reg_01_task_owner_due",
+ "title": "Task with owner and due date",
+ "blurb": "A named colleague and 'by Friday' become a task with owner Sam and a date.",
+ "tags": [
+  "regression"
+ ],
+ "steps": [
+  {
+   "do": "start",
+   "title": "Pricing sync",
+   "owner": "Priya",
+   "agenda": [
+    "Q3 pricing",
+    "Launch"
+   ],
+   "minutes": 30
+  },
+  {
+   "do": "join",
+   "who": "priya",
+   "seat": "s1",
+   "voice": "voice-A",
+   "checkin": "Priya"
+  },
+  {
+   "do": "join",
+   "who": "sam",
+   "seat": "s2",
+   "voice": "voice-B",
+   "checkin": "Sam"
+  },
+  {
+   "do": "say",
+   "who": "priya",
+   "text": "Sam, can you send the deck to the press team by Friday?",
+   "lang": "en"
+  },
+  {
+   "do": "expect",
+   "what": "proposal",
+   "by": "decider",
+   "action": "create_task",
+   "within": 45
+  },
+  {
+   "do": "expect",
+   "what": "item",
+   "kind": "task",
+   "owner": "Sam",
+   "has_due": true,
+   "within": 5
+  },
+  {
+   "do": "expect",
+   "what": "post",
+   "channel": "tasks",
+   "within": 5
+  }
+ ]
+}

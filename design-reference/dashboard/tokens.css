@@ -1,0 +1,69 @@
+/* LocoCisco — shared design tokens for the presenter dashboard (index.html) and the
+   How it works page (explainer.html). Colours are Webex Momentum light-theme tokens (momentum-design/momentum-design,
+   packages/assets/tokens/src/theme/stable/light.json); the LocoCisco gradient is kept for the brand. */
+
+@font-face { font-family: 'Figtree'; src: url(fonts/figtree-400.woff2) format('woff2'); font-weight: 400; font-display: block; }
+@font-face { font-family: 'Figtree'; src: url(fonts/figtree-500.woff2) format('woff2'); font-weight: 500; font-display: block; }
+@font-face { font-family: 'Figtree'; src: url(fonts/figtree-600.woff2) format('woff2'); font-weight: 600; font-display: block; }
+@font-face { font-family: 'Figtree'; src: url(fonts/figtree-700.woff2) format('woff2'); font-weight: 700; font-display: block; }
+@font-face { font-family: 'Figtree'; src: url(fonts/figtree-800.woff2) format('woff2'); font-weight: 800; font-display: block; }
+@font-face { font-family: 'JetBrains Mono'; src: url(fonts/jetbrains-mono-400.woff2) format('woff2'); font-weight: 400; font-display: block; }
+@font-face { font-family: 'JetBrains Mono'; src: url(fonts/jetbrains-mono-600.woff2) format('woff2'); font-weight: 600; font-display: block; }
+
+/* Daytime theme — Webex Momentum *light* tokens (theme/stable/light.json). */
+:root, .overlay-card {
+  /* surfaces — groupedbackground.primary, background.solid.primary / secondary / tertiary */
+  --bg: #f7f7f7;
+  --s1: #ffffff;
+  --s2: #f7f7f7;
+  --s3: #dedede;
+  --hover: rgba(0, 0, 0, 0.07);           /* background.primary.hover */
+  --press: rgba(0, 0, 0, 0.11);           /* background.primary.active */
+  --line: rgba(0, 0, 0, 0.10);            /* card hairline */
+  --line-2: rgba(0, 0, 0, 0.20);          /* outline.secondary */
+  --line-3: rgba(0, 0, 0, 0.46);          /* outline.primary */
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.06), 0 4px 16px rgba(0, 0, 0, 0.04);
+  /* text — text.primary / secondary, plus a tertiary step that keeps ≥ 5:1 on white */
+  --t1: rgba(0, 0, 0, 0.95);
+  --t2: rgba(0, 0, 0, 0.70);
+  --t3: rgba(0, 0, 0, 0.58);
+  /* inverse (primary buttons, toasts) — button.primary */
+  --inv-bg: rgba(0, 0, 0, 0.95);
+  --inv-hover: rgba(0, 0, 0, 0.80);
+  --inv-t: #ffffff;
+  /* status — text colour on its light tint (caption.text.light / caption.background.light) */
+  --accent: #0353a8;  --accent-bg: #1170cf;  --accent-deep: #dbf0ff;
+  --ok: #185e46;      --ok-bg: #1d805f;      --ok-deep: #cef5eb;
+  --warn: #7d4705;    --warn-bg: #f2990a;    --warn-deep: #ffebc2;
+  --bad: #ab0a15;     --bad-bg: #db1f2e;     --bad-deep: #ffe8ea;
+  --purple: #932099;  --purple-deep: #fcf2fc;
+  --edge-ok: rgba(24, 94, 70, 0.28); --edge-warn: rgba(125, 71, 5, 0.28); --edge-bad: rgba(171, 10, 21, 0.28); --edge-accent: rgba(3, 83, 168, 0.28);
+  /* outline.gradient.active — Webex's blue → cyan → green (light variant) */
+  --active: linear-gradient(44deg, #3492eb 14.64%, #00a3b5 51.1%, #3cc29a 85.36%);
+}
+/* Anything drawn over the meeting video keeps the dark (night) tokens so it stays legible on footage. */
+.video, .footage {
+  --s1: #1a1a1a; --s2: #262626; --s3: #3b3b3b;
+  --line: rgba(255, 255, 255, 0.12); --line-2: rgba(255, 255, 255, 0.20); --line-3: rgba(255, 255, 255, 0.40);
+  --t1: rgba(255, 255, 255, 0.95); --t2: rgba(255, 255, 255, 0.70); --t3: rgba(255, 255, 255, 0.56);
+  --accent: #64b4fa; --ok: #3cc29a; --warn: #f2990a; --bad: #fc8b98; --purple: #f294f1;
+  --active: linear-gradient(44deg, #3492eb 14.64%, #22c7d6 51.1%, #68debd 85.36%);
+  color: var(--t1);
+}
+:root {
+  /* LocoCisco logo gradient */
+  --brand: linear-gradient(90deg, #2447d6 0%, #0a6fe8 30%, #008fb3 58%, #00a07a 82%, #12a24c 100%);
+
+  --font: 'Figtree', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+  --fs-live: 26px;   /* caption on the video */
+  --fs-cap: 22px;    /* caption log */
+  --fs-title: 18px;  /* card titles, task titles */
+  --fs-body: 16px;   /* everything else — never smaller */
+  --r-card: 12px;
+  --r-inner: 8px;
+  --gap: 16px;
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --t-fast: 180ms;
+  --t-med: 280ms;
+}

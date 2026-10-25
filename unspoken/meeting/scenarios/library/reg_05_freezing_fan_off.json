@@ -1,0 +1,49 @@
+{
+ "id": "reg_05_freezing_fan_off",
+ "title": "It's freezing in here",
+ "blurb": "Comfort talk turns the fan off, no wake word.",
+ "tags": [
+  "regression"
+ ],
+ "steps": [
+  {
+   "do": "start",
+   "title": "Pricing sync",
+   "owner": "Priya",
+   "agenda": [
+    "Q3 pricing",
+    "Launch"
+   ],
+   "minutes": 30
+  },
+  {
+   "do": "join",
+   "who": "priya",
+   "seat": "s1",
+   "voice": "voice-A",
+   "checkin": "Priya"
+  },
+  {
+   "do": "join",
+   "who": "sam",
+   "seat": "s2",
+   "voice": "voice-B",
+   "checkin": "Sam"
+  },
+  {
+   "do": "say",
+   "who": "sam",
+   "text": "It's freezing in here.",
+   "lang": "en"
+  },
+  {
+   "do": "expect",
+   "what": "device",
+   "device_id": "fan",
+   "state": {
+    "on": false
+   },
+   "within": 45
+  }
+ ]
+}

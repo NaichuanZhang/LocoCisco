@@ -1,0 +1,54 @@
+{
+ "id": "reg_17_chat_checkin_binds_voice",
+ "title": "Chat check-in binds the next voice",
+ "blurb": "/here Lin, then an unnamed voice speaks: it is Lin.",
+ "tags": [
+  "regression"
+ ],
+ "steps": [
+  {
+   "do": "start",
+   "title": "Pricing sync",
+   "owner": "Priya",
+   "agenda": [
+    "Q3 pricing",
+    "Launch"
+   ],
+   "minutes": 30
+  },
+  {
+   "do": "join",
+   "who": "priya",
+   "seat": "s1",
+   "voice": "voice-A",
+   "checkin": "Priya"
+  },
+  {
+   "do": "chat",
+   "command": "here",
+   "user": "Lin",
+   "args": {
+    "name": "Lin"
+   }
+  },
+  {
+   "do": "enter",
+   "who": "lin",
+   "seat": "s3",
+   "voice": "voice-C"
+  },
+  {
+   "do": "say",
+   "who": "lin",
+   "text": "I can take the finance review.",
+   "lang": "en"
+  },
+  {
+   "do": "expect",
+   "what": "item",
+   "kind": "task",
+   "owner": "Lin",
+   "within": 45
+  }
+ ]
+}

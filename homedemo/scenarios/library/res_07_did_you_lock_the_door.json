@@ -1,0 +1,62 @@
+{
+  "id": "res_07_did_you_lock_the_door",
+  "title": "\"Did you lock the front door?\"",
+  "blurb": "Alex asks Sam from the bedroom (eval case sp78): nothing. At-risk: the 12B read it as 'lock the door' at 77% in the eval and at 61% in the full pipeline (2026-10-20), so the house asks 'Lock the front door?' and this scenario fails until the question wording improves.",
+  "tags": [
+    "research",
+    "speech",
+    "state-question",
+    "at-risk",
+    "eval:sp78"
+  ],
+  "steps": [
+    {
+      "do": "set_time",
+      "time": "23:00",
+      "weekday": "Tuesday"
+    },
+    {
+      "do": "set_device",
+      "device": "light_bedroom_main",
+      "state": {
+        "on": true,
+        "brightness": 70
+      }
+    },
+    {
+      "do": "set_env",
+      "room": "bedroom_main",
+      "lux": 300
+    },
+    {
+      "do": "move",
+      "who": "alex",
+      "to": "bedroom_main"
+    },
+    {
+      "do": "say",
+      "who": "alex",
+      "text": "Did you lock the front door?",
+      "lang": "en"
+    },
+    {
+      "do": "expect",
+      "what": "proposal",
+      "by": "keyword",
+      "action": "none",
+      "within": 5
+    },
+    {
+      "do": "expect",
+      "what": "verdict",
+      "verdict": "ignore",
+      "within": 15
+    },
+    {
+      "do": "expect",
+      "what": "no_command",
+      "device": "lock_front",
+      "within": 6
+    }
+  ]
+}

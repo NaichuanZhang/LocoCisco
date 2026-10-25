@@ -1,0 +1,3 @@
+# devices workstream (unspoken/devices). Pure-Python wheels; see docs/DEVICES.md for aarch64 notes.
+# The WiZ bulb is driven by our own 200-line UDP client (unspoken/devices/wiz.py): no dependency.
+python-kasa==0.11.0.1

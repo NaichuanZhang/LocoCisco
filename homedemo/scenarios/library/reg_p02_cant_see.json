@@ -1,0 +1,47 @@
+{
+  "id": "reg_p02_cant_see",
+  "title": "\"I can't see a thing in here.\"",
+  "blurb": "Indirect request: lights on. Keyword misses.",
+  "tags": [
+    "regression",
+    "speech",
+    "seed:p2",
+    "keyword-misses"
+  ],
+  "steps": [
+    {
+      "do": "set_time",
+      "time": "19:00",
+      "weekday": "Tuesday"
+    },
+    {
+      "do": "set_env",
+      "room": "living",
+      "lux": 15
+    },
+    {
+      "do": "say",
+      "who": "alex",
+      "text": "I can't see a thing in here.",
+      "lang": "en"
+    },
+    {
+      "do": "expect",
+      "what": "proposal",
+      "by": "keyword",
+      "action": "none",
+      "within": 5
+    },
+    {
+      "do": "expect",
+      "what": "outcome",
+      "action": "lights_on",
+      "accept": [
+        "done",
+        "asked"
+      ],
+      "within": 12,
+      "room": "living"
+    }
+  ]
+}

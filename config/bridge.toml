@@ -1,0 +1,66 @@
+# LocoCisco bridge: how the room brain talks to Discord through NemoClaw/OpenClaw, and how the OpenClaw
+# agent calls back into the room (MCP). Owned by the bridge workstream. NO SECRETS IN THIS FILE:
+#   DISCORD_BOT_TOKEN      Discord bot token (discord-rest fallback only; NemoClaw holds its own copy)
+#   OPENCLAW_HOOKS_TOKEN   bearer for the OpenClaw gateway /hooks routes (openclaw transport, mode = "hooks")
+#   UNSPOKEN_MCP_TOKEN     bearer the sandbox presents to our MCP server (and the TLS proxy checks)
+
+[notifier]
+# "openclaw" (primary: the sandboxed OpenClaw bot posts, verbatim), "discord-rest" (fallback: the host posts
+# with the bot token), "console" (dev: print). UNSPOKEN_NOTIFIER overrides this at runtime.
+transport = "console"
+# Which kinds get their own thread under the post (one thread per task so ✅ ❌ land on the task).
+thread_kinds = ["task"]
+# Discord hard limit is 2000 chars; we chunk below it.
+chunk_chars = 1900
+# Retries: attempts, first backoff, max backoff (seconds); per-request timeout (seconds).
+retries = 3
+backoff = 0.5
+backoff_max = 4.0
+timeout = 15.0
+
+# Logical channel key -> Discord channel id (snowflake). Keys are what the pipeline uses; ids come from
+# Discord Developer Mode -> right-click channel -> Copy Channel ID. Fill these on the day.
+[notifier.channels]
+notes = "000000000000000000"
+tasks = "000000000000000000"
+recap = "000000000000000000"
+
+[notifier.openclaw]
+# NemoClaw sandbox name (nemoclaw <sandbox> exec -- openclaw message send ...)
+sandbox = "unspoken"
+# "exec": run `openclaw message send` inside the sandbox through `nemoclaw exec` (verbatim text, message ids
+#         back). "hooks": POST /hooks/agent on the forwarded gateway port; the AGENT relays the text (not
+#         guaranteed verbatim), useful when exec is unavailable. Bearer from OPENCLAW_HOOKS_TOKEN.
+mode = "exec"
+nemoclaw_bin = "nemoclaw"
+# Discord channel account inside OpenClaw (omit/empty = default account).
+account = ""
+# hooks mode only: the NemoClaw-forwarded OpenClaw gateway on the host (loopback).
+hooks_url = "http://127.0.0.1:18789/hooks/agent"
+agent_id = "main"
+
+[notifier.discord_rest]
+api_base = "https://discord.com/api/v10"
+# Threads auto-archive after this many minutes (Discord accepts 60, 1440, 4320, 10080).
+auto_archive_minutes = 1440
+
+[mcp]
+# The room's MCP server (Streamable HTTP). Loopback only; the TLS proxy below is the only way in from the sandbox.
+host = "127.0.0.1"
+port = 8791          # 8792 on the dev desktop (UNSPOKEN_MCP_PORT overrides)
+path = "/mcp"
+# How long create_task / set_light wait for the policy verdict before answering "pending" (seconds).
+verdict_wait = 3.0
+# Stateless JSON responses are the simplest thing to proxy; set both false for SSE streaming sessions.
+stateless = true
+json_response = true
+
+[tls_proxy]
+# Binds ONLY to the private IPv4 gateway of the `openshell-docker` bridge (deploy/nemoclaw/connect.sh fills
+# bind_ip from `docker network inspect openshell-docker`). Never 0.0.0.0. Firewall: allow 8443 from that
+# subnet only (see docs/NEMOCLAW.md).
+bind_ip = ""
+port = 8443
+upstream = "http://127.0.0.1:8791"
+# Key material lives OUTSIDE the repo in a 0700 dir (deploy/nemoclaw/make-ca.sh writes it).
+cert_dir = "~/.unspoken/tls"

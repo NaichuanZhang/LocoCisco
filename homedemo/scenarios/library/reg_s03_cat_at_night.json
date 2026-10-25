@@ -1,0 +1,38 @@
+{
+  "id": "reg_s03_cat_at_night",
+  "title": "Cat in the dark kitchen at 02:15",
+  "blurb": "Only the cat moves at night: nothing.",
+  "tags": [
+    "regression",
+    "scene",
+    "seed:s3",
+    "reflex"
+  ],
+  "steps": [
+    {
+      "do": "set_time",
+      "time": "02:15",
+      "weekday": "Wednesday"
+    },
+    {
+      "do": "leave",
+      "who": "sam"
+    },
+    {
+      "do": "set_env",
+      "room": "kitchen",
+      "lux": 1
+    },
+    {
+      "do": "move",
+      "who": "mochi",
+      "to": "kitchen"
+    },
+    {
+      "do": "expect",
+      "what": "no_command",
+      "device": "any",
+      "within": 4
+    }
+  ]
+}

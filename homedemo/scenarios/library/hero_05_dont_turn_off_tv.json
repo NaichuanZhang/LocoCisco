@@ -1,0 +1,61 @@
+{
+  "id": "hero_dont_turn_off_tv",
+  "title": "\"Don't turn off the TV\"",
+  "blurb": "Negation: a keyword matcher sees 'turn off the TV' and kills the match. The decider hears the 'don't'.",
+  "tags": [
+    "hero",
+    "speech",
+    "keyword-wrong",
+    "negation"
+  ],
+  "steps": [
+    {
+      "do": "note",
+      "text": "Alex is watching the match. Sam walks past and reaches for the remote.",
+      "wait": 4
+    },
+    {
+      "do": "set_device",
+      "device": "tv_living",
+      "state": {
+        "on": true,
+        "volume": 25,
+        "playing": "the match"
+      }
+    },
+    {
+      "do": "set_env",
+      "room": "living",
+      "lux": 60
+    },
+    {
+      "do": "say",
+      "who": "alex",
+      "text": "Don't turn off the TV, I'm still watching.",
+      "lang": "en"
+    },
+    {
+      "do": "expect",
+      "what": "proposal",
+      "by": "keyword",
+      "action": "tv_off",
+      "within": 5
+    },
+    {
+      "do": "expect",
+      "what": "no_command",
+      "device": "tv_living",
+      "within": 6
+    },
+    {
+      "do": "note",
+      "text": "A keyword matcher sees 'turn off the TV' and kills the match. The decider heard the 'don't': no action (2B 65%, 12B 60%).",
+      "wait": 7
+    },
+    {
+      "do": "note",
+      "text": "Negation is where substring matching always fails.",
+      "wait": 3
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "id": "res_14_if_it_gets_colder",
+  "title": "\"If it gets any colder tonight we should turn the heat up.\"",
+  "blurb": "A conditional about later, in a 20 °C room (eval case sp89): nothing now. At-risk: the 2B answered 'warmer' at 75% in the eval; in the full pipeline (2026-10-20) the 12B answered 'warmer' at 98% and the thermostat went up. Fails until the question wording handles conditionals.",
+  "tags": [
+    "research",
+    "speech",
+    "conditional",
+    "at-risk",
+    "eval:sp89"
+  ],
+  "steps": [
+    {
+      "do": "set_time",
+      "time": "20:00",
+      "weekday": "Tuesday"
+    },
+    {
+      "do": "set_env",
+      "room": "living",
+      "lux": 150,
+      "celsius": 20
+    },
+    {
+      "do": "say",
+      "who": "alex",
+      "text": "If it gets any colder tonight we should turn the heat up.",
+      "lang": "en"
+    },
+    {
+      "do": "expect",
+      "what": "proposal",
+      "by": "keyword",
+      "action": "none",
+      "within": 5
+    },
+    {
+      "do": "expect",
+      "what": "verdict",
+      "verdict": "ignore",
+      "within": 15
+    },
+    {
+      "do": "expect",
+      "what": "no_command",
+      "device": "thermostat_main",
+      "within": 6
+    }
+  ]
+}

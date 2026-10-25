@@ -1,0 +1,64 @@
+{
+ "id": "reg_18_late_joiner_catch_up",
+ "title": "Late joiner gets a catch-up card",
+ "blurb": "A /here two minutes in shows what was decided.",
+ "tags": [
+  "regression"
+ ],
+ "steps": [
+  {
+   "do": "start",
+   "title": "Pricing sync",
+   "owner": "Priya",
+   "agenda": [
+    "Q3 pricing",
+    "Launch"
+   ],
+   "minutes": 30
+  },
+  {
+   "do": "join",
+   "who": "priya",
+   "seat": "s1",
+   "voice": "voice-A",
+   "checkin": "Priya"
+  },
+  {
+   "do": "join",
+   "who": "sam",
+   "seat": "s2",
+   "voice": "voice-B",
+   "checkin": "Sam"
+  },
+  {
+   "do": "say",
+   "who": "priya",
+   "text": "Let's go with the thirty-nine dollar Starter price.",
+   "lang": "en"
+  },
+  {
+   "do": "expect",
+   "what": "item",
+   "kind": "decision",
+   "within": 45
+  },
+  {
+   "do": "clock",
+   "minutes_left": 27
+  },
+  {
+   "do": "chat",
+   "command": "here",
+   "user": "Alex",
+   "args": {
+    "name": "Alex"
+   }
+  },
+  {
+   "do": "expect",
+   "what": "screen",
+   "card": "catch_up",
+   "within": 3
+  }
+ ]
+}

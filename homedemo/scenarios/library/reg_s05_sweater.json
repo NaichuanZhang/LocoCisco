@@ -1,0 +1,50 @@
+{
+  "id": "reg_s05_sweater",
+  "title": "Sweater and rubbing arms at 17 °C",
+  "blurb": "Adult puts on a sweater in a 17 °C living room: warmer (or an ask).",
+  "tags": [
+    "regression",
+    "scene",
+    "seed:s5"
+  ],
+  "steps": [
+    {
+      "do": "set_time",
+      "time": "19:00",
+      "weekday": "Tuesday"
+    },
+    {
+      "do": "set_env",
+      "room": "living",
+      "lux": 200,
+      "celsius": 17
+    },
+    {
+      "do": "set_device",
+      "device": "thermostat_main",
+      "state": {
+        "setpoint_c": 17.0
+      }
+    },
+    {
+      "do": "activity",
+      "who": "alex",
+      "text": "putting on a sweater, rubbing their arms, then sitting back down on the couch with a book",
+      "attrs": {
+        "wearing": [
+          "sweater"
+        ]
+      }
+    },
+    {
+      "do": "expect",
+      "what": "outcome",
+      "action": "warmer",
+      "accept": [
+        "done",
+        "asked"
+      ],
+      "within": 15
+    }
+  ]
+}

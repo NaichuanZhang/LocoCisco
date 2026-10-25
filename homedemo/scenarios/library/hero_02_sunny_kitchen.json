@@ -1,0 +1,64 @@
+{
+  "id": "hero_sunny_kitchen",
+  "title": "Sunny kitchen, no lights",
+  "blurb": "At 14:10 sunlight floods the kitchen. Alex walks in and nothing happens, although both models wanted the lights on.",
+  "tags": [
+    "hero",
+    "reflex",
+    "scene",
+    "model-wrong"
+  ],
+  "steps": [
+    {
+      "do": "note",
+      "text": "Two in the afternoon on a bright Tuesday. Sunlight floods the kitchen; Sam is in the living room.",
+      "wait": 3
+    },
+    {
+      "do": "set_time",
+      "time": "14:10",
+      "weekday": "Tuesday"
+    },
+    {
+      "do": "set_env",
+      "room": "living",
+      "lux": 500
+    },
+    {
+      "do": "move",
+      "who": "sam",
+      "to": "living"
+    },
+    {
+      "do": "set_env",
+      "room": "kitchen",
+      "lux": 900
+    },
+    {
+      "do": "note",
+      "text": "Alex walks in to make coffee.",
+      "wait": 2
+    },
+    {
+      "do": "move",
+      "who": "alex",
+      "to": "kitchen"
+    },
+    {
+      "do": "expect",
+      "what": "no_command",
+      "device": "light_kitchen",
+      "within": 5
+    },
+    {
+      "do": "note",
+      "text": "Both models wanted the lights on here (2B 34%, 12B 70%). The reflex checks the light level first, and the scene decider is not asked when someone simply enters a room.",
+      "wait": 6
+    },
+    {
+      "do": "note",
+      "text": "Rules handle the reflexes; the models are asked only when words or activity need understanding.",
+      "wait": 4
+    }
+  ]
+}

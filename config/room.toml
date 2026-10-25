@@ -1,0 +1,26 @@
+# Room appliances (owner: devices workstream). Loaded by unspoken.devices.load_devices(load_room_config()).
+# Override the path with UNSPOKEN_ROOM_CONFIG=/path/room.toml.
+#
+# Each device: kind = "light" | "plug"; driver = "wiz" | "kasa" | "fake"; host = "ip" for real drivers.
+# Optional: port (wiz, default 38899), timeout (s, default 1.0), retries (default 2), debounce_s (wiz, 0.15).
+# A device that is missing here, has an unknown driver or no host becomes an unhealthy fake, so the room
+# never crashes on hardware. The room brain expects the ids "lamp" (light) and "fan" (plug).
+#
+# Real hardware on the day: run `python -m unspoken.devices discover` on the travel router's Wi-Fi and
+# paste the printed block over the two entries below (driver "wiz" / "kasa" with the discovered hosts).
+# Kasa plugs on the newer KLAP/SMART protocol also need KASA_USERNAME / KASA_PASSWORD in the environment
+# (never in this file). See docs/DEVICES.md.
+
+[room]
+name = "LocoCisco meeting room"
+
+[devices.lamp]
+kind = "light"
+driver = "fake"          # "wiz" on the day
+# host = "192.168.8.21"  # from `discover`
+# port = 38899
+
+[devices.fan]
+kind = "plug"
+driver = "fake"          # "kasa" on the day
+# host = "192.168.8.22"  # from `discover`

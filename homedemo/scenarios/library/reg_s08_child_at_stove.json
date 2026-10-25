@@ -1,0 +1,59 @@
+{
+  "id": "reg_s08_child_at_stove",
+  "title": "Child on a chair by the lit stove",
+  "blurb": "Child next to a lit burner, no adult in the kitchen: alert a parent.",
+  "tags": [
+    "regression",
+    "scene",
+    "seed:s8",
+    "safety"
+  ],
+  "steps": [
+    {
+      "do": "set_time",
+      "time": "17:20",
+      "weekday": "Tuesday"
+    },
+    {
+      "do": "set_env",
+      "room": "kitchen",
+      "lux": 400
+    },
+    {
+      "do": "set_device",
+      "device": "stove_kitchen",
+      "state": {
+        "burner_on": true
+      }
+    },
+    {
+      "do": "move",
+      "who": "sam",
+      "to": "living"
+    },
+    {
+      "do": "move",
+      "who": "maya",
+      "to": "kitchen"
+    },
+    {
+      "do": "activity",
+      "who": "maya",
+      "text": "standing on a chair next to the stove",
+      "attrs": {
+        "age_group": "child",
+        "pose": "standing on chair",
+        "near": "stove"
+      }
+    },
+    {
+      "do": "expect",
+      "what": "outcome",
+      "action": "alert_parent",
+      "accept": [
+        "done"
+      ],
+      "within": 12
+    }
+  ]
+}

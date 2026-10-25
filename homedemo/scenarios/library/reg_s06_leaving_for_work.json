@@ -1,0 +1,54 @@
+{
+  "id": "reg_s06_leaving_for_work",
+  "title": "Jacket and car keys at 08:05",
+  "blurb": "Adult heads for the door in a 17 °C hallway: nothing (they are leaving).",
+  "tags": [
+    "regression",
+    "scene",
+    "seed:s6"
+  ],
+  "steps": [
+    {
+      "do": "set_time",
+      "time": "08:05",
+      "weekday": "Monday"
+    },
+    {
+      "do": "set_env",
+      "room": "hallway",
+      "lux": 300,
+      "celsius": 17
+    },
+    {
+      "do": "set_device",
+      "device": "thermostat_main",
+      "state": {
+        "setpoint_c": 17.0
+      }
+    },
+    {
+      "do": "move",
+      "who": "alex",
+      "to": "hallway"
+    },
+    {
+      "do": "activity",
+      "who": "alex",
+      "text": "putting on a jacket, holding car keys, walking toward the front door",
+      "attrs": {
+        "wearing": [
+          "jacket"
+        ],
+        "holding": [
+          "keys"
+        ]
+      }
+    },
+    {
+      "do": "expect",
+      "what": "no_command",
+      "device": "thermostat_main",
+      "within": 5
+    }
+  ]
+}

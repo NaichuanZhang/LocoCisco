@@ -1,0 +1,87 @@
+{
+  "id": "res_09_kitchen_lights_off_terse",
+  "title": "\"Kitchen lights off.\" (terse, from the hallway)",
+  "blurb": "Three words from the hallway on the way to bed (eval case sp42, where the 2B answered 'none' at 91%): the kitchen light goes off. The hallway has no mic; the kitchen mic picks it up.",
+  "tags": [
+    "research",
+    "speech",
+    "terse",
+    "other-room",
+    "eval:sp42"
+  ],
+  "steps": [
+    {
+      "do": "set_time",
+      "time": "22:00",
+      "weekday": "Tuesday"
+    },
+    {
+      "do": "set_device",
+      "device": "light_kitchen",
+      "state": {
+        "on": true,
+        "brightness": 100
+      }
+    },
+    {
+      "do": "set_env",
+      "room": "living",
+      "lux": 60
+    },
+    {
+      "do": "move",
+      "who": "sam",
+      "to": "living"
+    },
+    {
+      "do": "set_env",
+      "room": "hallway",
+      "lux": 20
+    },
+    {
+      "do": "move",
+      "who": "alex",
+      "to": "hallway",
+      "x": 560,
+      "y": 350
+    },
+    {
+      "do": "say",
+      "who": "alex",
+      "text": "Kitchen lights off.",
+      "lang": "en"
+    },
+    {
+      "do": "expect",
+      "what": "proposal",
+      "by": "keyword",
+      "action": "lights_off",
+      "within": 5
+    },
+    {
+      "do": "expect",
+      "what": "outcome",
+      "action": "lights_off",
+      "accept": [
+        "done",
+        "asked"
+      ],
+      "within": 20,
+      "room": "kitchen"
+    },
+    {
+      "do": "reply",
+      "answer": "Yes",
+      "if_asked": true
+    },
+    {
+      "do": "expect",
+      "what": "device",
+      "device": "light_kitchen",
+      "state": {
+        "on": false
+      },
+      "within": 6
+    }
+  ]
+}

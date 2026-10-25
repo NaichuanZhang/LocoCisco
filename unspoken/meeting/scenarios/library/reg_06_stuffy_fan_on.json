@@ -1,0 +1,48 @@
+{
+ "id": "reg_06_stuffy_fan_on",
+ "title": "It's stuffy in here",
+ "blurb": "The opposite complaint turns the fan on.",
+ "tags": [
+  "regression"
+ ],
+ "steps": [
+  {
+   "do": "start",
+   "title": "Pricing sync",
+   "owner": "Priya",
+   "agenda": [
+    "Q3 pricing",
+    "Launch"
+   ],
+   "minutes": 30
+  },
+  {
+   "do": "join",
+   "who": "priya",
+   "seat": "s1",
+   "voice": "voice-A",
+   "checkin": "Priya"
+  },
+  {
+   "do": "join",
+   "who": "sam",
+   "seat": "s2",
+   "voice": "voice-B",
+   "checkin": "Sam"
+  },
+  {
+   "do": "say",
+   "who": "priya",
+   "text": "It's really stuffy in here, can we get some air?"
+  },
+  {
+   "do": "expect",
+   "what": "device",
+   "device_id": "fan",
+   "state": {
+    "on": true
+   },
+   "within": 45
+  }
+ ]
+}

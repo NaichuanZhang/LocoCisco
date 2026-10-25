@@ -1,0 +1,76 @@
+{
+  "id": "res_12_guest_chilly",
+  "title": "Guest: \"Brr, is it always this chilly in here?\"",
+  "blurb": "An unknown voice complains about the cold in a 17 °C living room (designed): warmer, because guests may change the heat. An ask goes to the parents, since the guest has no phone.",
+  "tags": [
+    "research",
+    "speech",
+    "permissions",
+    "indirect",
+    "keyword-misses",
+    "f2:7"
+  ],
+  "steps": [
+    {
+      "do": "set_time",
+      "time": "19:30",
+      "weekday": "Saturday"
+    },
+    {
+      "do": "set_device",
+      "device": "light_living",
+      "state": {
+        "on": true,
+        "brightness": 100
+      }
+    },
+    {
+      "do": "set_env",
+      "room": "living",
+      "lux": 300,
+      "celsius": 17
+    },
+    {
+      "do": "arrive",
+      "who": "guest1",
+      "to": "living"
+    },
+    {
+      "do": "say",
+      "who": "guest1",
+      "text": "Brr, is it always this chilly in here?",
+      "lang": "en"
+    },
+    {
+      "do": "expect",
+      "what": "proposal",
+      "by": "keyword",
+      "action": "none",
+      "within": 5
+    },
+    {
+      "do": "expect",
+      "what": "outcome",
+      "action": "warmer",
+      "accept": [
+        "done",
+        "asked"
+      ],
+      "within": 20
+    },
+    {
+      "do": "reply",
+      "answer": "Yes",
+      "if_asked": true
+    },
+    {
+      "do": "expect",
+      "what": "outcome",
+      "action": "warmer",
+      "accept": [
+        "done"
+      ],
+      "within": 6
+    }
+  ]
+}

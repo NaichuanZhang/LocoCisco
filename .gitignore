@@ -1,0 +1,13 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+traces/
+eval/runs/
+
+# Local agent context and deployment state
+.devin/
+lococisco-runtime/
+.env
+.env.*
+!.env.example

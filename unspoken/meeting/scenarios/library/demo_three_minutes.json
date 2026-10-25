@@ -1,0 +1,272 @@
+{
+ "id": "demo_three_minutes",
+ "title": "The three-minute demo",
+ "blurb": "One meeting, eight beats: check-ins by voice, a task with owner and due date, comfort, slides, a guest, off the record, the two-minute banner, the recap. Everything local.",
+ "tags": [
+  "demo"
+ ],
+ "steps": [
+  {
+   "do": "note",
+   "text": "LocoCisco listens to this room with no wake word. Every sensor here is simulated; the decider is a real model on this machine.",
+   "wait": 4
+  },
+  {
+   "do": "start",
+   "title": "Pricing sync",
+   "owner": "Priya",
+   "agenda": [
+    "Q3 pricing",
+    "Launch"
+   ],
+   "minutes": 30
+  },
+  {
+   "do": "expect",
+   "what": "device",
+   "device_id": "lamp",
+   "state": {
+    "scene": "talk"
+   },
+   "within": 3
+  },
+  {
+   "do": "note",
+   "text": "Beat 1. The lamp turns green: the meeting is on, notes are on.",
+   "wait": 3
+  },
+  {
+   "do": "join",
+   "who": "priya",
+   "seat": "s1",
+   "voice": "voice-A",
+   "checkin": "Priya"
+  },
+  {
+   "do": "join",
+   "who": "sam",
+   "seat": "s2",
+   "voice": "voice-B",
+   "checkin": "Sam"
+  },
+  {
+   "do": "expect",
+   "what": "screen",
+   "caption_contains": "I'm Sam",
+   "within": 3
+  },
+  {
+   "do": "note",
+   "text": "Two check-ins. Priya's voice and seat are now 'Priya'; Sam's are 'Sam'. Names live only in this meeting.",
+   "wait": 4
+  },
+  {
+   "do": "say",
+   "who": "priya",
+   "text": "Sam, can you send the deck to the press team by Friday?",
+   "lang": "en"
+  },
+  {
+   "do": "expect",
+   "what": "item",
+   "kind": "task",
+   "owner": "Sam",
+   "has_due": true,
+   "within": 45
+  },
+  {
+   "do": "expect",
+   "what": "post",
+   "channel": "tasks",
+   "text_contains": "Sam",
+   "within": 5
+  },
+  {
+   "do": "note",
+   "text": "Beat 2. A task with an owner and a due date, posted to #tasks. The decider picked 'task' and 'Sam'; the date came from code.",
+   "wait": 5
+  },
+  {
+   "do": "say",
+   "who": "sam",
+   "text": "It's freezing in here.",
+   "lang": "en"
+  },
+  {
+   "do": "expect",
+   "what": "device",
+   "device_id": "fan",
+   "state": {
+    "on": false
+   },
+   "within": 45
+  },
+  {
+   "do": "note",
+   "text": "Beat 3. 'Freezing' is a room request: the fan (our stand-in for the AC) goes off.",
+   "wait": 4
+  },
+  {
+   "do": "scene",
+   "mode": "slides"
+  },
+  {
+   "do": "expect",
+   "what": "device",
+   "device_id": "lamp",
+   "state": {
+    "scene": "slides"
+   },
+   "within": 3
+  },
+  {
+   "do": "note",
+   "text": "Beat 4. The camera sees slides on the screen; a plain rule dims the lamp.",
+   "wait": 4
+  },
+  {
+   "do": "enter",
+   "who": "visitor",
+   "seat": "s4"
+  },
+  {
+   "do": "say",
+   "who": "sam",
+   "text": "Can you share the pricing doc in the channel?",
+   "lang": "en"
+  },
+  {
+   "do": "expect",
+   "what": "verdict",
+   "verdict": "deny",
+   "action": "share_docs",
+   "rule_contains": "guest",
+   "within": 45
+  },
+  {
+   "do": "expect",
+   "what": "no_post",
+   "channel": "notes",
+   "within": 2
+  },
+  {
+   "do": "note",
+   "text": "Beat 5. A face with no check-in walked in. Policy: no company docs while a guest is in the room.",
+   "wait": 5
+  },
+  {
+   "do": "leave",
+   "who": "visitor"
+  },
+  {
+   "do": "say",
+   "who": "priya",
+   "text": "Off the record: the layoffs will be announced in Q3.",
+   "lang": "en"
+  },
+  {
+   "do": "expect",
+   "what": "privacy",
+   "state": "off_record",
+   "within": 3
+  },
+  {
+   "do": "expect",
+   "what": "device",
+   "device_id": "lamp",
+   "state": {
+    "scene": "off_record"
+   },
+   "within": 3
+  },
+  {
+   "do": "expect",
+   "what": "screen",
+   "no_caption_contains": "layoffs",
+   "privacy": "off_record",
+   "within": 3
+  },
+  {
+   "do": "say",
+   "who": "sam",
+   "text": "We'd lose the whole Berlin team.",
+   "lang": "en"
+  },
+  {
+   "do": "expect",
+   "what": "no_item",
+   "within": 3
+  },
+  {
+   "do": "note",
+   "text": "Beat 6. 'Off the record' is a reflex in code: red lamp, the last minute of transcript deleted, nothing written down.",
+   "wait": 5
+  },
+  {
+   "do": "say",
+   "who": "priya",
+   "text": "Okay, back on the record.",
+   "lang": "en"
+  },
+  {
+   "do": "expect",
+   "what": "privacy",
+   "state": "on",
+   "within": 3
+  },
+  {
+   "do": "clock",
+   "minutes_left": 2
+  },
+  {
+   "do": "say",
+   "who": "priya",
+   "text": "Someone still needs to update the pricing page by next week.",
+   "lang": "en"
+  },
+  {
+   "do": "expect",
+   "what": "item",
+   "kind": "task",
+   "owner": null,
+   "within": 45
+  },
+  {
+   "do": "expect",
+   "what": "screen",
+   "banner_contains": "1 task has no owner",
+   "within": 5
+  },
+  {
+   "do": "note",
+   "text": "Beat 7. Two minutes left and one task has no owner: the screen says so.",
+   "wait": 4
+  },
+  {
+   "do": "chat",
+   "command": "recap",
+   "user": "Priya"
+  },
+  {
+   "do": "expect",
+   "what": "post",
+   "channel": "notes",
+   "text_contains": "Recap",
+   "within": 10
+  },
+  {
+   "do": "note",
+   "text": "Beat 8. The recap goes to Discord through OpenClaw. The egress meter counted every byte: text only, 0 bytes of audio or video.",
+   "wait": 5
+  },
+  {
+   "do": "end"
+  },
+  {
+   "do": "expect",
+   "what": "screen",
+   "banner_contains": "forgotten",
+   "within": 3
+  }
+ ]
+}

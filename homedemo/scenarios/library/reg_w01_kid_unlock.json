@@ -1,0 +1,46 @@
+{
+  "id": "reg_w01_kid_unlock",
+  "title": "Maya: \"Unlock the front door.\"",
+  "blurb": "A child asks to unlock: denied.",
+  "tags": [
+    "regression",
+    "who",
+    "seed:w1",
+    "permissions"
+  ],
+  "steps": [
+    {
+      "do": "set_time",
+      "time": "15:30",
+      "weekday": "Tuesday"
+    },
+    {
+      "do": "set_env",
+      "room": "living",
+      "lux": 300
+    },
+    {
+      "do": "move",
+      "who": "maya",
+      "to": "living"
+    },
+    {
+      "do": "say",
+      "who": "maya",
+      "text": "Unlock the front door.",
+      "lang": "en"
+    },
+    {
+      "do": "expect",
+      "what": "verdict",
+      "verdict": "deny",
+      "within": 10
+    },
+    {
+      "do": "expect",
+      "what": "no_command",
+      "device": "lock_front",
+      "within": 4
+    }
+  ]
+}

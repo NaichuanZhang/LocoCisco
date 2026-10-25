@@ -1,0 +1,47 @@
+{
+  "id": "reg_p04_stuffy",
+  "title": "\"Ugh, I'm sweating, it's so stuffy.\"",
+  "blurb": "Complaint in a 27 °C living room: cooler. Keyword misses.",
+  "tags": [
+    "regression",
+    "speech",
+    "seed:p4",
+    "keyword-misses"
+  ],
+  "steps": [
+    {
+      "do": "set_time",
+      "time": "19:00",
+      "weekday": "Tuesday"
+    },
+    {
+      "do": "set_env",
+      "room": "living",
+      "lux": 200,
+      "celsius": 27
+    },
+    {
+      "do": "say",
+      "who": "alex",
+      "text": "Ugh, I'm sweating, it's so stuffy.",
+      "lang": "en"
+    },
+    {
+      "do": "expect",
+      "what": "proposal",
+      "by": "keyword",
+      "action": "none",
+      "within": 5
+    },
+    {
+      "do": "expect",
+      "what": "outcome",
+      "action": "cooler",
+      "accept": [
+        "done",
+        "asked"
+      ],
+      "within": 12
+    }
+  ]
+}

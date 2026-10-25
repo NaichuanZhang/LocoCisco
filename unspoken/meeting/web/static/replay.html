@@ -1,0 +1,78 @@
+<section id="replay-panel" aria-label="Meeting intelligence presentation">
+  <div class="capture-layout">
+    <div class="capture-room">
+      <section class="capture-card capture-video-card" aria-labelledby="replay-title">
+        <header class="capture-card-head">
+          <div><span class="capture-step">01</span><h2 id="replay-title">In the room</h2></div>
+          <span class="capture-chip">Local video input</span>
+        </header>
+        <div class="replay-stage">
+          <video id="replay-video" playsinline preload="auto" aria-label="Meeting video playback" aria-describedby="replay-input-label"></video>
+          <div id="capture-vision" aria-label="Observed face tracks and speaking scores"></div>
+          <div class="video-corner"><span class="signal-dot"></span>ON-DEVICE PERCEPTION</div>
+          <div id="replay-privacy" hidden role="status">
+            <div class="replay-privacy-message">
+              <svg viewBox="0 0 48 48" aria-hidden="true"><rect x="12" y="21" width="24" height="21" rx="5"/><path d="M17 21v-8a7 7 0 0 1 14 0v8"/><circle cx="24" cy="31" r="2"/></svg>
+              <h3>Off the record</h3>
+              <p>Source hidden. Audio muted. Notes protected.</p>
+            </div>
+          </div>
+          <div id="replay-countdown" hidden aria-live="assertive"></div>
+          <span id="replay-recording" role="status" hidden><span aria-hidden="true">●</span> Recording</span>
+        </div>
+        <div class="capture-progress-row">
+          <span id="replay-time" aria-label="Elapsed time and duration">00:00 / 00:00</span>
+          <div class="capture-progress" role="progressbar" aria-label="Meeting replay progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div id="capture-progress-fill"></div></div>
+          <span id="capture-playback-state">Ready for a take</span>
+        </div>
+        <div class="capture-source"><span id="replay-input-label">Loading the local meeting video</span><span id="replay-status" aria-live="polite">Checking local models…</span></div>
+      </section>
+      <section class="capture-card capture-roster" aria-label="Session speaker associations">
+        <div class="capture-roster-label"><span class="capture-kicker">SPEAKER ASSOCIATIONS</span><span>Voice + face + check-in</span></div>
+        <div id="capture-people"><p class="capture-empty">Listening for a clear introduction.</p></div>
+      </section>
+      <section class="capture-card capture-transcript-card" aria-labelledby="capture-transcript-title">
+        <header class="capture-card-head"><div><span class="capture-step">02</span><h2 id="capture-transcript-title">The conversation</h2></div><span class="capture-label">ON-RECORD TRANSCRIPT</span></header>
+        <div id="capture-transcript"></div>
+      </section>
+    </div>
+    <div class="capture-intelligence">
+      <section class="capture-card capture-pipeline-card" aria-labelledby="pipeline-title">
+        <header class="capture-card-head"><div><span class="capture-step">03</span><h2 id="pipeline-title">Inside the local intelligence</h2></div><div id="model-summary"><span class="capture-chip">Connecting to models</span></div></header>
+        <div class="capture-pipeline-intro"><p>Small specialists. One shared understanding.</p><span>Observe → understand → decide</span></div>
+        <div id="model-pipeline" aria-label="Live model interaction pipeline"><p class="capture-empty">Model activity will appear as the meeting is processed.</p></div>
+        <div id="capture-stats" aria-label="Measured model activity"></div>
+      </section>
+      <div class="capture-result-grid">
+        <section class="capture-card capture-decision-card" aria-labelledby="capture-decision-title">
+          <header class="capture-card-head"><div><span class="capture-step">04</span><h2 id="capture-decision-title">Why it decided</h2></div><span class="capture-label">LIVE REASONING TRACE</span></header>
+          <div id="decision-detail"><p class="capture-empty">The next utterance will reveal the model’s route, confidence and policy verdict.</p></div>
+        </section>
+        <section class="capture-card capture-output-card" aria-labelledby="capture-output-title">
+          <header class="capture-card-head"><div><h2 id="capture-output-title">What the room keeps</h2></div><span class="capture-chip subtle">Local</span></header>
+          <div id="capture-notes"><p class="capture-empty">Tasks and decisions appear when the evidence supports them.</p></div>
+          <div class="capture-feed-head"><span class="capture-kicker">ROOM ACTIVITY</span><span class="capture-label">PREVIEW OUTPUTS</span></div>
+          <div id="capture-feed"><p class="capture-empty">Room and notification previews appear here.</p></div>
+          <p id="replay-answer" aria-live="polite" hidden></p>
+        </section>
+      </div>
+    </div>
+  </div>
+  <div class="capture-meta"><span id="replay-attribution"></span><span id="replay-integration">Devices and Discord: local previews</span></div>
+  <p id="replay-error" role="alert" aria-live="polite" hidden></p>
+  <!-- Operator tools stay outside the recorded presentation. O opens setup; R records. -->
+  <section id="replay-operator" hidden aria-label="Recording setup">
+    <header><h2>Recording setup</h2><button id="replay-operator-close" type="button" aria-label="Close recording setup">Close · O</button></header>
+    <p>The demo starts automatically · Space pauses or continues · R records · Shift R restarts · O hides these tools.</p>
+    <div class="replay-source"><label class="replay-upload"><input id="replay-file" type="file" accept="video/*" aria-label="Choose local meeting video"><span>Choose video</span></label></div>
+    <div class="replay-controls" role="group" aria-label="Replay controls">
+      <button id="replay-play" type="button" disabled>Play</button><button id="replay-pause" type="button" disabled>Pause</button><button id="replay-restart" type="button" disabled>Restart</button>
+      <button id="replay-record" type="button" disabled>Record demo</button><button id="replay-stop-record" type="button" disabled>Stop &amp; save</button><a id="replay-download" download hidden>Download recording</a>
+    </div>
+    <div class="replay-commands" role="group" aria-label="Meeting controls">
+      <button id="replay-offrecord" type="button">Off the record</button><button id="replay-resume" type="button">Resume notes</button><button id="replay-xray" type="button">Detailed X-ray</button>
+      <input id="replay-person" placeholder="Participant name" maxlength="64" aria-label="Participant name"><button id="replay-checkin" type="button">Check in</button>
+    </div>
+    <div class="replay-commands"><input id="replay-question" placeholder="What did we decide?" maxlength="1000" aria-label="Ask the room"><button id="replay-ask" type="button">Ask locally</button><button id="replay-refresh" type="button">Check models</button></div>
+  </section>
+</section>

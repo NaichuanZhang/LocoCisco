@@ -1,0 +1,103 @@
+{
+  "id": "hero_porch_stranger",
+  "title": "A stranger on the porch, then Alex",
+  "blurb": "'Unlock the front door' from outside is denied. The same words from Alex in the hallway unlock it.",
+  "tags": [
+    "hero",
+    "policy",
+    "voice-source",
+    "permissions",
+    "keyword-wrong"
+  ],
+  "steps": [
+    {
+      "do": "note",
+      "text": "Wednesday, 23:10. Everyone is asleep. Someone is on the porch.",
+      "wait": 3
+    },
+    {
+      "do": "set_time",
+      "time": "23:10",
+      "weekday": "Wednesday"
+    },
+    {
+      "do": "outside_say",
+      "text": "Unlock the front door.",
+      "door": "front"
+    },
+    {
+      "do": "expect",
+      "what": "verdict",
+      "verdict": "deny",
+      "within": 10
+    },
+    {
+      "do": "expect",
+      "what": "no_command",
+      "device": "lock_front",
+      "within": 5
+    },
+    {
+      "do": "expect",
+      "what": "proposal",
+      "by": "keyword",
+      "action": "unlock_door",
+      "within": 5
+    },
+    {
+      "do": "note",
+      "text": "The porch mic heard the words from outside. Policy: only voices inside the house count. Denied. A keyword lock would have opened.",
+      "wait": 6
+    },
+    {
+      "do": "note",
+      "text": "Alex wakes up and comes to the hallway; the hallway light comes on by reflex.",
+      "wait": 2
+    },
+    {
+      "do": "set_env",
+      "room": "hallway",
+      "lux": 2
+    },
+    {
+      "do": "move",
+      "who": "alex",
+      "to": "hallway"
+    },
+    {
+      "do": "say",
+      "who": "alex",
+      "text": "Unlock the front door.",
+      "lang": "en"
+    },
+    {
+      "do": "expect",
+      "what": "outcome",
+      "action": "unlock_door",
+      "accept": [
+        "done",
+        "asked"
+      ],
+      "within": 15
+    },
+    {
+      "do": "reply",
+      "answer": "Yes",
+      "if_asked": true
+    },
+    {
+      "do": "expect",
+      "what": "device",
+      "device": "lock_front",
+      "state": {
+        "locked": false
+      },
+      "within": 6
+    },
+    {
+      "do": "note",
+      "text": "Same words, different speaker: Alex's voice matched above the 0.90 the unlock rule needs. The door unlocked.",
+      "wait": 5
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "id": "reg_s04a_remote_hunt",
+  "title": "Looking for the remote at 20:30",
+  "blurb": "Adult lifts couch cushions on a Friday evening: TV on (or an ask).",
+  "tags": [
+    "regression",
+    "scene",
+    "seed:s4a"
+  ],
+  "steps": [
+    {
+      "do": "set_time",
+      "time": "20:30",
+      "weekday": "Friday"
+    },
+    {
+      "do": "set_env",
+      "room": "living",
+      "lux": 120
+    },
+    {
+      "do": "activity",
+      "who": "alex",
+      "text": "sitting on the couch, lifting couch cushions and looking around the coffee table"
+    },
+    {
+      "do": "expect",
+      "what": "outcome",
+      "action": "tv_on",
+      "accept": [
+        "done",
+        "asked"
+      ],
+      "within": 15,
+      "room": "living"
+    }
+  ]
+}

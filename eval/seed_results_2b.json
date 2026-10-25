@@ -1,0 +1,582 @@
+{
+ "summary": {
+  "scene": {
+   "n": 10,
+   "right": 7,
+   "sure": 1,
+   "sure_right": 1,
+   "rule_right": 6
+  },
+  "speech": {
+   "n": 14,
+   "right": 12,
+   "sure": 2,
+   "sure_right": 2,
+   "rule_right": 5
+  },
+  "who": {
+   "n": 9,
+   "right": 6,
+   "sure": 0,
+   "sure_right": 0,
+   "rule_right": null
+  },
+  "multi": {
+   "three_questions_ms": 1719,
+   "one_question_ms": 869,
+   "answers": {
+    "act": [
+     "Do it now",
+     0.22
+    ],
+    "req": [
+     "yes",
+     0.653
+    ],
+    "tv": [
+     "no",
+     0.459
+    ]
+   }
+  },
+  "latency_ms": {
+   "median": 824,
+   "p90": 867,
+   "calls": 33
+  }
+ },
+ "rows": [
+  {
+   "sec": "scene",
+   "id": "s1",
+   "pick": "Turn on lights",
+   "ok": [
+    "Turn on lights"
+   ],
+   "right": true,
+   "conf": 0.63,
+   "rule": "Turn on lights",
+   "probs": {
+    "Turn on lights": 0.692,
+    "Do nothing": 0.204,
+    "Alert a parent": 0.061
+   }
+  },
+  {
+   "sec": "scene",
+   "id": "s2",
+   "pick": "Turn on lights",
+   "ok": [
+    "Do nothing"
+   ],
+   "right": false,
+   "conf": 0.339,
+   "rule": "Do nothing",
+   "probs": {
+    "Turn on lights": 0.449,
+    "Do nothing": 0.434,
+    "Alert a parent": 0.043
+   }
+  },
+  {
+   "sec": "scene",
+   "id": "s3",
+   "pick": "Do nothing",
+   "ok": [
+    "Do nothing"
+   ],
+   "right": true,
+   "conf": 0.621,
+   "rule": "Do nothing",
+   "probs": {
+    "Do nothing": 0.684,
+    "Alert a parent": 0.11,
+    "Turn on lights": 0.107
+   }
+  },
+  {
+   "sec": "scene",
+   "id": "s4a",
+   "pick": "Turn on TV",
+   "ok": [
+    "Turn on TV"
+   ],
+   "right": true,
+   "conf": 0.211,
+   "rule": "Do nothing",
+   "probs": {
+    "Turn on TV": 0.343,
+    "Turn off TV": 0.34,
+    "Do nothing": 0.219
+   }
+  },
+  {
+   "sec": "scene",
+   "id": "s4b",
+   "pick": "Do nothing",
+   "ok": [
+    "Do nothing"
+   ],
+   "right": true,
+   "conf": 0.343,
+   "rule": "Do nothing",
+   "probs": {
+    "Do nothing": 0.453,
+    "Turn off TV": 0.222,
+    "Turn on lights": 0.173
+   }
+  },
+  {
+   "sec": "scene",
+   "id": "s5",
+   "pick": "Do nothing",
+   "ok": [
+    "Make warmer"
+   ],
+   "right": false,
+   "conf": 0.71,
+   "rule": "Do nothing",
+   "probs": {
+    "Do nothing": 0.758,
+    "Make warmer": 0.096,
+    "Turn on lights": 0.057
+   }
+  },
+  {
+   "sec": "scene",
+   "id": "s6",
+   "pick": "Do nothing",
+   "ok": [
+    "Do nothing"
+   ],
+   "right": true,
+   "conf": 0.756,
+   "rule": "Do nothing",
+   "probs": {
+    "Do nothing": 0.797,
+    "Make warmer": 0.086,
+    "Turn on lights": 0.046
+   }
+  },
+  {
+   "sec": "scene",
+   "id": "s7",
+   "pick": "Do nothing",
+   "ok": [
+    "Turn off TV"
+   ],
+   "right": false,
+   "conf": 0.306,
+   "rule": "Do nothing",
+   "probs": {
+    "Do nothing": 0.422,
+    "Alert a parent": 0.213,
+    "Turn off TV": 0.14
+   }
+  },
+  {
+   "sec": "scene",
+   "id": "s8",
+   "pick": "Alert a parent",
+   "ok": [
+    "Alert a parent"
+   ],
+   "right": true,
+   "conf": 0.922,
+   "rule": "Do nothing",
+   "probs": {
+    "Alert a parent": 0.935,
+    "Do nothing": 0.029,
+    "Turn on lights": 0.017
+   }
+  },
+  {
+   "sec": "scene",
+   "id": "s9",
+   "pick": "Do nothing",
+   "ok": [
+    "Do nothing"
+   ],
+   "right": true,
+   "conf": 0.523,
+   "rule": "Do nothing",
+   "probs": {
+    "Do nothing": 0.602,
+    "Turn on lights": 0.2,
+    "Make warmer": 0.091
+   }
+  },
+  {
+   "sec": "speech",
+   "id": "p1",
+   "pick": "Lights on",
+   "ok": [
+    "Lights on"
+   ],
+   "right": true,
+   "conf": 0.867,
+   "rule": "Lights on",
+   "probs": {
+    "Lights on": 0.886,
+    "No action": 0.068,
+    "Lights off or dimmer": 0.034
+   }
+  },
+  {
+   "sec": "speech",
+   "id": "p2",
+   "pick": "Lights on",
+   "ok": [
+    "Lights on"
+   ],
+   "right": true,
+   "conf": 0.671,
+   "rule": "No action",
+   "probs": {
+    "Lights on": 0.718,
+    "No action": 0.172,
+    "Lights off or dimmer": 0.072
+   }
+  },
+  {
+   "sec": "speech",
+   "id": "p3",
+   "pick": "Warmer",
+   "ok": [
+    "Warmer"
+   ],
+   "right": true,
+   "conf": 0.584,
+   "rule": "No action",
+   "probs": {
+    "Warmer": 0.644,
+    "Cooler": 0.138,
+    "No action": 0.122
+   }
+  },
+  {
+   "sec": "speech",
+   "id": "p4",
+   "pick": "Cooler",
+   "ok": [
+    "Cooler"
+   ],
+   "right": true,
+   "conf": 0.404,
+   "rule": "No action",
+   "probs": {
+    "Cooler": 0.489,
+    "Warmer": 0.322,
+    "No action": 0.135
+   }
+  },
+  {
+   "sec": "speech",
+   "id": "p5",
+   "pick": "Lights off or dimmer",
+   "ok": [
+    "No action"
+   ],
+   "right": false,
+   "conf": 0.757,
+   "rule": "Lights on",
+   "probs": {
+    "Lights off or dimmer": 0.792,
+    "No action": 0.124,
+    "Lights on": 0.06
+   }
+  },
+  {
+   "sec": "speech",
+   "id": "p6",
+   "pick": "No action",
+   "ok": [
+    "No action"
+   ],
+   "right": true,
+   "conf": 0.645,
+   "rule": "TV off",
+   "probs": {
+    "No action": 0.696,
+    "TV on": 0.209,
+    "TV off": 0.056
+   }
+  },
+  {
+   "sec": "speech",
+   "id": "p7",
+   "pick": "No action",
+   "ok": [
+    "No action"
+   ],
+   "right": true,
+   "conf": 0.487,
+   "rule": "No action",
+   "probs": {
+    "No action": 0.56,
+    "Lights off or dimmer": 0.13,
+    "TV off": 0.119
+   }
+  },
+  {
+   "sec": "speech",
+   "id": "p8",
+   "pick": "No action",
+   "ok": [
+    "TV on"
+   ],
+   "right": false,
+   "conf": 0.49,
+   "rule": "No action",
+   "probs": {
+    "No action": 0.563,
+    "TV on": 0.314,
+    "TV off": 0.075
+   }
+  },
+  {
+   "sec": "speech",
+   "id": "p9",
+   "pick": "Lights off or dimmer",
+   "ok": [
+    "Lights off or dimmer"
+   ],
+   "right": true,
+   "conf": 0.927,
+   "rule": "No action",
+   "probs": {
+    "Lights off or dimmer": 0.938,
+    "No action": 0.025,
+    "Lights on": 0.019
+   }
+  },
+  {
+   "sec": "speech",
+   "id": "p10",
+   "pick": "Warmer",
+   "ok": [
+    "Warmer"
+   ],
+   "right": true,
+   "conf": 0.367,
+   "rule": "No action",
+   "probs": {
+    "Warmer": 0.458,
+    "No action": 0.295,
+    "Cooler": 0.183
+   }
+  },
+  {
+   "sec": "speech",
+   "id": "p11",
+   "pick": "Lights off or dimmer",
+   "ok": [
+    "Lights off or dimmer"
+   ],
+   "right": true,
+   "conf": 0.902,
+   "rule": "Lights off or dimmer",
+   "probs": {
+    "Lights off or dimmer": 0.916,
+    "No action": 0.046,
+    "Lights on": 0.019
+   }
+  },
+  {
+   "sec": "speech",
+   "id": "p12",
+   "pick": "No action",
+   "ok": [
+    "No action"
+   ],
+   "right": true,
+   "conf": 0.599,
+   "rule": "No action",
+   "probs": {
+    "No action": 0.656,
+    "TV on": 0.207,
+    "TV off": 0.097
+   }
+  },
+  {
+   "sec": "speech",
+   "id": "p13",
+   "pick": "Lights on",
+   "ok": [
+    "Lights on"
+   ],
+   "right": true,
+   "conf": 0.804,
+   "rule": "No action",
+   "probs": {
+    "Lights on": 0.832,
+    "No action": 0.096,
+    "Lights off or dimmer": 0.046
+   }
+  },
+  {
+   "sec": "speech",
+   "id": "p14",
+   "pick": "No action",
+   "ok": [
+    "No action"
+   ],
+   "right": true,
+   "conf": 0.773,
+   "rule": "No action",
+   "probs": {
+    "No action": 0.805,
+    "Warmer": 0.102,
+    "Cooler": 0.042
+   }
+  },
+  {
+   "sec": "who",
+   "id": "w1",
+   "pick": "Do nothing",
+   "ok": [
+    "Check with a parent first",
+    "Do nothing"
+   ],
+   "right": true,
+   "conf": 0.532,
+   "rule": null,
+   "probs": {
+    "Do nothing": 0.688,
+    "Check with a parent first": 0.284,
+    "Do it now": 0.028
+   }
+  },
+  {
+   "sec": "who",
+   "id": "w2",
+   "pick": "Do nothing",
+   "ok": [
+    "Do it now"
+   ],
+   "right": false,
+   "conf": 0.668,
+   "rule": null,
+   "probs": {
+    "Do nothing": 0.778,
+    "Check with a parent first": 0.18,
+    "Do it now": 0.042
+   }
+  },
+  {
+   "sec": "who",
+   "id": "w3",
+   "pick": "Do it now",
+   "ok": [
+    "Do it now"
+   ],
+   "right": true,
+   "conf": 0.717,
+   "rule": null,
+   "probs": {
+    "Do it now": 0.811,
+    "Check with a parent first": 0.095,
+    "Do nothing": 0.094
+   }
+  },
+  {
+   "sec": "who",
+   "id": "w4",
+   "pick": "Do it now",
+   "ok": [
+    "Do nothing"
+   ],
+   "right": false,
+   "conf": 0.22,
+   "rule": null,
+   "probs": {
+    "Do it now": 0.48,
+    "Do nothing": 0.287,
+    "Check with a parent first": 0.233
+   }
+  },
+  {
+   "sec": "who",
+   "id": "w5",
+   "pick": "Do nothing",
+   "ok": [
+    "Do nothing",
+    "Check with a parent first"
+   ],
+   "right": true,
+   "conf": 0.224,
+   "rule": null,
+   "probs": {
+    "Do nothing": 0.482,
+    "Do it now": 0.268,
+    "Check with a parent first": 0.249
+   }
+  },
+  {
+   "sec": "who",
+   "id": "w6",
+   "pick": "Do nothing",
+   "ok": [
+    "Check with a parent first",
+    "Do nothing"
+   ],
+   "right": true,
+   "conf": 0.264,
+   "rule": null,
+   "probs": {
+    "Do nothing": 0.509,
+    "Check with a parent first": 0.444,
+    "Do it now": 0.046
+   }
+  },
+  {
+   "sec": "who",
+   "id": "w7",
+   "pick": "Do nothing",
+   "ok": [
+    "Do it now"
+   ],
+   "right": false,
+   "conf": 0.194,
+   "rule": null,
+   "probs": {
+    "Do nothing": 0.462,
+    "Check with a parent first": 0.437,
+    "Do it now": 0.1
+   }
+  },
+  {
+   "sec": "who",
+   "id": "w8",
+   "pick": "Do it now",
+   "ok": [
+    "Do it now"
+   ],
+   "right": true,
+   "conf": 0.58,
+   "rule": null,
+   "probs": {
+    "Do it now": 0.72,
+    "Check with a parent first": 0.163,
+    "Do nothing": 0.117
+   }
+  },
+  {
+   "sec": "who",
+   "id": "w9",
+   "pick": "Do nothing",
+   "ok": [
+    "Do nothing",
+    "Check with a parent first"
+   ],
+   "right": true,
+   "conf": 0.601,
+   "rule": null,
+   "probs": {
+    "Do nothing": 0.734,
+    "Check with a parent first": 0.236,
+    "Do it now": 0.03
+   }
+  }
+ ]
+}

@@ -1,0 +1,726 @@
+{
+ "_comment": "Scene cases for build_scene_query. split fixed before tuning; tune on dev only. ok = acceptable actions (first = canonical). Tag beyond_v0 = needs an action v0's options cannot express.",
+ "cases": [
+  {
+   "id": "sc01",
+   "category": "dark_room",
+   "tags": [
+    "dark_room"
+   ],
+   "scene": {
+    "room": "kitchen",
+    "trigger": "person_entered",
+    "text": "Time 23:40. Kitchen camera: 1 adult walking in from the hallway. Kitchen lights: off. Light level: 2 lux (dark)."
+   },
+   "expected": "lights_on",
+   "ok": [
+    "lights_on"
+   ],
+   "split": "dev"
+  },
+  {
+   "id": "sc02",
+   "category": "sunny",
+   "tags": [
+    "sunny"
+   ],
+   "scene": {
+    "room": "kitchen",
+    "trigger": "person_entered",
+    "text": "Time 14:10. Kitchen camera: 1 adult walking in. Kitchen lights: off. Light level: 900 lux (bright sunlight)."
+   },
+   "expected": "none",
+   "ok": [
+    "none"
+   ],
+   "split": "dev"
+  },
+  {
+   "id": "sc03",
+   "category": "pet",
+   "tags": [
+    "pet"
+   ],
+   "scene": {
+    "room": "kitchen",
+    "trigger": "activity_changed",
+    "text": "Time 02:15. Kitchen camera: 1 cat walking across the floor. No people detected. Kitchen lights: off. Light level: 1 lux."
+   },
+   "expected": "none",
+   "ok": [
+    "none"
+   ],
+   "split": "dev"
+  },
+  {
+   "id": "sc04",
+   "category": "tv_habit",
+   "tags": [
+    "tv_habit"
+   ],
+   "scene": {
+    "room": "living",
+    "trigger": "activity_changed",
+    "text": "Time 20:30 Friday. Living room camera: 1 adult sitting on the couch, lifting couch cushions and looking around the coffee table. TV: off. TV remote: not visible. Habit: this person turned the TV on around 20:30 on 5 of the last 7 nights."
+   },
+   "expected": "tv_on",
+   "ok": [
+    "tv_on"
+   ],
+   "split": "dev"
+  },
+  {
+   "id": "sc05",
+   "category": "leaving",
+   "tags": [
+    "leaving"
+   ],
+   "scene": {
+    "room": "living",
+    "trigger": "activity_changed",
+    "text": "Time 07:50 Monday. Living room camera: 1 adult in a coat, holding a bag, lifting couch cushions and looking around the coffee table. TV: off. Front door: closed."
+   },
+   "expected": "none",
+   "ok": [
+    "none"
+   ],
+   "split": "dev"
+  },
+  {
+   "id": "sc06",
+   "category": "cold",
+   "tags": [
+    "cold"
+   ],
+   "scene": {
+    "room": "living",
+    "trigger": "activity_changed",
+    "text": "Time 19:00. Living room camera: 1 adult putting on a sweater, rubbing their arms, then sitting back down on the couch with a book. Room temperature: 17 C. Thermostat set to 17 C."
+   },
+   "expected": "warmer",
+   "ok": [
+    "warmer"
+   ],
+   "split": "dev"
+  },
+  {
+   "id": "sc07",
+   "category": "leaving",
+   "tags": [
+    "leaving"
+   ],
+   "scene": {
+    "room": "hallway",
+    "trigger": "activity_changed",
+    "text": "Time 08:05. Hallway camera: 1 adult putting on a jacket, holding car keys, walking toward the front door. Room temperature: 17 C. Thermostat set to 17 C."
+   },
+   "expected": "none",
+   "ok": [
+    "none"
+   ],
+   "split": "test"
+  },
+  {
+   "id": "sc08",
+   "category": "sleeping",
+   "tags": [
+    "sleeping"
+   ],
+   "scene": {
+    "room": "living",
+    "trigger": "idle",
+    "text": "Time 01:30. Living room camera: 1 adult lying on the couch, eyes closed, no movement for 40 minutes. TV: on, volume 30."
+   },
+   "expected": "tv_off",
+   "ok": [
+    "tv_off"
+   ],
+   "split": "dev"
+  },
+  {
+   "id": "sc09",
+   "category": "hazard",
+   "tags": [
+    "hazard"
+   ],
+   "scene": {
+    "room": "kitchen",
+    "trigger": "hazard",
+    "text": "Time 17:20. Kitchen camera: 1 child (about 4 years old) standing on a chair next to the stove. Stove burner: on. No adult in the kitchen."
+   },
+   "expected": "alert_parent",
+   "ok": [
+    "alert_parent"
+   ],
+   "split": "dev"
+  },
+  {
+   "id": "sc10",
+   "category": "cooking",
+   "tags": [
+    "cooking"
+   ],
+   "scene": {
+    "room": "kitchen",
+    "trigger": "activity_changed",
+    "text": "Time 18:00. Kitchen camera: 1 adult at the stove, stirring a pot. Stove burner: on. Kitchen lights: on."
+   },
+   "expected": "none",
+   "ok": [
+    "none"
+   ],
+   "split": "dev"
+  },
+  {
+   "id": "sc11",
+   "category": "sunny",
+   "tags": [
+    "sunny"
+   ],
+   "scene": {
+    "room": "living",
+    "trigger": "idle",
+    "text": "Time 15:30. Living room camera: 1 adult reading on the couch. Living room lights: off. Light level: 650 lux (daylight through the windows)."
+   },
+   "expected": "none",
+   "ok": [
+    "none"
+   ],
+   "split": "test"
+  },
+  {
+   "id": "sc12",
+   "category": "dark_room",
+   "tags": [
+    "dark_room"
+   ],
+   "scene": {
+    "room": "living",
+    "trigger": "person_entered",
+    "text": "Time 21:10. Living room camera: 1 adult walking in and sitting down on the couch with a laptop. Living room lights: off. Light level: 3 lux (dark). TV: off."
+   },
+   "expected": "lights_on",
+   "ok": [
+    "lights_on"
+   ],
+   "split": "test"
+  },
+  {
+   "id": "sc13",
+   "category": "empty_room",
+   "tags": [
+    "empty_room",
+    "beyond_v0",
+    "pet"
+   ],
+   "scene": {
+    "room": "living",
+    "trigger": "idle",
+    "text": "Time 03:00. Living room camera: 1 cat sleeping on the couch. No people detected. Living room lights: on. TV: off. No one has been in the room for 90 minutes."
+   },
+   "expected": "lights_off",
+   "ok": [
+    "lights_off"
+   ],
+   "split": "dev"
+  },
+  {
+   "id": "sc14",
+   "category": "pet",
+   "tags": [
+    "pet"
+   ],
+   "scene": {
+    "room": "hallway",
+    "trigger": "activity_changed",
+    "text": "Time 13:00. Hallway camera: 1 dog walking toward the front door, tail wagging. No people detected. Front door: closed and locked. Light level: 400 lux."
+   },
+   "expected": "none",
+   "ok": [
+    "none"
+   ],
+   "split": "test"
+  },
+  {
+   "id": "sc15",
+   "category": "leaving",
+   "tags": [
+    "leaving"
+   ],
+   "scene": {
+    "room": "hallway",
+    "trigger": "activity_changed",
+    "text": "Time 07:45. Hallway camera: 2 adults and 1 child putting on shoes and coats; one adult holding car keys and a school bag. Front door: closed. Hallway lights: on."
+   },
+   "expected": "none",
+   "ok": [
+    "none"
+   ],
+   "split": "dev"
+  },
+  {
+   "id": "sc16",
+   "category": "leaving",
+   "tags": [
+    "leaving"
+   ],
+   "scene": {
+    "room": "porch",
+    "trigger": "activity_changed",
+    "text": "Time 08:05. Front porch camera: 1 adult walking away from the house toward the street with a bag. Front door: closed, locked. Nobody detected inside for 2 minutes."
+   },
+   "expected": "none",
+   "ok": [
+    "none"
+   ],
+   "split": "test"
+  },
+  {
+   "id": "sc17",
+   "category": "cooking",
+   "tags": [
+    "cooking"
+   ],
+   "scene": {
+    "room": "kitchen",
+    "trigger": "activity_changed",
+    "text": "Time 18:30. Kitchen camera: 1 adult chopping vegetables at the counter; stove burner: on, pot steaming. Kitchen lights: on. Light level: 300 lux."
+   },
+   "expected": "none",
+   "ok": [
+    "none"
+   ],
+   "split": "test"
+  },
+  {
+   "id": "sc18",
+   "category": "cooking",
+   "tags": [
+    "cooking"
+   ],
+   "scene": {
+    "room": "kitchen",
+    "trigger": "activity_changed",
+    "text": "Time 12:15. Kitchen camera: 1 adult at the stove frying, 1 child (about 7) sitting at the table drawing. Stove burner: on. Kitchen lights: on."
+   },
+   "expected": "none",
+   "ok": [
+    "none"
+   ],
+   "split": "dev"
+  },
+  {
+   "id": "sc19",
+   "category": "sleeping",
+   "tags": [
+    "sleeping"
+   ],
+   "scene": {
+    "room": "living",
+    "trigger": "idle",
+    "text": "Time 23:50. Living room camera: 1 adult asleep on the couch under a blanket, no movement for 35 minutes. TV: on, volume 25, playing a talk show. Living room lights: on."
+   },
+   "expected": "tv_off",
+   "ok": [
+    "tv_off",
+    "lights_off"
+   ],
+   "split": "test"
+  },
+  {
+   "id": "sc20",
+   "category": "sleeping",
+   "tags": [
+    "sleeping",
+    "beyond_v0"
+   ],
+   "scene": {
+    "room": "living",
+    "trigger": "idle",
+    "text": "Time 00:30. Living room camera: 1 adult lying on the couch, eyes closed, no movement for 25 minutes. TV: off. Living room lights: on at full brightness."
+   },
+   "expected": "lights_off",
+   "ok": [
+    "lights_off"
+   ],
+   "split": "dev"
+  },
+  {
+   "id": "sc21",
+   "category": "hazard",
+   "tags": [
+    "hazard"
+   ],
+   "scene": {
+    "room": "kitchen",
+    "trigger": "hazard",
+    "text": "Time 16:40. Kitchen camera: 1 child (about 7) alone, reaching for a pan handle on the stove. Stove burner: on. No adult in the kitchen or hallway."
+   },
+   "expected": "alert_parent",
+   "ok": [
+    "alert_parent"
+   ],
+   "split": "test"
+  },
+  {
+   "id": "sc22",
+   "category": "hazard",
+   "tags": [
+    "hazard"
+   ],
+   "scene": {
+    "room": "living",
+    "trigger": "hazard",
+    "text": "Time 10:20. Living room camera: 1 adult (about 70 years old) lying on the floor next to the coffee table, not moving for 2 minutes. No one else at home."
+   },
+   "expected": "alert_parent",
+   "ok": [
+    "alert_parent"
+   ],
+   "split": "dev"
+  },
+  {
+   "id": "sc23",
+   "category": "hazard",
+   "tags": [
+    "hazard"
+   ],
+   "scene": {
+    "room": "kitchen",
+    "trigger": "hazard",
+    "text": "Time 19:30. Kitchen camera: smoke visible above the stove, no people in the kitchen. Stove burner: on. Pan on the burner."
+   },
+   "expected": "alert_parent",
+   "ok": [
+    "alert_parent"
+   ],
+   "split": "test"
+  },
+  {
+   "id": "sc24",
+   "category": "hazard",
+   "tags": [
+    "hazard"
+   ],
+   "scene": {
+    "room": "hallway",
+    "trigger": "hazard",
+    "text": "Time 02:40. Hallway camera: 1 adult not recognised as a resident, standing inside the hallway with a flashlight. Front door: open. All residents' phones show them away."
+   },
+   "expected": "alert_parent",
+   "ok": [
+    "alert_parent"
+   ],
+   "split": "dev"
+  },
+  {
+   "id": "sc25",
+   "category": "child_safe",
+   "tags": [
+    "child_safe"
+   ],
+   "scene": {
+    "room": "kitchen",
+    "trigger": "activity_changed",
+    "text": "Time 17:00. Kitchen camera: 1 child (about 7) sitting at the table doing homework. Stove burner: off. Kitchen lights: on. 1 adult in the next room (hallway)."
+   },
+   "expected": "none",
+   "ok": [
+    "none"
+   ],
+   "split": "dev"
+  },
+  {
+   "id": "sc26",
+   "category": "hot",
+   "tags": [
+    "hot",
+    "beyond_v0"
+   ],
+   "scene": {
+    "room": "living",
+    "trigger": "activity_changed",
+    "text": "Time 20:15. Living room camera: 1 adult sitting on the couch, fanning themselves with a magazine, wiping their forehead. Room temperature: 29 C. Thermostat set to 24 C."
+   },
+   "expected": "cooler",
+   "ok": [
+    "cooler"
+   ],
+   "split": "dev"
+  },
+  {
+   "id": "sc27",
+   "category": "cold",
+   "tags": [
+    "cold"
+   ],
+   "scene": {
+    "room": "living",
+    "trigger": "activity_changed",
+    "text": "Time 21:00. Living room camera: 1 adult wrapped in a blanket on the couch, hands tucked under their arms, watching TV. Room temperature: 16 C. Thermostat set to 16 C."
+   },
+   "expected": "warmer",
+   "ok": [
+    "warmer"
+   ],
+   "split": "test"
+  },
+  {
+   "id": "sc28",
+   "category": "comfortable",
+   "tags": [
+    "comfortable"
+   ],
+   "scene": {
+    "room": "living",
+    "trigger": "idle",
+    "text": "Time 19:15. Living room camera: 1 adult sitting on the couch in a T-shirt, relaxed, watching TV. Room temperature: 21 C. Thermostat set to 21 C."
+   },
+   "expected": "none",
+   "ok": [
+    "none"
+   ],
+   "split": "dev"
+  },
+  {
+   "id": "sc29",
+   "category": "dark_room",
+   "tags": [
+    "dark_room"
+   ],
+   "scene": {
+    "room": "bedroom_main",
+    "trigger": "activity_changed",
+    "text": "Time 06:20. Parents' bedroom presence sensor (no camera): 1 person got out of bed and is walking around. Lights: off. Light level: 1 lux (before sunrise)."
+   },
+   "expected": "lights_on",
+   "ok": [
+    "lights_on"
+   ],
+   "split": "dev"
+  },
+  {
+   "id": "sc30",
+   "category": "sleeping",
+   "tags": [
+    "sleeping",
+    "beyond_v0"
+   ],
+   "scene": {
+    "room": "bedroom_maya",
+    "trigger": "idle",
+    "text": "Time 22:45. Maya's room presence sensor (no camera): 1 person lying still for 30 minutes. Lights: on. Light level: 200 lux. School night."
+   },
+   "expected": "lights_off",
+   "ok": [
+    "lights_off"
+   ],
+   "split": "test"
+  },
+  {
+   "id": "sc31",
+   "category": "sleeping",
+   "tags": [
+    "sleeping"
+   ],
+   "scene": {
+    "room": "living",
+    "trigger": "idle",
+    "text": "Time 14:00. Living room camera: 1 adult napping in an armchair, eyes closed. Lights: off. Light level: 500 lux (daylight). TV: off."
+   },
+   "expected": "none",
+   "ok": [
+    "none"
+   ],
+   "split": "dev"
+  },
+  {
+   "id": "sc32",
+   "category": "tv_habit",
+   "tags": [
+    "tv_habit"
+   ],
+   "scene": {
+    "room": "living",
+    "trigger": "activity_changed",
+    "text": "Time 20:30 Friday. Living room camera: 1 adult sitting on the couch scrolling on a phone. TV: off. Habit: this person rarely watches TV."
+   },
+   "expected": "none",
+   "ok": [
+    "none"
+   ],
+   "split": "test"
+  },
+  {
+   "id": "sc33",
+   "category": "tv_habit",
+   "tags": [
+    "tv_habit"
+   ],
+   "scene": {
+    "room": "living",
+    "trigger": "activity_changed",
+    "text": "Time 20:35 Saturday. Living room camera: 1 adult and 1 child sitting on the couch with a bowl of popcorn, looking at the TV. TV: off. Habit: family movie night on Saturdays at 20:30."
+   },
+   "expected": "tv_on",
+   "ok": [
+    "tv_on"
+   ],
+   "split": "dev"
+  },
+  {
+   "id": "sc34",
+   "category": "empty_room",
+   "tags": [
+    "empty_room"
+   ],
+   "scene": {
+    "room": "living",
+    "trigger": "idle",
+    "text": "Time 22:10. Living room camera: nobody in the room. TV: on, volume 30. No one has been in the room for 20 minutes. Residents' phones: all at home (in bedrooms)."
+   },
+   "expected": "tv_off",
+   "ok": [
+    "tv_off"
+   ],
+   "split": "test"
+  },
+  {
+   "id": "sc35",
+   "category": "pet",
+   "tags": [
+    "pet"
+   ],
+   "scene": {
+    "room": "living",
+    "trigger": "activity_changed",
+    "text": "Time 09:00. Living room camera: 1 cat sitting on the TV remote. TV: on, playing a cartoon. No people detected for 15 minutes."
+   },
+   "expected": "tv_off",
+   "ok": [
+    "tv_off"
+   ],
+   "split": "dev"
+  },
+  {
+   "id": "sc36",
+   "category": "pet",
+   "tags": [
+    "pet",
+    "sunny"
+   ],
+   "scene": {
+    "room": "kitchen",
+    "trigger": "activity_changed",
+    "text": "Time 11:00. Kitchen camera: 1 dog drinking from its bowl. 1 adult at the table reading the newspaper. Kitchen lights: off. Light level: 700 lux."
+   },
+   "expected": "none",
+   "ok": [
+    "none"
+   ],
+   "split": "test"
+  },
+  {
+   "id": "sc37",
+   "category": "dark_room",
+   "tags": [
+    "dark_room"
+   ],
+   "scene": {
+    "room": "kitchen",
+    "trigger": "person_entered",
+    "text": "Time 18:50. Kitchen camera: 1 adult walking in carrying groceries. Kitchen lights: off. Light level: 8 lux (dusk, dim)."
+   },
+   "expected": "lights_on",
+   "ok": [
+    "lights_on"
+   ],
+   "split": "test"
+  },
+  {
+   "id": "sc38",
+   "category": "leaving",
+   "tags": [
+    "leaving"
+   ],
+   "scene": {
+    "room": "hallway",
+    "trigger": "activity_changed",
+    "text": "Time 07:30. Hallway camera: 1 adult walking to the front door in pyjamas, picking up a newspaper from the porch and coming back in. Front door: closed again, locked. Hallway lights: on."
+   },
+   "expected": "none",
+   "ok": [
+    "none"
+   ],
+   "split": "dev"
+  },
+  {
+   "id": "sc39",
+   "category": "comfortable",
+   "tags": [
+    "comfortable"
+   ],
+   "scene": {
+    "room": "kitchen",
+    "trigger": "activity_changed",
+    "text": "Time 23:00. Kitchen camera: 1 adult standing at the open fridge, eating from a container. Kitchen lights: on. Stove burner: off."
+   },
+   "expected": "none",
+   "ok": [
+    "none"
+   ],
+   "split": "test"
+  },
+  {
+   "id": "sc40",
+   "category": "child_safe",
+   "tags": [
+    "child_safe"
+   ],
+   "scene": {
+    "room": "kitchen",
+    "trigger": "activity_changed",
+    "text": "Time 15:45. Kitchen camera: 1 child (about 7) standing on a chair reaching for the cookie jar on a high shelf. Stove burner: off. 1 adult at the kitchen table watching."
+   },
+   "expected": "none",
+   "ok": [
+    "none"
+   ],
+   "split": "test"
+  },
+  {
+   "id": "sc41",
+   "category": "sleeping",
+   "tags": [
+    "sleeping"
+   ],
+   "scene": {
+    "room": "bedroom_main",
+    "trigger": "idle",
+    "text": "Time 01:10. Parents' bedroom presence sensor (no camera): 2 people lying still for 2 hours. Lights: off. Temperature: 19 C."
+   },
+   "expected": "none",
+   "ok": [
+    "none"
+   ],
+   "split": "test"
+  },
+  {
+   "id": "sc42",
+   "category": "child_safe",
+   "tags": [
+    "child_safe"
+   ],
+   "scene": {
+    "room": "living",
+    "trigger": "activity_changed",
+    "text": "Time 17:30. Living room camera: 1 child (about 7) alone on the couch watching TV. TV: on. School night, 17:30. 1 adult in the kitchen."
+   },
+   "expected": "none",
+   "ok": [
+    "none"
+   ],
+   "split": "dev"
+  }
+ ]
+}

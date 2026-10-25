@@ -1,0 +1,59 @@
+{
+ "id": "reg_04_question_docs",
+ "title": "Question answered from local docs",
+ "blurb": "A policy question gets an answer card from examples/docs.",
+ "tags": [
+  "regression"
+ ],
+ "steps": [
+  {
+   "do": "start",
+   "title": "Pricing sync",
+   "owner": "Priya",
+   "agenda": [
+    "Q3 pricing",
+    "Launch"
+   ],
+   "minutes": 30
+  },
+  {
+   "do": "join",
+   "who": "priya",
+   "seat": "s1",
+   "voice": "voice-A",
+   "checkin": "Priya"
+  },
+  {
+   "do": "join",
+   "who": "sam",
+   "seat": "s2",
+   "voice": "voice-B",
+   "checkin": "Sam"
+  },
+  {
+   "do": "say",
+   "who": "sam",
+   "text": "What's our refund policy for annual plans?",
+   "lang": "en"
+  },
+  {
+   "do": "expect",
+   "what": "item",
+   "kind": "question",
+   "within": 45
+  },
+  {
+   "do": "expect",
+   "what": "screen",
+   "card": "answer",
+   "within": 5
+  },
+  {
+   "do": "expect",
+   "what": "post",
+   "channel": "notes",
+   "text_contains": "refund",
+   "within": 5
+  }
+ ]
+}

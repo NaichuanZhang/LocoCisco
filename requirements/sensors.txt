@@ -1,0 +1,15 @@
+# Sensors workstream runtime deps (exact pins; resolved 2026-10-24 on the x86_64 dev box with Python 3.12).
+# aarch64 (GB10, DGX OS 7 / Ubuntu 24.04) status per PyPI wheel listings on 2026-10-24: see docs/SENSORS.md.
+numpy==2.5.4                     # manylinux aarch64 cp312 wheel: yes
+onnxruntime==1.31.0              # CPU runtime; manylinux aarch64 cp312 wheel: yes (Silero VAD, WeSpeaker). No prebuilt aarch64 CUDA build; CPU is fine for these two small models
+opencv-python-headless==4.14.0.94  # manylinux aarch64 cp312 wheel: yes (V4L2 capture, YuNet FaceDetectorYN, mp4 replay). 4.x pinned on purpose; 5.0 is out but untested here
+faster-whisper==1.2.1            # pure python; pulls ctranslate2, tokenizers, huggingface-hub, av, tqdm, onnxruntime
+ctranslate2==4.8.3               # manylinux aarch64 cp312 wheel: yes. CPU int8 here; the aarch64 wheel has NO CUDA (GPU ASR on the GB10 = speech server via the registry's openai-audio provider, or build ctranslate2 with CUDA)
+tokenizers==0.23.3               # manylinux aarch64 cp312 wheel: yes
+huggingface-hub==2.3.0           # pure python (hf-xet 1.7.0 has aarch64 wheels)
+av==19.0.2                       # manylinux aarch64 cp312 wheel: yes (decoding non-16 kHz WAVs / mp3 for replay)
+kaldi-native-fbank==1.22.4       # manylinux aarch64 cp312 wheel: yes (80-bin fbank for the speaker model)
+sounddevice==0.5.6               # pure python; needs the system PortAudio library (apt install libportaudio2). Falls back to `arecord` (alsa-utils) when missing
+# NOT runtime deps: piper-tts==1.8.0 only regenerates tests/sensors/fixtures/meeting3.wav (see make_meeting_wav.py).
+# NOT included: torch (Light-ASD is documented as the next step, MotionASD ships instead); silero-vad pip package
+# (it requires torch; we vendor its pinned 2.3 MB ONNX instead, see unspoken/sensors/models/SOURCES.md).

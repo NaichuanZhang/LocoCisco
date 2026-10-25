@@ -1,0 +1,73 @@
+{
+  "id": "hero_midnight_snack",
+  "title": "Midnight snack",
+  "blurb": "Alex walks into a pitch-dark kitchen at 23:40. A plain reflex rule turns the light on before any model is asked.",
+  "tags": [
+    "hero",
+    "reflex",
+    "scene"
+  ],
+  "steps": [
+    {
+      "do": "note",
+      "text": "23:40 on a Tuesday. Sam is away for work and Alex has been reading by phone light in the dark living room.",
+      "wait": 4
+    },
+    {
+      "do": "set_time",
+      "time": "23:40",
+      "weekday": "Tuesday"
+    },
+    {
+      "do": "leave",
+      "who": "sam"
+    },
+    {
+      "do": "set_env",
+      "room": "kitchen",
+      "lux": 2
+    },
+    {
+      "do": "note",
+      "text": "Alex gets up for a snack.",
+      "wait": 3
+    },
+    {
+      "do": "move",
+      "who": "alex",
+      "to": "kitchen"
+    },
+    {
+      "do": "expect",
+      "what": "device",
+      "device": "light_kitchen",
+      "state": {
+        "on": true
+      },
+      "within": 3
+    },
+    {
+      "do": "expect",
+      "what": "proposal",
+      "by": "reflex",
+      "action": "lights_on",
+      "room": "kitchen",
+      "within": 3
+    },
+    {
+      "do": "note",
+      "text": "Dark room + a person + night: the reflex rule turned the light on in milliseconds. No model was asked.",
+      "wait": 5
+    },
+    {
+      "do": "note",
+      "text": "For comparison, the 2B scene decider needs 0.8 s on this scene and was only 63% sure of 'turn on lights'.",
+      "wait": 5
+    },
+    {
+      "do": "note",
+      "text": "Reflexes stay in code. The models are saved for words and activity that need understanding.",
+      "wait": 3
+    }
+  ]
+}

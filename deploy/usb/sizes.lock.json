@@ -1,0 +1,146 @@
+{
+ "generated": "2026-10-25T06:05:41.034968+00:00",
+ "image_tar_factor": 2.2,
+ "items": {
+  "apt-audio": {
+   "bytes": 4265040,
+   "detail": "10 debs: alsa-utils libasound2-data libasound2t64 libatopology2t64 libfftw3-single3 libgomp1 libjack-jackd2-0 libopus0 libportaudio2 libsamplerate0",
+   "files": 10
+  },
+  "hf-decider-12b": {
+   "bytes": 843021697,
+   "detail": "23 files @ main",
+   "files": 23
+  },
+  "hf-decider-2b": {
+   "bytes": 234803773,
+   "detail": "29 files @ 216d1ccb46a9e9b036eb9187b248db98480f77d4",
+   "files": 29
+  },
+  "hf-fw-base-en": {
+   "bytes": 147772310,
+   "detail": "6 files @ 3d3d5dee26484f91867d81cb899cfcf72b96be6c",
+   "files": 6
+  },
+  "hf-fw-small-en": {
+   "bytes": 486101605,
+   "detail": "6 files @ d1d751a5f8271d482d14ca55d9e2deeebbae577f",
+   "files": 6
+  },
+  "hf-gemma4-12b": {
+   "bytes": 23951776979,
+   "detail": "9 files @ 707f0a3b8a3c7ad586ed01e27eafbad8a27dd0f7",
+   "files": 9
+  },
+  "hf-kokoro": {
+   "bytes": 363323757,
+   "detail": "72 files @ main",
+   "files": 72
+  },
+  "hf-qwen35-2b": {
+   "bytes": 4571206192,
+   "detail": "12 files @ b1485b2fa6dfa1287294f269f5fb618e03d52d7c",
+   "files": 12
+  },
+  "hf-qwen36": {
+   "bytes": 23462477857,
+   "detail": "17 files @ main",
+   "files": 17
+  },
+  "image-pytorch": {
+   "bytes": 12273449215,
+   "detail": "arm64 sha256:307c449df7da compressed; .tar ~25.1 GiB plain",
+   "files": 1
+  },
+  "image-speech": {
+   "bytes": 186307737,
+   "detail": "arm64 sha256:3ad7c3f4c600 compressed; .tar ~0.4 GiB plain",
+   "files": 1
+  },
+  "image-vllm": {
+   "bytes": 9603085145,
+   "detail": "arm64 sha256:9204569b17ee compressed; .tar ~19.7 GiB plain",
+   "files": 1
+  },
+  "lightasd-ava": {
+   "bytes": 4175289,
+   "detail": "pretrain_AVA_CVPR.model (sha256 pinned)",
+   "files": 1
+  },
+  "nemo-speech-native": {
+   "bytes": 70009613,
+   "detail": "nemo-speech-0.2.0-linux-aarch64-cuda13.tar.gz",
+   "files": 1
+  },
+  "nemoclaw-installer": {
+   "bytes": 16741,
+   "detail": "nemoclaw.sh",
+   "files": 1
+  },
+  "nemoclaw-repo": {
+   "bytes": 127251456,
+   "detail": "lkg shallow clone (<= 1/4 of GitHub's 485 MiB packed size)",
+   "files": 1
+  },
+  "speech-diar": {
+   "bytes": 107012128,
+   "detail": "Nemotron-3-Diarization.q8_0.gguf",
+   "files": 1
+  },
+  "speech-magpie": {
+   "bytes": 1802020192,
+   "detail": "magpie_tts_multilingual_357m.v2607.q8_0.gguf, magpie_tts_multilingual_357m.nemo",
+   "files": 2
+  },
+  "speech-nanocodec": {
+   "bytes": 78823104,
+   "detail": "nemo_nano_codec_22khz_1.89kbps_21.5fps.decoder.f16.gguf",
+   "files": 1
+  },
+  "speech-nemotron35": {
+   "bytes": 742090464,
+   "detail": "nemotron-3.5-asr-streaming-0.6b.q8_0.gguf",
+   "files": 1
+  },
+  "speech-parakeet": {
+   "bytes": 713975456,
+   "detail": "parakeet-tdt-0.6b-v3.q8_0.gguf",
+   "files": 1
+  },
+  "unspoken-repo": {
+   "bytes": 11042816,
+   "detail": "local repo packed size",
+   "files": 1
+  },
+  "uv": {
+   "bytes": 15914298,
+   "detail": "uv-aarch64-unknown-linux-gnu.tar.gz",
+   "files": 1
+  },
+  "wespeaker-campp": {
+   "bytes": 29292684,
+   "detail": "wespeaker_en_voxceleb_CAM++.onnx (sha256 pinned)",
+   "files": 1
+  },
+  "wheels-decider": {
+   "bytes": 62668266,
+   "detail": "51 pinned wheels + 1 built from source (strands-decider)",
+   "files": 52
+  },
+  "wheels-sdist": {
+   "bytes": 150000,
+   "detail": "0 pinned wheels + 1 built from source (python_speech_features==0.6)",
+   "files": 1
+  },
+  "wheels-torch-cu130": {
+   "bytes": 3147481537,
+   "detail": "29 wheels resolved by pip for linux aarch64 cp312",
+   "files": 29
+  },
+  "wheels-unspoken": {
+   "bytes": 230839538,
+   "detail": "98 wheels resolved by pip for linux aarch64 cp312",
+   "files": 98
+  }
+ }
+}

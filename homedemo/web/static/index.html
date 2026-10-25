@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>LocoCisco · smart-home decider demo</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="static/style.css">
+<link rel="stylesheet" href="static/3d/scene.css">
+<script type="importmap">
+{
+  "imports": {
+    "three": "./static/vendor/three/build/three.module.js",
+    "three/addons/": "./static/vendor/three/examples/jsm/"
+  }
+}
+</script>
+</head>
+<body>
+<header class="top">
+  <div class="brand">
+    <h1 id="home-name">Smart-home decider demo</h1>
+    <p class="tagline">Small agents on one event bus. The decider answers bounded questions; plain code keeps the rules.</p>
+  </div>
+  <div class="top-right">
+    <div class="clock" aria-live="off"><span id="clock-day">Tuesday</span> <strong id="clock-time">19:00</strong></div>
+    <span id="conn" class="conn" title="Live stream">● connecting</span>
+    <button id="pause" class="btn ghost" aria-pressed="false" title="Stop dots, pulses and movement">Pause animations</button>
+    <button id="settings-toggle" class="btn ghost" aria-expanded="false" aria-controls="settings">Settings</button>
+    <button id="present-toggle" class="btn ghost" aria-pressed="false" title="Presenter mode for recording (key p); x hides the X-ray, c shows the code card">Presenter</button>
+  </div>
+</header>
+
+<!-- presenter mode only: the intent banner (project name and the one-line idea) with compact controls -->
+<section id="present-banner" class="present-banner" hidden aria-label="Intent">
+  <div class="pb-brand">
+    <span class="pb-name"><span data-project-name></span> <span class="pb-name-zh" lang="zh-Hans" data-project-name-zh></span></span>
+    <span class="pb-intent" data-intent></span>
+  </div>
+  <div class="pb-controls">
+    <span class="pb-clock"><span data-clock-day></span> <strong data-clock-time></strong></span>
+    <select id="pb-scenario" aria-label="Scenario"></select>
+    <button id="pb-run" class="btn tiny primary" type="button">Run</button>
+    <button id="pb-stop" class="btn tiny" type="button">Stop</button>
+    <button id="pb-reset" class="btn tiny" type="button">Reset</button>
+    <span id="pb-state" class="chip state idle">idle</span>
+  </div>
+</section>
+
+<section id="settings" class="settings card" hidden>
+  <h2>Settings</h2>
+  <div class="settings-grid">
+    <label>Decider
+      <select id="set-mode">
+        <option value="2b">2B only</option>
+        <option value="12b">12B only</option>
+        <option value="cascade">Cascade: 2B on the hub, escalate if unsure</option>
+        <option value="fake">Fake (no model)</option>
+      </select>
+    </label>
+    <label>When the 2B is unsure, ask
+      <select id="set-escalate">
+        <option value="bedrock">Claude on Amazon Bedrock</option>
+        <option value="12b">Strands Decider 12B (local)</option>
+      </select>
+    </label>
+    <label>Act when confidence is at least <output id="set-act-out">0.80</output>
+      <input id="set-act" type="range" min="0.5" max="1" step="0.01" value="0.8">
+    </label>
+    <label>Ask when at least <output id="set-ask-out">0.45</output> (below: ignore)
+      <input id="set-ask" type="range" min="0" max="1" step="0.01" value="0.45">
+    </label>
+    <label>Playback speed <output id="set-speed-out">1×</output>
+      <input id="set-speed" type="range" min="0.25" max="8" step="0.25" value="1">
+    </label>
+    <label class="check"><input id="set-shadow" type="checkbox" checked> Show the keyword baseline next to the decider</label>
+  </div>
+  <details class="rules">
+    <summary>House rules (plain code, not the model)</summary>
+    <ul id="house-rules"></ul>
+  </details>
+</section>
+
+<main class="grid">
+  <section class="card plan-card" aria-labelledby="plan-h">
+    <div class="card-head">
+      <h2 id="plan-h">The house</h2>
+      <div class="view-toggle" role="radiogroup" aria-label="House view">
+        <button id="view-3d" type="button" role="radio" aria-checked="false" disabled title="3D view (needs WebGL2)">3D</button>
+        <button id="view-2d" type="button" role="radio" aria-checked="true">2D</button>
+      </div>
+      <p class="legend">
+        <span class="chip src-person">voice: person</span>
+        <span class="chip src-tv">voice: TV</span>
+        <span class="chip src-outside">voice: outside</span>
+      </p>
+    </div>
+    <div id="house3d-bar" class="house3d-bar" hidden>
+      <span class="house3d-caption">Overview</span>
+      <div class="hud">
+        <button class="btn tiny" type="button" data-act="auto" aria-pressed="true" title="Follow the latest event, return to the overview when quiet">Auto camera</button>
+        <button class="btn tiny" type="button" data-act="overview" title="Back to the whole house">Overview</button>
+        <button class="btn tiny" type="button" data-act="xray" aria-pressed="false" title="See through all walls">X-ray</button>
+      </div>
+    </div>
+    <div id="house3d" class="house3d" hidden aria-label="3D house with live people, devices and decisions">
+      <p class="house3d-status">Loading 3D house…</p>
+      <div class="card-dock" hidden aria-live="polite"></div>
+      <p id="present-caption" class="present-caption" hidden aria-live="polite"></p>
+    </div>
+    <p id="house3d-note" class="house3d-note" hidden></p>
+    <div id="plan-wrap" class="scroll-x">
+      <svg id="plan" class="plan" viewBox="0 0 1000 600" role="img" aria-label="Floor plan with live people and devices"></svg>
+    </div>
+    <div class="say-box" aria-labelledby="say-h">
+      <h3 id="say-h">Say something</h3>
+      <div class="say">
+        <select id="say-who" aria-label="Who speaks"></select>
+        <input id="say-text" type="text" placeholder="e.g. I can't see a thing in here" aria-label="Words heard" maxlength="200">
+        <button id="say-person" class="btn primary">Say it</button>
+        <button id="say-tv" class="btn">TV says it</button>
+        <button id="say-outside" class="btn">Stranger at the door says it</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="card score-card" id="scoreboard" aria-labelledby="sb-h">
+    <div class="card-head">
+      <h2 id="sb-h">Scoreboard</h2>
+      <p class="legend small">decisions since load · <button id="sb-reset" class="btn tiny" type="button">reset</button></p>
+    </div>
+    <div class="tiles">
+      <div class="tile"><b data-sb="decisions">0</b><span>decisions judged</span><small data-sb="decisions-sub">speech and camera scenes</small></div>
+      <div class="tile local"><b data-sb="local">0</b><span>handled on the hub by the 2B</span><small data-sb="local-sub">0 tokens · nothing left the house</small></div>
+      <div class="tile bedrock"><b data-sb="escalated">0</b><span data-sb="escalated-label">sent to Claude on Bedrock</span><small data-sb="escalated-sub">0 tokens</small></div>
+      <div class="tile share"><b data-sb="avoided">–</b><span>LLM calls avoided</span><small data-sb="avoided-sub">no decisions yet</small></div>
+      <div class="tile kw"><b data-sb="kw">0</b><span>keyword mistakes avoided</span><small data-sb="kw-sub">the old matcher, judged against the outcome</small></div>
+    </div>
+  </section>
+
+  <section class="card xray-card" id="xray" aria-labelledby="xr-h">
+    <div class="card-head">
+      <h2 id="xr-h">How the house decided</h2>
+      <div class="xr-status">
+        <span id="xr-route" class="xr-badge waiting">waiting</span>
+        <span id="xr-clock" class="xr-clock" title="latency">–</span>
+      </div>
+    </div>
+    <div id="xr-body" class="xr-body">
+      <p class="muted">The newest decision appears here: what was heard or seen, the exact typed request sent to the Decider 2B, its answer against the act threshold, and where the decision was made.</p>
+    </div>
+    <div id="xr-history" class="xr-history" hidden></div>
+  </section>
+
+  <aside class="side">
+    <section class="card" aria-labelledby="scn-h">
+      <div class="card-head">
+        <h2 id="scn-h">Scenario</h2>
+        <span id="scn-state" class="chip state idle">idle</span>
+      </div>
+      <div id="scenario-list" class="scenario-list" role="listbox" aria-label="Scenarios"></div>
+      <div class="row controls">
+        <button id="run" class="btn primary">Run</button>
+        <button id="stop" class="btn">Stop</button>
+        <button id="reset" class="btn">Reset house</button>
+      </div>
+      <p id="narration" class="narration">Pick a scenario and press Run, or say something under the floor plan.</p>
+      <ul id="checks" class="checks" aria-label="Expectations"></ul>
+    </section>
+
+    <section class="card phone-card" aria-labelledby="phone-h">
+      <h2 id="phone-h">Parents' phone</h2>
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div id="phone-list" class="phone-screen"><p class="muted">No notifications yet.</p></div>
+      </div>
+    </section>
+  </aside>
+
+  <section class="card pipeline-card" aria-labelledby="pipe-h">
+    <div class="card-head">
+      <h2 id="pipe-h">Agents on the bus</h2>
+      <p class="legend small">A dot runs along an edge when that event fires. Busy agents pulse.</p>
+    </div>
+    <div class="scroll-x">
+      <svg id="pipeline" class="pipeline" viewBox="0 0 1000 420" role="img" aria-label="Agent pipeline"></svg>
+    </div>
+  </section>
+
+  <section class="card decider-card" aria-labelledby="dec-h">
+    <div class="card-head">
+      <h2 id="dec-h">Decider</h2>
+      <span id="dec-model" class="chip model">waiting for a question</span>
+    </div>
+    <div id="decider" class="decider">
+      <p class="muted">The newest decider proposal appears here: the question, the exact state text it read, and its probabilities.</p>
+    </div>
+  </section>
+
+  <section class="card compare-card" aria-labelledby="cmp-h">
+    <div class="card-head">
+      <h2 id="cmp-h">Keyword baseline vs decider</h2>
+      <p class="legend small">Rows turn red when the old keyword matcher would have done the wrong thing.</p>
+    </div>
+    <div class="scroll-x">
+      <table id="compare" class="compare">
+        <thead><tr><th>Heard</th><th>Keyword</th><th>Decider</th><th>Policy</th><th>Outcome</th></tr></thead>
+        <tbody id="compare-body"></tbody>
+      </table>
+    </div>
+    <p id="compare-empty" class="muted">No utterances yet.</p>
+  </section>
+
+  <section class="card timeline-card" aria-labelledby="tl-h">
+    <div class="card-head">
+      <h2 id="tl-h">Events</h2>
+      <label class="small">Show
+        <select id="tl-filter">
+          <option value="all">everything</option>
+          <option value="sensors">sensors and clock</option>
+          <option value="perception">perception and voice</option>
+          <option value="proposals">proposals</option>
+          <option value="policy">policy verdicts</option>
+          <option value="actions">commands and devices</option>
+          <option value="phone">phone</option>
+          <option value="scenario">scenario and log</option>
+          <option value="ui">UI</option>
+        </select>
+      </label>
+      <span id="tl-count" class="small muted">0 events</span>
+    </div>
+    <div class="timeline-grid">
+      <ol id="timeline" class="timeline" data-filter="all" aria-label="Event timeline, newest first"></ol>
+      <div id="detail" class="detail"><p class="muted">Click an event to see its JSON and what caused it.</p></div>
+    </div>
+  </section>
+</main>
+
+<!-- presenter mode, key c: "reuse it in your agent" -->
+<div id="code-card" class="code-card" hidden role="dialog" aria-modal="false" aria-labelledby="cc-h">
+  <div class="cc-panel">
+    <div class="cc-head">
+      <h2 id="cc-h">Reuse it in your agent</h2>
+      <p class="cc-sub">One Strands <code>InterventionHandler</code>. Drop it into any agent; its tools become the Decider's options. Pattern <b>#tool-selection</b>.</p>
+      <button id="cc-close" class="btn tiny" type="button" aria-label="Close">close (c)</button>
+    </div>
+    <div class="cc-body">
+      <section class="cc-col">
+        <h3>Wiring: 5 lines</h3>
+        <pre id="cc-python" class="code"></pre>
+        <p class="cc-note" data-cc-note></p>
+      </section>
+      <section class="cc-col">
+        <h3>The typed question the router sends (tool names = options)</h3>
+        <pre id="cc-json" class="code json"></pre>
+      </section>
+    </div>
+  </div>
+</div>
+
+<script src="static/app.js"></script>
+<script src="static/xray.js"></script>
+<script src="static/present.js"></script>
+<script type="module" src="static/3d/main.js"></script>
+</body>
+</html>

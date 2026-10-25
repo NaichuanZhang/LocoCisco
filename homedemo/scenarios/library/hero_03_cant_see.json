@@ -1,0 +1,80 @@
+{
+  "id": "hero_cant_see",
+  "title": "\"I can't see a thing in here\"",
+  "blurb": "No wake word and no command words. The keyword baseline hears nothing; the decider turns the lights on.",
+  "tags": [
+    "hero",
+    "speech",
+    "keyword-misses"
+  ],
+  "steps": [
+    {
+      "do": "note",
+      "text": "Tuesday evening. Alex is on the couch with the lights off; dusk has made the living room dim.",
+      "wait": 4
+    },
+    {
+      "do": "set_time",
+      "time": "19:00",
+      "weekday": "Tuesday"
+    },
+    {
+      "do": "set_env",
+      "room": "living",
+      "lux": 15
+    },
+    {
+      "do": "note",
+      "text": "Alex speaks: no wake word, no command words.",
+      "wait": 3
+    },
+    {
+      "do": "say",
+      "who": "alex",
+      "text": "I can't see a thing in here.",
+      "lang": "en"
+    },
+    {
+      "do": "expect",
+      "what": "proposal",
+      "by": "keyword",
+      "action": "none",
+      "within": 5
+    },
+    {
+      "do": "expect",
+      "what": "outcome",
+      "action": "lights_on",
+      "accept": [
+        "done",
+        "asked"
+      ],
+      "within": 15,
+      "room": "living"
+    },
+    {
+      "do": "note",
+      "text": "The keyword baseline heard no command. The decider understood the complaint (2B 67%, 12B 95%).",
+      "wait": 5
+    },
+    {
+      "do": "reply",
+      "answer": "Yes",
+      "if_asked": true
+    },
+    {
+      "do": "expect",
+      "what": "device",
+      "device": "light_living",
+      "state": {
+        "on": true
+      },
+      "within": 6
+    },
+    {
+      "do": "note",
+      "text": "If the 2B was unsure the house asked first and Alex said yes on the phone; if the 12B was confident it just acted.",
+      "wait": 6
+    }
+  ]
+}

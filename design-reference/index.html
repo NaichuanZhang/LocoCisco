@@ -1,0 +1,719 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta name="od-motion-output" content="video">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <meta name="od-motion-audio" content="required">
+    <link rel="alternate" type="video/mp4" href="../../lococisco-intro.mp4">
+    <title>LocoCisco — a satin ribbon writes the logo</title>
+    <script src="./gsap.min.js"></script>
+    <script>
+      // Automated capture (HyperFrames CLI render) drives the timeline itself:
+      // keep the preview player's autoplay and scaling out of the frames.
+      if (navigator.webdriver) window.__odMotionRender = true;
+    </script>
+    <!-- The word's centre line, widths, folds, bars and dot, from ../tools/build-logo.mjs -->
+    <script src="assets/lococisco-data.js"></script>
+    <!-- The Dell × NVIDIA ending: real brand marks, then the two avatars (../tools/export-avatars.mjs exports them) -->
+    <script src="assets/brand-logos.js"></script>
+    <script src="assets/avatars.js"></script>
+    <style>
+      @font-face { font-family: 'Figtree'; src: url(assets/fonts/figtree-800.woff2) format('woff2'); font-weight: 800; font-display: block; }
+      :root { --ground: #ffffff; }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: var(--ground);
+      }
+      #root { position: relative; width: 1920px; height: 1080px; overflow: hidden; background: var(--ground); }
+      /* Stacked picture layers: the ribbon (canvas), the finished logo (SVG) and the collab avatars (SVG). */
+      #silk, #logo, #pals { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; display: block; }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="6.8"
+      data-fps="60"
+      data-width="1920"
+      data-height="1080"
+      data-poster-time="6.4"
+      role="img"
+      aria-label="Logo intro: a satin ribbon whips in, writes LocoCisco in one joined stroke and becomes the lettering, then nine bridge bars rise above it like voice levels and settle. The logo lifts, a little Dell box and an NVIDIA NemoClaw lobster hop in below it, bump fist to claw, and the Dell and NVIDIA logos appear between them"
+    >
+      <canvas id="silk" aria-hidden="true"></canvas>
+      <svg id="logo" viewBox="0 0 1920 1080" aria-hidden="true">
+        <defs>
+          <linearGradient id="lc-grad" gradientUnits="userSpaceOnUse" y1="0" y2="0"></linearGradient>
+          <linearGradient id="lc-sheen-fill" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#fff" stop-opacity="0" />
+            <stop offset="0.5" stop-color="#fff" stop-opacity="1" />
+            <stop offset="1" stop-color="#fff" stop-opacity="0" />
+          </linearGradient>
+          <clipPath id="lc-clip"><use href="#lc-letters" /></clipPath>
+        </defs>
+        <g id="lc-bars" fill="url(#lc-grad)"></g>
+        <path id="lc-letters" fill="url(#lc-grad)" />
+        <circle id="lc-dot" fill="url(#lc-grad)" />
+        <path id="lc-gloss" fill="#fff" />
+        <g clip-path="url(#lc-clip)">
+          <g id="lc-sheen"><rect id="lc-sheen-band" fill="url(#lc-sheen-fill)" /></g>
+        </g>
+      </svg>
+      <svg id="pals" viewBox="0 0 1920 1080" aria-hidden="true">
+        <defs id="pals-defs"></defs>
+        <g id="pal-shadows"><g id="pal-dell-shadow"></g><g id="pal-nemo-shadow"></g></g>
+        <g id="pal-dell" visibility="hidden"></g>
+        <g id="pal-nemo" visibility="hidden"></g>
+        <g id="pal-burst"></g>
+        <g id="pal-label"></g>
+        <g id="pal-x" opacity="0"><path d="M-10 -10L10 10M10 -10L-10 10" stroke="url(#px-grad)" stroke-width="6" stroke-linecap="round" fill="none" /></g>
+      </svg>
+      <audio id="sound" class="clip" src="assets/sound.wav" data-start="0" data-duration="6.8"
+             data-track-index="2" data-volume="1" preload="auto"></audio>
+    </div>
+    <script>
+    (function () {
+      const LOCO = window.LOCO;
+      // ---- configuration: every timing, size and light value lives here ----
+      // (../tools/make-sound.mjs reads this block too, so the sound follows any change)
+      const CFG = /*@cfg*/{
+        duration: 6.8,
+        posterTime: 6.4,
+        // Free flight before the word (stage px), smoothed through these points and on into the L's
+        // entry stroke: in from off-screen right, two S-waves along the top, one loop at upper left,
+        // then a hook down the left side that swings up into the L.
+        flight: [[2200, 330], [1900, 190], [1640, 330], [1400, 420], [1150, 290], [900, 170], [660, 260],
+                 [470, 330], [320, 270], [360, 150], [480, 170], [500, 290], [430, 420], [330, 515],
+                 [243, 595], [250, 662], [326, 606]],
+        ribbon: {
+          start: 0, travel: 2.9, easePow: 2.2, // the tip runs flight + word on 1-(1-u)^2.2: fast whip, slowing as it writes
+          width: 36,                // flat width in flight (px); its length equals the word's centre line
+          widthFlow: 0.2, flowLen: 720, flowHz: 0.35, // width swells and narrows ±20 % along the band, drifting
+          tailTaper: 160, tipTaper: 90, endMin: 0.35, // both ends taper to 35 % and finish in a round cap
+          fillIn: 45,               // over its first 45 px on the word the band takes the letters' width and colour
+          settle: [-0.05, 0.2],     // the last piece of tail settles into the L this long around the landing (s)
+          twistLen: 1000, twistHz: 0.4, edgeMin: 0.5, // a soft full twist per 1000 px; never thinner than half
+          backShade: 0.8, sheen: 0.38,                // back face darker; satin glint when face-on
+          flutter: 16, flutterLen: 380, flutterHz: 1.3, // ripples travelling along the airborne part
+          tailFlutter: 1.7, tailLen: 260, tipCalm: 200, // the free tail whips more; the tip stays steady
+          landBlend: 140,                             // px before the word where ripples and twist die out
+        },
+        swap: 3.1,                  // the written ribbon hands over to the logo artwork (identical outline)
+        gloss: { start: 3.05, dur: 0.4 },             // the artwork's satin highlights fade in
+        // Nine bridge bars flicker through three voice levels, then glide together into the bridge.
+        bars: {
+          start: 2.95, stagger: 0.025, beats: [0.12, 0.1, 0.1], lock: 3.62,
+          levels: [[0.55, 0.3, 0.8], [0.9, 0.45, 0.6], [0.7, 1, 0.4], [1, 0.55, 0.85], [0.6, 0.95, 0.5],
+                   [0.85, 0.4, 0.95], [0.45, 0.8, 0.65], [0.75, 0.35, 0.9], [0.4, 0.7, 0.3]],
+        },
+        dot: { at: 3.3, dur: 0.3, fade: 0.1, ease: 'power3.out' },   // the i's dot
+        sheen: { start: 3.4, dur: 0.5, width: 240, alpha: 0.42, skew: -18, ease: 'power2.inOut' },
+        // The Dell × NVIDIA ending. The logo keeps its smooth, no-bounce motion; the two avatars are allowed
+        // to be playful (squash and stretch, overshoot, blinks). Avatars: assets/avatars.js.
+        pals: {
+          lift: { start: 3.85, dur: 0.6, y: -90 },          // the finished logo glides up to make room
+          ground: 935, meetX: 960, lean: 16,                // feet line; they meet at the centre; lean-in distance (px)
+          dell: { hop: 4.1, land: 4.55 },                   // the Dell box hops up from below, left of centre
+          nemo: { hop: 4.35, land: 4.8 },                   // NemoClaw follows on the right
+          hop: { from: 430, height: 230, drift: 70, tilt: 9 }, // starts below the frame, peaks ~65 px over the floor (stays clear of the word)
+          squash: { amt: 0.2, decay: 0.13, hz: 3.2 },       // landing squash that springs back
+          snaps: [4.92, 5.04, 5.8],                         // NemoClaw's right claw clacks hello (and once more at the end)
+          bump: { reach: 4.96, meet: 5.16, back: 5.42 },    // reach out and lean in, fist meets claw, settle back
+          spark: { at: 5.16, pop: 0.22, scale: 2.2, fly: [5.36, 5.72] }, // the × pops out of the bump, then drops into the label
+          label: { y: 996, reveal: [5.52, 5.86], stagger: 0.06, dellH: 56, nvH: 34, gap: 26, xScale: 1.5 },
+          blinks: { dell: [4.66, 5.98, 6.52], nemo: [4.98, 6.24] },
+          bob: { start: 5.9, amp: 3, period: 1.4 },          // a gentle idle bob through the hold
+        },
+      }/*@end*/;
+
+      const RB = CFG.ribbon, TAU = Math.PI * 2;
+      const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
+      const smooth = (a, b, x) => { const v = clamp((x - a) / (b - a), 0, 1); return v * v * (3 - 2 * v); };
+      const STEP = LOCO.step, SP = LOCO.spine, KN = SP.length;
+
+      const canvas = document.getElementById('silk');
+      const R = Math.min(2, Math.max(1, window.devicePixelRatio || 1));
+      canvas.width = 1920 * R; canvas.height = 1080 * R;
+      const ctx = canvas.getContext('2d');
+
+      // ---- the finished logo, built from the same data as ../../lococisco-logo.svg ----
+      const NS = 'http://www.w3.org/2000/svg';
+      const svgEl = (tag, attrs, parent) => {
+        const e = document.createElementNS(NS, tag);
+        for (const k in attrs) e.setAttribute(k, attrs[k]);
+        if (parent) parent.appendChild(e);
+        return e;
+      };
+      const GRAD = LOCO.gradient, gx0 = GRAD[0][0], gx1 = GRAD[GRAD.length - 1][0];
+      const gradEl = document.getElementById('lc-grad');
+      gradEl.setAttribute('x1', gx0); gradEl.setAttribute('x2', gx1);
+      GRAD.forEach(([x, r, g, b]) => svgEl('stop', { offset: (x - gx0) / (gx1 - gx0), 'stop-color': `rgb(${r},${g},${b})` }, gradEl));
+      const lettersEl = document.getElementById('lc-letters');
+      lettersEl.setAttribute('d', LOCO.letters);
+      const glossEl = document.getElementById('lc-gloss');
+      glossEl.setAttribute('d', LOCO.gloss);
+      glossEl.setAttribute('fill-opacity', LOCO.glossAlpha);
+      const dotEl = document.getElementById('lc-dot');
+      dotEl.setAttribute('cx', LOCO.dot.cx); dotEl.setAttribute('cy', LOCO.dot.cy); dotEl.setAttribute('r', LOCO.dot.r);
+      const barsEl = document.getElementById('lc-bars');
+      const barEls = LOCO.bars.items.map((b) => svgEl('rect', { x: b.cx - b.w / 2, width: b.w, rx: b.w / 2, y: LOCO.bars.cy, height: 0 }, barsEl));
+      const box = LOCO.box, SH = CFG.sheen, skewK = Math.tan(SH.skew * Math.PI / 180);
+      const sheenEl = document.getElementById('lc-sheen');
+      const band0 = document.getElementById('lc-sheen-band');
+      [['x', 0], ['y', box.y - 10], ['width', SH.width], ['height', box.h + 20],
+       ['transform', `skewX(${SH.skew})`]].forEach(([k, v]) => band0.setAttribute(k, v));
+      band0.setAttribute('fill-opacity', SH.alpha);
+
+      // ---- path: free flight + the word's centre line, one sample every STEP px ----
+      function flightLine(pts, end, dir) {
+        const P = pts.concat([end]), n = P.length, T = [];
+        for (let i = 0; i < n; i++) {
+          if (i === n - 1) { T.push(dir); continue; }
+          const a = P[Math.max(0, i - 1)], b = P[i + 1], l = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1;
+          T.push([(b[0] - a[0]) / l, (b[1] - a[1]) / l]);
+        }
+        const dense = [P[0]];
+        for (let i = 0; i < n - 1; i++) {
+          const p0 = P[i], p3 = P[i + 1], ch = Math.hypot(p3[0] - p0[0], p3[1] - p0[1]), h = 0.36 * ch;
+          const p1 = [p0[0] + T[i][0] * h, p0[1] + T[i][1] * h], p2 = [p3[0] - T[i + 1][0] * h, p3[1] - T[i + 1][1] * h];
+          const m = Math.max(8, Math.ceil(ch));
+          for (let k = 1; k <= m; k++) {
+            const t = k / m, u = 1 - t, a = u * u * u, b = 3 * u * u * t, c = 3 * u * t * t, d = t * t * t;
+            dense.push([a * p0[0] + b * p1[0] + c * p2[0] + d * p3[0], a * p0[1] + b * p1[1] + c * p2[1] + d * p3[1]]);
+          }
+        }
+        // Even spacing (a whole number of spans of about STEP px) so the word starts on a sample.
+        const cum = [0];
+        for (let i = 1; i < dense.length; i++) cum.push(cum[i - 1] + Math.hypot(dense[i][0] - dense[i - 1][0], dense[i][1] - dense[i - 1][1]));
+        const L = cum[cum.length - 1], spans = Math.max(1, Math.round(L / STEP)), out = [];
+        for (let k = 0, i = 1; k <= spans; k++) {
+          const s = L * k / spans;
+          while (i < cum.length - 1 && cum[i] < s) i++;
+          const seg = cum[i] - cum[i - 1], f = seg > 0 ? (s - cum[i - 1]) / seg : 0;
+          out.push([dense[i - 1][0] + (dense[i][0] - dense[i - 1][0]) * f, dense[i - 1][1] + (dense[i][1] - dense[i - 1][1]) * f]);
+        }
+        out[spans] = [end[0], end[1]];
+        return out;
+      }
+      const flightPts = flightLine(CFG.flight, [LOCO.start.x, LOCO.start.y], [LOCO.start.dx, LOCO.start.dy]);
+      flightPts.pop(); // the word supplies its own first point
+      const pathPts = flightPts.concat(SP.map((p) => [p[0], p[1]]));
+      const NP = pathPts.length;
+      const PX = new Float64Array(NP), PY = new Float64Array(NP), NX = new Float64Array(NP), NY = new Float64Array(NP);
+      pathPts.forEach((p, i) => { PX[i] = p[0]; PY[i] = p[1]; });
+      for (let i = 0; i < NP; i++) {
+        const a = Math.max(0, i - 2), b = Math.min(NP - 1, i + 2);
+        const dx = PX[b] - PX[a], dy = PY[b] - PY[a], l = Math.hypot(dx, dy) || 1;
+        NX[i] = -dy / l; NY[i] = dx / l;
+      }
+      const sLetter = flightPts.length * STEP;     // path position where the word begins
+      const sEnd = (NP - 1) * STEP;
+      const ribbonLen = (KN - 1) * STEP;           // exactly the word's centre line
+      function pathAt(s, out) {
+        const f = clamp(s / STEP, 0, NP - 1), i = Math.min(NP - 2, Math.floor(f)), k = f - i;
+        out[0] = PX[i] + (PX[i + 1] - PX[i]) * k; out[1] = PY[i] + (PY[i + 1] - PY[i]) * k;
+        out[2] = NX[i] + (NX[i + 1] - NX[i]) * k; out[3] = NY[i] + (NY[i + 1] - NY[i]) * k;
+      }
+
+      // Ribbon colour = the logo gradient where each piece will finally lie.
+      function gradAt(x) {
+        if (x <= GRAD[0][0]) return GRAD[0].slice(1);
+        for (let i = 1; i < GRAD.length; i++) if (x <= GRAD[i][0]) {
+          const a = GRAD[i - 1], b = GRAD[i], k = (x - a[0]) / (b[0] - a[0]);
+          return [a[1] + (b[1] - a[1]) * k, a[2] + (b[2] - a[2]) * k, a[3] + (b[3] - a[3]) * k];
+        }
+        return GRAD[GRAD.length - 1].slice(1);
+      }
+      const COL = SP.map((p) => gradAt(p[0]));
+      const letterGrad = ctx.createLinearGradient(gx0, 0, gx1, 0);
+      GRAD.forEach(([x, r, g, b]) => letterGrad.addColorStop((x - gx0) / (gx1 - gx0), `rgb(${r},${g},${b})`));
+
+      // Per-frame scratch buffers for the ribbon.
+      const CX = new Float64Array(KN), CY = new Float64Array(KN), HW = new Float64Array(KN), HWP = new Float64Array(KN);
+      const TX = new Float64Array(KN), TY = new Float64Array(KN), IN = new Float64Array(KN);
+      const SR = new Float64Array(KN), SG = new Float64Array(KN), SB = new Float64Array(KN);
+      const rgb = (k) => 'rgb(' + (SR[k] | 0) + ',' + (SG[k] | 0) + ',' + (SB[k] | 0) + ')';
+      const tmp = [0, 0, 0, 0];
+
+      // Unit tangents of the centre line; where it doubles back, keep the incoming direction.
+      function tangents(k0, k1) {
+        for (let k = k0; k <= k1; k++) {
+          let ax = 0, ay = 0, bx = 0, by = 0, l;
+          if (k > k0) { ax = CX[k] - CX[k - 1]; ay = CY[k] - CY[k - 1]; l = Math.hypot(ax, ay); if (l > 1e-9) { ax /= l; ay /= l; } else ax = ay = 0; }
+          if (k < k1) { bx = CX[k + 1] - CX[k]; by = CY[k + 1] - CY[k]; l = Math.hypot(bx, by); if (l > 1e-9) { bx /= l; by /= l; } else bx = by = 0; }
+          let tx = ax + bx, ty = ay + by; l = Math.hypot(tx, ty);
+          if (l < 0.5) { tx = ax || bx; ty = ay || by; l = Math.hypot(tx, ty) || 1; }
+          TX[k] = tx / l; TY[k] = ty / l;
+        }
+      }
+      // The band's outline as runs of quads plus round caps, all wound one way, so where the ribbon
+      // crosses or folds back over itself the pieces simply add up: ONE shape, ONE outline.
+      // (Same construction as build-logo.mjs, so the written ribbon and the artwork match exactly.)
+      const G = {
+        moveTo: (x, y) => ctx.moveTo(x, y), lineTo: (x, y) => ctx.lineTo(x, y), closePath: () => ctx.closePath(),
+        disc: (x, y, r) => { ctx.moveTo(x + r, y); ctx.arc(x, y, r, 0, TAU, false); ctx.closePath(); },
+      };
+      function band(g, k0, k1, W, discs) {
+        const lx = (k) => CX[k] - TY[k] * W[k], ly = (k) => CY[k] + TX[k] * W[k];
+        const rx = (k) => CX[k] + TY[k] * W[k], ry = (k) => CY[k] - TX[k] * W[k];
+        const area3 = (ax, ay, bx, by, cx, cy) => (bx - ax) * (cy - ay) - (cx - ax) * (by - ay);
+        const tri = (ax, ay, bx, by, cx, cy) => {
+          g.moveTo(ax, ay);
+          if (area3(ax, ay, bx, by, cx, cy) >= 0) { g.lineTo(bx, by); g.lineTo(cx, cy); } else { g.lineTo(cx, cy); g.lineTo(bx, by); }
+          g.closePath();
+        };
+        let run = -1;
+        const flush = (end) => {
+          if (run < 0) return;
+          g.moveTo(rx(run), ry(run));
+          for (let k = run + 1; k <= end; k++) g.lineTo(rx(k), ry(k));
+          for (let k = end; k >= run; k--) g.lineTo(lx(k), ly(k));
+          g.closePath(); run = -1;
+        };
+        for (let k = k0 + 1; k <= k1; k++) {
+          const a = k - 1;
+          if (TX[a] * TX[k] + TY[a] * TY[k] < 0) { flush(a); continue; }
+          const t1 = area3(rx(a), ry(a), rx(k), ry(k), lx(k), ly(k)), t2 = area3(rx(a), ry(a), lx(k), ly(k), lx(a), ly(a));
+          if (t1 > 0 && t2 > 0) { if (run < 0) run = a; continue; }
+          flush(a);
+          tri(rx(a), ry(a), rx(k), ry(k), lx(k), ly(k)); tri(rx(a), ry(a), lx(k), ly(k), lx(a), ly(a));
+        }
+        flush(k1);
+        for (const k of discs) g.disc(CX[k], CY[k], W[k]);
+      }
+
+      const easeTip = (q) => 1 - Math.pow(1 - q, RB.easePow);
+      const tipEnd = RB.start + RB.travel;          // the tip lands at the end of the flourish
+
+      function drawRibbon(t) {
+        const q = clamp((t - RB.start) / RB.travel, 0, 1);
+        const sTip = sEnd * easeTip(q), sTail = sTip - ribbonLen;
+        let k0 = 0;
+        while (k0 < KN && sTail + k0 * STEP < 0) k0++;
+        if (k0 >= KN - 2) return;
+        const last = KN - 1;
+        const settle = smooth(tipEnd + RB.settle[0], tipEnd + RB.settle[1], t);
+        const taper = (a) => RB.endMin + (1 - RB.endMin) * a;
+        for (let k = k0; k <= last; k++) {
+          const m = k * STEP, s = sTail + m;
+          pathAt(s, tmp);
+          const laid = smooth(sLetter - RB.landBlend, sLetter, s), air = 1 - laid;
+          const tipCalm = smooth(0, RB.tipCalm, sTip - s);
+          const tailBoost = 1 + (RB.tailFlutter - 1) * (1 - clamp(m / RB.tailLen, 0, 1));
+          const off = RB.flutter * air * tipCalm * tailBoost * Math.sin(TAU * (s / RB.flutterLen - RB.flutterHz * t));
+          CX[k] = tmp[0] + tmp[2] * off; CY[k] = tmp[1] + tmp[3] * off;
+          // The twist eases out by blending its effect toward face-on (not its phase, which would
+          // spin the band through several turns inside the landing zone).
+          const c = 1 - air * (1 - Math.cos(TAU * (m / RB.twistLen + RB.twistHz * t)));
+          const flow = 1 + RB.widthFlow * Math.sin(TAU * (m / RB.flowLen - RB.flowHz * t));
+          // Twist narrows the band through cos² (smooth through edge-on, no kink in the outline).
+          const airHW = RB.width / 2 * flow * (RB.edgeMin + (1 - RB.edgeMin) * c * c);
+          // On the word the band takes the letters' own width, so the ribbon becomes the lettering.
+          const j = clamp(Math.round((s - sLetter) / STEP), 0, KN - 1);
+          const inLetter = s >= sLetter ? Math.max(smooth(sLetter, sLetter + RB.fillIn, s), settle) : 0;
+          const ends = taper(smooth(0, RB.tailTaper, m)) * taper(smooth(0, RB.tipTaper, ribbonLen - m));
+          const endK = ends + (1 - ends) * inLetter;
+          IN[k] = inLetter;
+          HW[k] = endK * (airHW + (SP[j][2] - airHW) * inLetter);
+          // Front and back faces blend smoothly instead of switching at a hard crease.
+          const face = RB.backShade + (1 - RB.backShade) * smooth(-0.35, 0.35, c);
+          const spec = air * RB.sheen * Math.pow(Math.max(0, c), 6);
+          const ck = COL[k], cj = COL[j], lum = face * (0.86 + 0.14 * c * c * air + 0.14 * laid);
+          const br = ck[0] + (cj[0] - ck[0]) * inLetter, bg = ck[1] + (cj[1] - ck[1]) * inLetter, bb = ck[2] + (cj[2] - ck[2]) * inLetter;
+          SR[k] = br * lum + (255 - br * lum) * spec;
+          SG[k] = bg * lum + (255 - bg * lum) * spec;
+          SB[k] = bb * lum + (255 - bb * lum) * spec;
+        }
+        tangents(k0, last);
+        // Round caps at both ends, and round folds where the word doubles back under the ribbon.
+        const discs = [k0, last], shift = (sLetter - sTail) / STEP;
+        for (const jf of LOCO.folds) { const kf = Math.round(jf + shift); if (kf > k0 && kf < last) discs.push(kf); }
+
+        // The band's outline is one clip path; its colour is painted inside it.
+        ctx.save();
+        ctx.beginPath();
+        band(G, k0, last, HW, discs);
+        ctx.clip();
+        // In the air: one colour per slice (twist shading), slices slightly wider than the band and
+        // overlapping, so only the clip shows as an edge.
+        const pad = 1.5, back = 1.2;
+        let px0 = 0, py0 = 0, qx0 = 0, qy0 = 0, firstLaid = -1;
+        for (let k = k0; k <= last; k++) {
+          const w = HW[k] + pad;
+          const lx = CX[k] - TY[k] * w, ly = CY[k] + TX[k] * w, rx = CX[k] + TY[k] * w, ry = CY[k] - TX[k] * w;
+          if (IN[k] >= 0.5 && firstLaid < 0) firstLaid = k;
+          if (k === k0) {
+            if (IN[k] < 0.5) { ctx.beginPath(); ctx.arc(CX[k], CY[k], HW[k] + pad + 1, 0, TAU); ctx.fillStyle = rgb(k); ctx.fill(); }
+          } else if (IN[k - 1] < 0.5) {
+            const bx = TX[k] * back, by = TY[k] * back;
+            ctx.beginPath();
+            ctx.moveTo(px0 - bx, py0 - by); ctx.lineTo(lx, ly); ctx.lineTo(rx, ry); ctx.lineTo(qx0 - bx, qy0 - by); ctx.closePath();
+            ctx.fillStyle = rgb(k); ctx.fill();
+          }
+          px0 = lx; py0 = ly; qx0 = rx; qy0 = ry;
+        }
+        if (firstLaid < 0) { ctx.beginPath(); ctx.arc(CX[last], CY[last], HW[last] + pad + 1, 0, TAU); ctx.fillStyle = rgb(last); ctx.fill(); }
+        // On the word: the letters' own gradient, filled once over every laid piece, so strokes that
+        // cross or fold back carry exactly the artwork's colour with no seams.
+        if (firstLaid >= 0) {
+          const from = Math.max(k0, firstLaid - 1);
+          for (let k = from; k <= last; k++) HWP[k] = HW[k] + pad;
+          ctx.beginPath();
+          band(G, from, last, HWP, discs.filter((k) => k >= from));
+          ctx.fillStyle = letterGrad; ctx.fill();
+        }
+        ctx.restore();
+      }
+
+      // ---- the Dell × NVIDIA ending: two avatars hop in, bump fist to claw, and the logos appear ----
+      // Everything here is a function of the timeline's time (seekable), drawn by renderPals(t).
+      const PL = CFG.pals, AV = window.AVATARS, BR = window.BRANDS, S0 = AV.scale, DEG = 180 / Math.PI;
+      const byId = (id) => document.getElementById(id);
+      const lbClipL = PL.meetX - 16, lbClipR = PL.meetX + 16;
+      byId('pals-defs').innerHTML = AV.dell.defs + AV.nemo.defs +
+        '<linearGradient id="px-grad" gradientUnits="userSpaceOnUse" x1="-10" y1="0" x2="10" y2="0">' +
+        GRAD.map(([x, r, g, b]) => `<stop offset="${((x - gx0) / (gx1 - gx0)).toFixed(3)}" stop-color="rgb(${r},${g},${b})"/>`).join('') + '</linearGradient>' +
+        `<clipPath id="lb-clip-l"><rect x="0" y="880" width="${lbClipL}" height="200"/></clipPath>` +
+        `<clipPath id="lb-clip-r"><rect x="${lbClipR}" y="880" width="${1920 - lbClipR}" height="200"/></clipPath>`;
+      byId('pal-dell').innerHTML = AV.dell.body;
+      byId('pal-nemo').innerHTML = AV.nemo.body;
+      byId('pal-dell-shadow').innerHTML = AV.dell.shadow;
+      byId('pal-nemo-shadow').innerHTML = AV.nemo.shadow;
+      const dellEl = byId('pal-dell'), nemoEl = byId('pal-nemo');
+      const dShadow = byId('pal-dell-shadow'), nShadow = byId('pal-nemo-shadow');
+
+      // Contact geometry: the Dell's right fist and NemoClaw's left claw meet at meetX.
+      const dRig = AV.dell.rig, nRig = AV.nemo.rig;
+      const dArm0 = Math.atan2(32, 22), dReach = -10 / DEG;                       // arm hangs down-out → points at its friend
+      const fist = [dRig.shoulder.r[0] + dRig.armLen * Math.cos(dReach), dRig.shoulder.r[1] + dRig.armLen * Math.sin(dReach)];
+      const nVec = [nRig.claw.l[0] - nRig.shoulder.l[0], nRig.claw.l[1] - nRig.shoulder.l[1]];
+      const nArm0 = Math.atan2(nVec[1], nVec[0]), nLen = Math.hypot(nVec[0], nVec[1]), nReach = -160 / DEG;
+      const clawAt = [nRig.shoulder.l[0] + nLen * Math.cos(nReach), nRig.shoulder.l[1] + nLen * Math.sin(nReach)];
+      const dellXb = PL.meetX - S0 * (fist[0] + dRig.fistR), nemoXb = PL.meetX + S0 * (nRig.clawR - clawAt[0]);
+      const dellX0 = dellXb - PL.lean, nemoX0 = nemoXb + PL.lean;
+      const sparkY = PL.ground + S0 * (fist[1] + clawAt[1]) / 2;
+
+      // The × and its burst of rays (Dell blue and NVIDIA green), then the two real logos.
+      const xEl = byId('pal-x'), burstEl = byId('pal-burst');
+      burstEl.innerHTML = Array.from({ length: 8 }, (_, i) =>
+        `<line stroke="${i % 2 ? '#76B900' : '#007DB8'}" stroke-width="5" stroke-linecap="round" x1="0" y1="0" x2="0" y2="0"/>`).join('');
+      const rays = Array.from(burstEl.children);
+      const LB = PL.label, dellW = LB.dellH, nvVB = BR.nvidia.viewBox.split(/\s+/).map(Number), nvW = LB.nvH * nvVB[2] / nvVB[3];
+      byId('pal-label').innerHTML =
+        `<g clip-path="url(#lb-clip-l)"><g id="lb-dell"><svg x="${PL.meetX - LB.gap - dellW}" y="${LB.y - LB.dellH / 2}" width="${dellW}" height="${LB.dellH}" viewBox="${BR.dell.viewBox}">${BR.dell.markup}</svg></g></g>` +
+        `<g clip-path="url(#lb-clip-r)"><g id="lb-nv"><svg x="${PL.meetX + LB.gap}" y="${LB.y - LB.nvH / 2}" width="${nvW.toFixed(1)}" height="${LB.nvH}" viewBox="${BR.nvidia.viewBox}">${BR.nvidia.markup}</svg></g></g>`;
+      const lbDell = byId('lb-dell'), lbNv = byId('lb-nv');
+      const part = {};
+      ['dl-arm-l', 'dl-arm-r', 'dl-eye-l', 'dl-eye-r', 'dl-pup-l', 'dl-pup-r', 'nc-arm-l', 'nc-arm-r', 'nc-claw-l', 'nc-claw-r',
+        'nc-eye-l', 'nc-eye-r', 'nc-pup-l', 'nc-pup-r', 'nc-ant-l', 'nc-ant-r'].forEach((id) => { part[id] = byId(id); });
+
+      const f2 = (v) => v.toFixed(2);
+      const out3 = (u) => 1 - Math.pow(1 - u, 3);
+      const inOut = (u) => (u < 0.5 ? 2 * u * u : 1 - Math.pow(-2 * u + 2, 2) / 2);
+      const backOut = (u) => { const c = 1.9; return 1 + (c + 1) * Math.pow(u - 1, 3) + c * Math.pow(u - 1, 2); };
+      const pulse = (t, at, len) => (t > at && t < at + len ? Math.sin(Math.PI * (t - at) / len) : 0);
+      const blinkK = (t, list) => Math.max(0, ...list.map((b) => pulse(t, b, 0.14)));
+      const snapK = (t) => Math.max(0, ...PL.snaps.map((s) => { const d = t - s; return d < 0 ? 0 : d < 0.05 ? smooth(0, 0.05, d) : 1 - smooth(0.05, 0.17, d); }));
+
+      // A hop up from below the frame: parabola in, stretch in flight, squash on landing that springs back.
+      function hopState(t, A, side) {
+        const H = PL.hop, u = clamp((t - A.hop) / (A.land - A.hop), 0, 1);
+        const y = H.from * (1 - u) - 4 * H.height * u * (1 - u), vy = -H.from - 4 * H.height * (1 - 2 * u);
+        let sx = 1, sy = 1;
+        if (t < A.land) { const k = 0.08 * Math.min(1, Math.abs(vy) / 1600); sy = 1 + k; sx = 1 - 0.6 * k; }
+        else { const d = t - A.land, q = PL.squash.amt * Math.exp(-d / PL.squash.decay) * Math.cos(2 * Math.PI * PL.squash.hz * d); sy = 1 - q; sx = 1 + 0.7 * q; }
+        return { y, sx, sy, dx: side * H.drift * (1 - out3(u)), rot: side * H.tilt * Math.sin(Math.PI * u), shown: t > A.hop, since: t - A.land };
+      }
+      function bumpState(t) {
+        const B = PL.bump;
+        const reach = smooth(B.reach, B.reach + 0.14, t) * (1 - smooth(B.meet + 0.08, B.back + 0.12, t));
+        let lean = 0;
+        if (t > B.reach && t <= B.meet) { const u = (t - B.reach) / (B.meet - B.reach); lean = PL.lean * u * u; }
+        else if (t > B.meet) { const d = t - B.meet; lean = PL.lean * Math.exp(-d / 0.09) * Math.cos(2 * Math.PI * 2 * d); }
+        return { reach, lean };
+      }
+      const bob = (t, phase) => -PL.bob.amp * Math.sin(2 * Math.PI * (t - PL.bob.start) / PL.bob.period + phase) * smooth(PL.bob.start, PL.bob.start + 0.3, t);
+      const rotAbout = (deg, [x, y]) => `rotate(${f2(deg)} ${x} ${y})`;
+      const blinkT = (k, [x, y]) => `translate(${x} ${y}) scale(1 ${f2(1 - 0.92 * k)}) translate(${-x} ${-y})`;
+
+      function placeAvatar(el, sh, x, h, b, bobY, sign) {
+        el.setAttribute('visibility', h.shown ? 'visible' : 'hidden');
+        el.setAttribute('transform', `translate(${f2(x + h.dx + sign * b.lean)} ${f2(PL.ground + h.y + bobY)}) rotate(${f2(h.rot)}) scale(${(S0 * h.sx).toFixed(4)} ${(S0 * h.sy).toFixed(4)})`);
+        const up = Math.max(0, -(h.y + bobY)), k = h.y > 0 ? 0 : clamp(1 - up / 160, 0, 1);
+        sh.setAttribute('opacity', f2(k));
+        sh.setAttribute('transform', `translate(${f2(x + h.dx + sign * b.lean)} ${PL.ground}) scale(${(S0 * (0.55 + 0.45 * k) * h.sx).toFixed(4)} ${S0})`);
+      }
+
+      function renderPals(t) {
+        const b = bumpState(t), hd = hopState(t, PL.dell, -1), hn = hopState(t, PL.nemo, 1);
+        placeAvatar(dellEl, dShadow, dellX0, hd, b, bob(t, 0), 1);
+        placeAvatar(nemoEl, nShadow, nemoX0, hn, b, bob(t, 1.7), -1);
+        // eyes: look at each other for the bump, glance down at the logos, then back at us
+        const look = smooth(4.9, 5.0, t) * (1 - smooth(5.45, 5.6, t)), down = smooth(5.55, 5.7, t) * (1 - smooth(6.2, 6.4, t));
+        const kd = blinkK(t, PL.blinks.dell), kn = blinkK(t, PL.blinks.nemo);
+        part['dl-eye-l'].setAttribute('transform', blinkT(kd, AV.dell.eyes.l));
+        part['dl-eye-r'].setAttribute('transform', blinkT(kd, AV.dell.eyes.r));
+        part['nc-eye-l'].setAttribute('transform', blinkT(kn, AV.nemo.eyes.l));
+        part['nc-eye-r'].setAttribute('transform', blinkT(kn, AV.nemo.eyes.r));
+        const pd = `translate(${f2(3 * look)} ${f2(2.5 * down)})`, pn = `translate(${f2(-3 * look)} ${f2(2.5 * down)})`;
+        part['dl-pup-l'].setAttribute('transform', pd); part['dl-pup-r'].setAttribute('transform', pd);
+        part['nc-pup-l'].setAttribute('transform', pn); part['nc-pup-r'].setAttribute('transform', pn);
+        // arms: the Dell's right fist reaches out; NemoClaw's left claw closes into a fist and meets it
+        part['dl-arm-r'].setAttribute('transform', rotAbout(b.reach * (dReach - dArm0) * DEG, dRig.shoulder.r));
+        part['dl-arm-l'].setAttribute('transform', rotAbout(6 * Math.sin(Math.PI * clamp(hd.since / 0.35, 0, 1)), dRig.shoulder.l));
+        part['nc-arm-l'].setAttribute('transform', rotAbout(b.reach * (nReach - nArm0) * DEG, nRig.shoulder.l));
+        const wave = -10 * Math.sin(2 * Math.PI * 5 * (t - 4.86)) * smooth(4.86, 4.9, t) * (1 - smooth(5.08, 5.14, t))
+          - 8 * Math.sin(2 * Math.PI * 4 * (t - 5.76)) * smooth(5.76, 5.8, t) * (1 - smooth(5.96, 6.02, t));
+        part['nc-arm-r'].setAttribute('transform', rotAbout(wave, nRig.shoulder.r));
+        part['nc-claw-l'].setAttribute('d', AV.clawPath(nRig.claw.l[0], nRig.claw.l[1], nRig.clawR, nRig.dir.l, nRig.open - 0.78 * b.reach));
+        part['nc-claw-r'].setAttribute('d', AV.clawPath(nRig.claw.r[0], nRig.claw.r[1], nRig.clawR, nRig.dir.r, nRig.open - 0.82 * snapK(t)));
+        // antennae wobble after the landing and after the bump
+        const wob = (d, a) => (d > 0 ? a * Math.exp(-d / 0.25) * Math.sin(2 * Math.PI * 3.5 * d) : 0);
+        const ant = wob(hn.since, 12) + wob(t - PL.bump.meet, 8);
+        part['nc-ant-l'].setAttribute('transform', rotAbout(-ant, nRig.antBase.l));
+        part['nc-ant-r'].setAttribute('transform', rotAbout(ant, nRig.antBase.r));
+
+        // the × pops out of the bump, then drops into the label between the two logos
+        const SP = PL.spark;
+        let xo = 0, xs = 0, xr = 0, xx = PL.meetX, xy = sparkY;
+        if (t > SP.at) {
+          const u = clamp((t - SP.at) / SP.pop, 0, 1), f = clamp((t - SP.fly[0]) / (SP.fly[1] - SP.fly[0]), 0, 1), e = inOut(f);
+          xo = smooth(0, 0.3, u); xr = -90 * (1 - out3(u)) + 180 * e;
+          xs = SP.scale * backOut(u) + (LB.xScale - SP.scale) * e;
+          xy = sparkY + (LB.y - sparkY) * e; xx = PL.meetX + 10 * Math.sin(Math.PI * e);
+        }
+        xEl.setAttribute('opacity', f2(xo));
+        xEl.setAttribute('transform', `translate(${f2(xx)} ${f2(xy)}) rotate(${f2(xr)}) scale(${f2(xs)})`);
+        const ru = clamp((t - SP.at) / 0.32, 0, 1);
+        burstEl.setAttribute('opacity', t > SP.at && ru < 1 ? f2(1 - ru) : 0);
+        rays.forEach((ray, i) => {
+          const a = (i / 8) * Math.PI * 2 + Math.PI / 8, r0 = 18 + 26 * out3(ru), r1 = 30 + 44 * out3(ru);
+          ray.setAttribute('x1', f2(PL.meetX + r0 * Math.cos(a))); ray.setAttribute('y1', f2(sparkY + r0 * Math.sin(a)));
+          ray.setAttribute('x2', f2(PL.meetX + r1 * Math.cos(a))); ray.setAttribute('y2', f2(sparkY + r1 * Math.sin(a)));
+        });
+        // the logos slide out from behind the ×
+        const r = LB.reveal, uD = out3(clamp((t - r[0]) / (r[1] - r[0]), 0, 1)), uN = out3(clamp((t - r[0] - LB.stagger) / (r[1] - r[0]), 0, 1));
+        lbDell.setAttribute('transform', `translate(${f2((dellW + 12) * (1 - uD))} 0)`);
+        lbNv.setAttribute('transform', `translate(${f2(-(nvW + 12) * (1 - uN))} 0)`);
+      }
+
+      function renderAt(t) {
+        ctx.setTransform(R, 0, 0, R, 0, 0);
+        ctx.clearRect(0, 0, 1920, 1080);
+        if (t > RB.start && t < CFG.swap) drawRibbon(t);
+        renderPals(t);
+      }
+
+      function build() {
+        const tl = gsap.timeline({ paused: true });
+        const clock = { t: 0 };
+        tl.to(clock, { t: CFG.duration, duration: CFG.duration, ease: 'none' }, 0);
+
+        // The ribbon has become the lettering: the artwork takes over, then its gloss fades in.
+        tl.fromTo(lettersEl, { opacity: 0 }, { opacity: 1, duration: 0.001, ease: 'none' }, CFG.swap);
+        tl.fromTo(glossEl, { opacity: 0 }, { opacity: 1, duration: CFG.gloss.dur, ease: 'sine.inOut' }, CFG.gloss.start);
+
+        // Bridge bars: each flickers through three voice levels, then all glide into the bridge together.
+        const BA = CFG.bars, cy = LOCO.bars.cy, H = LOCO.bars.maxH;
+        const hAt = (h) => ({ attr: { y: cy - h / 2, height: h } });
+        barEls.forEach((el, i) => {
+          const lv = BA.levels[i];
+          let at = BA.start + i * BA.stagger;
+          tl.fromTo(el, hAt(0), { ...hAt(lv[0] * H), duration: BA.beats[0], ease: 'power2.out' }, at);
+          at += BA.beats[0];
+          tl.to(el, { ...hAt(lv[1] * H), duration: BA.beats[1], ease: 'sine.inOut' }, at);
+          at += BA.beats[1];
+          tl.to(el, { ...hAt(lv[2] * H), duration: BA.beats[2], ease: 'sine.inOut' }, at);
+          at += BA.beats[2];
+          tl.to(el, { ...hAt(LOCO.bars.items[i].h), duration: BA.lock - at, ease: 'power3.out' }, at);
+        });
+
+        // The i's dot grows into place (no overshoot).
+        const DT = CFG.dot, origin = LOCO.dot.cx + ' ' + LOCO.dot.cy;
+        tl.fromTo(dotEl, { scale: 0, svgOrigin: origin }, { scale: 1, svgOrigin: origin, duration: DT.dur, ease: DT.ease }, DT.at);
+        tl.fromTo(dotEl, { opacity: 0 }, { opacity: 1, duration: DT.fade, ease: 'none' }, DT.at);
+
+        // Sheen: one soft slanted band of light crosses the lettering, clipped to it.
+        const startX = box.x - SH.width - skewK * (box.y - 10), endX = box.x + box.w - skewK * (box.y + box.h + 10);
+        tl.fromTo(sheenEl, { x: startX }, { x: endX, duration: SH.dur, ease: SH.ease }, SH.start);
+        tl.fromTo(sheenEl, { opacity: 0 }, { opacity: 1, duration: SH.dur * 0.35, ease: 'sine.out' }, SH.start);
+        tl.to(sheenEl, { opacity: 0, duration: SH.dur * 0.35, ease: 'sine.in' }, SH.start + SH.dur * 0.65);
+
+        // The finished logo glides up to make room for the avatars (smooth, no bounce).
+        const LF = CFG.pals.lift;
+        tl.fromTo(document.getElementById('logo'), { y: 0 }, { y: LF.y, duration: LF.dur, ease: 'power2.inOut' }, LF.start);
+
+        // The ribbon and the avatars are drawn from the timeline's time, in preview and on export seeks.
+        let drawn = -1;
+        window.addEventListener('hf-seek', (e) => {
+          const t = Number(e && e.detail && e.detail.time);
+          if (Number.isFinite(t)) { renderAt(t); drawn = t; }
+        });
+        (function frame() {
+          const t = tl.time();
+          if (t !== drawn) { renderAt(t); drawn = t; }
+          requestAnimationFrame(frame);
+        })();
+        renderAt(0);
+
+        window.__timelines = window.__timelines || {};
+        window.__timelines['main'] = tl;
+
+        // Reduced motion: open on the finished logo; a click on the picture plays it.
+        if (!window.__odMotionRender && window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          const until = Date.now() + 5000;
+          (function hold() {
+            const p = window.__odMotionPlayer;
+            if (p) p.seek(CFG.posterTime); else if (Date.now() < until) setTimeout(hold, 100);
+          })();
+        }
+      }
+
+      const fontReady = document.fonts && document.fonts.load ? document.fonts.load("800 13px 'Figtree'").catch(() => {}) : Promise.resolve();
+      const ready = fontReady.then(build);
+      window.__hf = window.__hf || {};
+      window.__hf.buildReady = window.__hf.buildReady || {};
+      window.__hf.buildReady.silk = ready;
+    })();
+    </script>
+  <script data-od-motion-source-player="6">
+
+window.__odValidateMotionTimeline = function (root, tl) {
+  var mode = document.querySelector('meta[name="od-motion-output"]');
+  if (!mode || mode.content !== 'video') return null;
+  var seconds = Number(root && root.getAttribute('data-duration'));
+  if (!Number.isFinite(seconds) || seconds <= 0) return 'Motion video requires a positive data-duration.';
+  if (!tl || typeof tl.duration !== 'function' || typeof tl.timeScale !== 'function') return 'Motion video requires a registered GSAP timeline.';
+  if (!Number.isFinite(tl.timeScale()) || Math.abs(tl.timeScale() - 1) > 0.000001) return 'Motion video timeScale must be 1. Do not use duration(seconds) to stretch the timeline; author tracks in real seconds.';
+  if (!Number.isFinite(tl.duration()) || Math.abs(tl.duration() - seconds) > 0.001) return 'Motion video timeline duration must equal data-duration. Add a clock tween at time 0 for the full duration; do not change playback speed.';
+  if ((typeof tl.repeat === 'function' && tl.repeat() !== 0) || (typeof tl.delay === 'function' && tl.delay() !== 0)) return 'Motion video master timeline must have no repeat or delay.';
+  return null;
+};
+(function () {
+  function boot() {
+    if (window.__odMotionRender || window.__odMotionSourcePlayer) return;
+    var root = document.querySelector('[data-composition-id][data-duration][data-width][data-height]');
+    var mode = document.querySelector('meta[name="od-motion-output"]');
+    if (!root || (mode && mode.content === 'interactive')) return;
+    window.__odMotionSourcePlayer = true;
+    var width = Number(root.dataset.width), height = Number(root.dataset.height);
+    if (!(width > 0 && height > 0)) return;
+    var hint = document.createElement('output');
+    hint.setAttribute('data-od-motion-status', ''); hint.setAttribute('role', 'status');
+    hint.style.cssText = 'position:fixed;bottom:12px;right:12px;z-index:2147483647;padding:6px 10px;border-radius:6px;background:#17191d;color:white;font:13px system-ui;display:none';
+    document.body.appendChild(hint);
+    function notice(text) { hint.textContent = text; hint.style.display = text ? 'block' : 'none'; }
+    var hosted = window.__odMotionPreview === true || new URL(location.href).searchParams.get('odMotionPreview') === '1';
+    var thumbnail = window.__odMotionThumbnail === true || new URL(location.href).searchParams.get('odMotionThumbnail') === '1';
+    var instance = Date.now().toString(36) + Math.random().toString(36).slice(2);
+    var active = !hosted, playing = false, wantsPlay = true, pageActive = true, updateTimer = null;
+    var applyPlayback = function () {};
+    function requestActivity() { window.parent.postMessage({type:'od:motion-preview-request', id:instance, width:width, height:height}, '*'); }
+    function onActivity(event) {
+      var data = event.data;
+      if (!hosted || event.source !== window.parent || !data) return;
+      if (data.type === 'od:motion-preview-probe') { requestActivity(); return; }
+      if (data.type !== 'od:motion-preview-activity' || typeof data.active !== 'boolean' || (data.active && data.id !== instance)) return;
+      active = data.active; applyPlayback();
+    }
+    window.addEventListener('message', onActivity);
+    var tracks = Array.prototype.map.call(document.querySelectorAll('audio[src]'), function (audio) {
+      audio.pause(); audio.autoplay = false;
+      return { audio: audio, start: Number(audio.dataset.start || 0), duration: Number(audio.dataset.duration), volume: Number(audio.dataset.volume || 1), pending: false, blocked: false };
+    });
+    var muted = thumbnail;
+    function syncAudio(time, shouldPlay, force) {
+      tracks.forEach(function (track) {
+        var audio = track.audio, local = time - track.start;
+        if (thumbnail) { audio.muted = true; audio.pause(); return; }
+        var trackActive = local >= 0 && local < track.duration;
+        audio.volume = Math.max(0, Math.min(1, track.volume)); audio.muted = muted;
+        if (!trackActive || !shouldPlay) audio.pause();
+        var target = Math.max(0, Math.min(track.duration, local));
+        if (audio.readyState > 0 && (force || Math.abs(audio.currentTime - target) > .2)) audio.currentTime = target;
+        if (trackActive && shouldPlay && audio.paused && !track.pending && !track.blocked) {
+          track.pending = true;
+          var promise = audio.play();
+          if (promise) promise.catch(function (error) {
+            if (error && error.name === 'AbortError') return;
+            track.blocked = true;
+            notice(error && error.name === 'NotAllowedError' ? '点击画面开启声音' : '音频无法播放，请检查素材');
+          }).finally(function () {
+            track.pending = false;
+            if (!active || !pageActive || !playing || !wantsPlay) audio.pause();
+          });
+          else track.pending = false;
+        }
+      });
+    }
+    var fitStyle = document.createElement('style');
+    fitStyle.textContent = 'html,body{width:100% !important;height:100% !important;margin:0 !important;overflow:hidden !important}';
+    document.head.appendChild(fitStyle);
+    var stage = document.createElement('div');
+    root.parentNode.insertBefore(stage, root); stage.appendChild(root);
+    function fit() {
+      var scale = Math.min(innerWidth / width, Math.max(1, innerHeight) / height);
+      stage.style.cssText = 'position:fixed;width:' + width + 'px;height:' + height + 'px;left:' + ((innerWidth-width*scale)/2) + 'px;top:' + ((innerHeight-height*scale)/2) + 'px;transform-origin:0 0;transform:scale(' + scale + ')';
+    }
+    fit(); window.addEventListener('resize', fit);
+    var started = Date.now();
+    function connect() {
+      var tl = window.__timelines && window.__timelines[root.dataset.compositionId];
+      if (!tl || typeof tl.seek !== 'function' || typeof tl.play !== 'function' || !(tl.duration() > 0)) {
+        if (Date.now()-started < 15000) { setTimeout(connect, 100); return; }
+        notice('动效未就绪，请检查时间轴或依赖文件'); return;
+      }
+      var timingError = window.__odValidateMotionTimeline(root, tl);
+      if (timingError) { tl.pause(); notice(timingError); return; }
+      var duration = tl.duration();
+      applyPlayback = function () {
+        clearTimeout(updateTimer); updateTimer = null;
+        playing = active && pageActive && wantsPlay;
+        if (playing) {
+          if (tl.time() >= duration) tl.seek(0, false);
+          tl.play(); syncAudio(tl.time(), true, true); update();
+        } else { tl.pause(); syncAudio(tl.time(), false, true); }
+      };
+      function play() { wantsPlay = true; applyPlayback(); }
+      function pause() { wantsPlay = false; applyPlayback(); }
+      function seek(time) { pause(); tl.seek(Math.max(0, Math.min(duration, Number(time))), false); syncAudio(tl.time(), false, true); }
+      function replay() { seek(0); play(); }
+      window.__odMotionPlayer = {
+        play: play, pause: pause, seek: seek, replay: replay,
+        setMuted: function (value) { muted = thumbnail || !!value; syncAudio(tl.time(), playing, false); },
+        state: function () { return { playing: playing, active: active, time: tl.time(), duration: duration, muted: muted,
+          audio: tracks.map(function (track) { return { paused: track.audio.paused, time: track.audio.currentTime, muted: track.audio.muted, volume: track.audio.volume, blocked: track.blocked }; }) }; }
+      };
+      root.addEventListener('click', function () {
+        var blocked = tracks.some(function (track) { return track.blocked; });
+        if (blocked) { tracks.forEach(function (track) { track.blocked = false; }); notice(''); if (playing) syncAudio(tl.time(), true, true); else play(); }
+        else if (playing) pause(); else play();
+      });
+      tl.seek(0, false); applyPlayback();
+      function update() {
+        if (!stage.isConnected) { active = false; applyPlayback(); return; }
+        if (!active || !pageActive || !playing) return;
+        if (playing && tl.time() >= duration) { tl.seek(0, false); tl.play(); syncAudio(0, true, true); }
+        syncAudio(tl.time(), playing && !tl.paused(), false);
+        updateTimer = setTimeout(update, 33);
+      }
+    }
+    window.addEventListener('pagehide', function () { pageActive = false; applyPlayback(); tracks.forEach(function (track) { track.audio.pause(); }); });
+    window.addEventListener('pageshow', function () {
+      pageActive = true;
+      if (hosted) { active = false; requestActivity(); }
+      applyPlayback();
+    });
+    if (hosted) requestActivity();
+    connect();
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, {once:true}); else boot();
+})();
+</script></body>
+</html>

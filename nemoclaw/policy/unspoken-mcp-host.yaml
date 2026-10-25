@@ -1,0 +1,29 @@
+# FALLBACK A only. The primary path is the managed registration (`nemoclaw <sb> mcp add unspoken ...`), which
+# generates its own OpenShell policy. Apply this preset only when the managed add will not converge and the agent
+# must reach the room's MCP server through an agent-native URL registration instead (docs/NEMOCLAW.md §Fallback A):
+#
+#   nemoclaw unspoken policy add --from-file nemoclaw/policy/unspoken-mcp-host.yaml \
+#       --trusted-private-host <bridge-ip> --dry-run      # review the pins
+#   nemoclaw unspoken policy add --from-file nemoclaw/policy/unspoken-mcp-host.yaml --trusted-private-host <bridge-ip>
+#
+# Rules: host must be the exact private bridge IP (RFC1918) the TLS proxy binds; only the Streamable HTTP route
+# (GET/POST/DELETE /mcp) and only from the Node runtime that opens the connection (confirm the path with
+# `nemoclaw unspoken exec -- which node`). No allowed_ips here: NemoClaw pins them from --trusted-private-host.
+# deploy/nemoclaw/connect.sh --fallback-rest rewrites BRIDGE_IP_PLACEHOLDER before applying.
+preset:
+  name: unspoken-mcp-host
+  description: "LocoCisco room MCP server (TLS proxy on the docker bridge IP), agent-native fallback"
+network_policies:
+  unspoken_mcp_host:
+    name: unspoken_mcp_host
+    endpoints:
+      - host: BRIDGE_IP_PLACEHOLDER
+        port: 8443
+        protocol: rest
+        enforcement: enforce
+        rules:
+          - allow: { method: GET, path: "/mcp" }
+          - allow: { method: POST, path: "/mcp" }
+          - allow: { method: DELETE, path: "/mcp" }
+    binaries:
+      - { path: /usr/local/bin/node }

@@ -1,0 +1,66 @@
+{
+  "_comment": "OWNED BY THE INTEGRATOR. The simulated home: floor plan (canvas 1000x600, origin top-left), devices, sensors, residents and house rules. The sim builds the world from this; agents may read it as 'home configuration' (they must NOT read live world state except through bus events).",
+  "name": "The Zhang-Rivera home",
+  "start": {"time": "19:00", "weekday": "Tuesday"},
+  "rooms": [
+    {"id": "living", "name": "Living room", "x": 0, "y": 0, "w": 420, "h": 320, "indoor": true},
+    {"id": "kitchen", "name": "Kitchen", "x": 420, "y": 0, "w": 300, "h": 320, "indoor": true},
+    {"id": "hallway", "name": "Hallway", "x": 0, "y": 320, "w": 720, "h": 100, "indoor": true},
+    {"id": "bedroom_main", "name": "Parents' bedroom", "x": 720, "y": 0, "w": 280, "h": 320, "indoor": true},
+    {"id": "bedroom_maya", "name": "Maya's room", "x": 720, "y": 320, "w": 280, "h": 280, "indoor": true},
+    {"id": "porch", "name": "Front porch", "x": 0, "y": 420, "w": 720, "h": 180, "indoor": false}
+  ],
+  "doors": [
+    {"door_id": "front", "name": "Front door", "between": ["hallway", "porch"], "x": 160, "y": 420, "lock": "lock_front", "open": false}
+  ],
+  "devices": [
+    {"device_id": "light_living", "kind": "light", "room": "living", "x": 210, "y": 160, "state": {"on": false, "brightness": 0}},
+    {"device_id": "light_kitchen", "kind": "light", "room": "kitchen", "x": 570, "y": 160, "state": {"on": false, "brightness": 0}},
+    {"device_id": "light_hallway", "kind": "light", "room": "hallway", "x": 360, "y": 370, "state": {"on": false, "brightness": 0}},
+    {"device_id": "light_bedroom_main", "kind": "light", "room": "bedroom_main", "x": 860, "y": 160, "state": {"on": false, "brightness": 0}},
+    {"device_id": "light_bedroom_maya", "kind": "light", "room": "bedroom_maya", "x": 860, "y": 460, "state": {"on": false, "brightness": 0}},
+    {"device_id": "light_porch", "kind": "light", "room": "porch", "x": 160, "y": 500, "state": {"on": false, "brightness": 0}},
+    {"device_id": "tv_living", "kind": "tv", "room": "living", "x": 40, "y": 160, "state": {"on": false, "volume": 20, "playing": null}},
+    {"device_id": "thermostat_main", "kind": "thermostat", "room": "hallway", "x": 620, "y": 370, "state": {"setpoint_c": 19.0}},
+    {"device_id": "stove_kitchen", "kind": "stove", "room": "kitchen", "x": 680, "y": 60, "state": {"burner_on": false}},
+    {"device_id": "lock_front", "kind": "lock", "room": "hallway", "x": 160, "y": 410, "state": {"locked": true}}
+  ],
+  "sensors": {
+    "cameras": [
+      {"camera_id": "cam_living", "room": "living"},
+      {"camera_id": "cam_kitchen", "room": "kitchen"},
+      {"camera_id": "cam_hallway", "room": "hallway"},
+      {"camera_id": "cam_porch", "room": "porch"}
+    ],
+    "_cameras_note": "No cameras in bedrooms (privacy). Bedrooms have presence, lux, temperature and a mic only.",
+    "mics": [
+      {"mic_id": "mic_living", "room": "living", "x": 380, "y": 160},
+      {"mic_id": "mic_kitchen", "room": "kitchen", "x": 450, "y": 300},
+      {"mic_id": "mic_bedroom_main", "room": "bedroom_main", "x": 980, "y": 160},
+      {"mic_id": "mic_bedroom_maya", "room": "bedroom_maya", "x": 980, "y": 460},
+      {"mic_id": "mic_porch", "room": "porch", "x": 160, "y": 440}
+    ],
+    "presence": ["living", "kitchen", "hallway", "bedroom_main", "bedroom_maya", "porch"],
+    "lux": ["living", "kitchen", "hallway", "bedroom_main", "bedroom_maya", "porch"],
+    "temperature": ["living", "kitchen", "hallway", "bedroom_main", "bedroom_maya", "porch"]
+  },
+  "residents": [
+    {"id": "alex", "name": "Alex", "role": "parent", "voice_enrolled": true, "phone": true, "lang": ["en", "zh"], "start_room": "living"},
+    {"id": "sam", "name": "Sam", "role": "parent", "voice_enrolled": true, "phone": true, "lang": ["en"], "start_room": "kitchen"},
+    {"id": "maya", "name": "Maya", "role": "child", "age": 7, "voice_enrolled": true, "phone": false, "lang": ["en", "zh"], "start_room": "bedroom_maya"}
+  ],
+  "pets": [
+    {"id": "mochi", "name": "Mochi", "species": "cat", "start_room": "living"}
+  ],
+  "house_rules": [
+    {"id": "inside_voices_only", "text": "Only voices of people inside the house count. Voices from the TV or from outside are ignored."},
+    {"id": "kids_no_unlock", "text": "Kids may not unlock doors."},
+    {"id": "unlock_needs_parent", "text": "Unlocking needs a parent's voice with a strong voice match (0.90 or more)."},
+    {"id": "kids_tv_curfew", "text": "Kids may not turn on the TV after 20:00 on school nights (Sunday to Thursday) without a parent's OK."},
+    {"id": "anyone_lights", "text": "Anyone at home may change the lights."},
+    {"id": "guests_heat", "text": "Guests may change the heat."},
+    {"id": "alerts_always", "text": "Safety alerts to a parent are always allowed."},
+    {"id": "unsure_asks", "text": "When the house is unsure what someone wants, it asks instead of acting."}
+  ],
+  "thresholds": {"voice_match": 0.85, "unlock_voice_match": 0.90, "dark_lux": 10, "night_from": "19:30", "night_to": "06:30"}
+}

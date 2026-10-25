@@ -1,0 +1,58 @@
+{
+ "id": "reg_20_end_wipes_people",
+ "title": "Meeting end forgets everyone",
+ "blurb": "After end, the participants list is empty and the banner says so.",
+ "tags": [
+  "regression"
+ ],
+ "steps": [
+  {
+   "do": "start",
+   "title": "Pricing sync",
+   "owner": "Priya",
+   "agenda": [
+    "Q3 pricing",
+    "Launch"
+   ],
+   "minutes": 30
+  },
+  {
+   "do": "join",
+   "who": "priya",
+   "seat": "s1",
+   "voice": "voice-A",
+   "checkin": "Priya"
+  },
+  {
+   "do": "join",
+   "who": "sam",
+   "seat": "s2",
+   "voice": "voice-B",
+   "checkin": "Sam"
+  },
+  {
+   "do": "say",
+   "who": "sam",
+   "text": "It's freezing in here.",
+   "lang": "en"
+  },
+  {
+   "do": "expect",
+   "what": "device",
+   "device_id": "fan",
+   "state": {
+    "on": false
+   },
+   "within": 45
+  },
+  {
+   "do": "end"
+  },
+  {
+   "do": "expect",
+   "what": "screen",
+   "banner_contains": "forgotten",
+   "within": 3
+  }
+ ]
+}

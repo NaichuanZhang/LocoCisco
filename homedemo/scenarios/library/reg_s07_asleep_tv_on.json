@@ -1,0 +1,56 @@
+{
+  "id": "reg_s07_asleep_tv_on",
+  "title": "Asleep on the couch, TV on, 01:30",
+  "blurb": "40 idle minutes with the TV on: TV off (or an ask). At-risk: 12B 39%.",
+  "tags": [
+    "regression",
+    "scene",
+    "seed:s7",
+    "at-risk"
+  ],
+  "steps": [
+    {
+      "do": "set_time",
+      "time": "01:30",
+      "weekday": "Wednesday"
+    },
+    {
+      "do": "set_env",
+      "room": "living",
+      "lux": 15
+    },
+    {
+      "do": "set_device",
+      "device": "tv_living",
+      "state": {
+        "on": true,
+        "volume": 30,
+        "playing": "a late movie"
+      }
+    },
+    {
+      "do": "activity",
+      "who": "alex",
+      "text": "lying on the couch, eyes closed",
+      "attrs": {
+        "pose": "lying down"
+      }
+    },
+    {
+      "do": "idle",
+      "who": "alex",
+      "minutes": 40
+    },
+    {
+      "do": "expect",
+      "what": "outcome",
+      "action": "tv_off",
+      "accept": [
+        "done",
+        "asked"
+      ],
+      "within": 15,
+      "room": "living"
+    }
+  ]
+}

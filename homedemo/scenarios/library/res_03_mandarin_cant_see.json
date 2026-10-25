@@ -1,0 +1,62 @@
+{
+  "id": "res_03_mandarin_cant_see",
+  "title": "Maya: “好暗，我看不清。”",
+  "blurb": "Mandarin 'so dark, I can't see' from a child in her dim room (designed): lights on; anyone may change the lights. The keyword baseline hears nothing.",
+  "tags": [
+    "research",
+    "speech",
+    "mandarin",
+    "keyword-misses",
+    "f2:16"
+  ],
+  "steps": [
+    {
+      "do": "set_time",
+      "time": "20:30",
+      "weekday": "Tuesday"
+    },
+    {
+      "do": "set_env",
+      "room": "bedroom_maya",
+      "lux": 15
+    },
+    {
+      "do": "say",
+      "who": "maya",
+      "text": "好暗，我看不清。",
+      "lang": "zh"
+    },
+    {
+      "do": "expect",
+      "what": "proposal",
+      "by": "keyword",
+      "action": "none",
+      "within": 5
+    },
+    {
+      "do": "expect",
+      "what": "outcome",
+      "action": "lights_on",
+      "accept": [
+        "done",
+        "asked"
+      ],
+      "within": 20,
+      "room": "bedroom_maya"
+    },
+    {
+      "do": "reply",
+      "answer": "Yes",
+      "if_asked": true
+    },
+    {
+      "do": "expect",
+      "what": "device",
+      "device": "light_bedroom_maya",
+      "state": {
+        "on": true
+      },
+      "within": 6
+    }
+  ]
+}

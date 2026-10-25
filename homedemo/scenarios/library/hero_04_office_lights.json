@@ -1,0 +1,59 @@
+{
+  "id": "hero_office_lights",
+  "title": "\"I left the lights on at the office\"",
+  "blurb": "The keyword baseline hears 'lights on' and would flip the kitchen switch. The decider reads the sentence and does nothing.",
+  "tags": [
+    "hero",
+    "speech",
+    "keyword-wrong"
+  ],
+  "steps": [
+    {
+      "do": "note",
+      "text": "Sam is in the kitchen with the lights on, telling Alex about a bad day at work.",
+      "wait": 3
+    },
+    {
+      "do": "set_device",
+      "device": "light_kitchen",
+      "state": {
+        "on": true,
+        "brightness": 100
+      }
+    },
+    {
+      "do": "set_env",
+      "room": "kitchen",
+      "lux": 300
+    },
+    {
+      "do": "say",
+      "who": "sam",
+      "text": "I left the lights on at the office again, my boss is going to kill me.",
+      "lang": "en"
+    },
+    {
+      "do": "expect",
+      "what": "proposal",
+      "by": "keyword",
+      "action": "lights_on",
+      "within": 5
+    },
+    {
+      "do": "expect",
+      "what": "no_command",
+      "device": "light_kitchen",
+      "within": 6
+    },
+    {
+      "do": "note",
+      "text": "The keyword system heard 'lights on' and would have touched the kitchen switch. The decider read the whole sentence: it is about the office, not this house.",
+      "wait": 6
+    },
+    {
+      "do": "note",
+      "text": "The 2B leaned to 'lights off' at 76%, under the act threshold, so the 12B was asked: 'no action'. Nothing moved.",
+      "wait": 5
+    }
+  ]
+}

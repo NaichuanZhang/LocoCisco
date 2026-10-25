@@ -1,0 +1,2189 @@
+{
+ "notes": "Labelled meeting utterances for eval/run_meeting_eval.py. expected = contracts.ACTIONS entry; ok = accepted answers; owner for tasks (None = no owner should be pinned); args: due True/False for tasks, on for set_fan, scene for set_light.",
+ "names": [
+  "Priya",
+  "Sam",
+  "Lin"
+ ],
+ "context": "Pricing sync, topic: Q3 pricing. 22 min left. Here: Priya (owner), Sam, Lin.",
+ "cases": [
+  {
+   "id": "m01",
+   "category": "task",
+   "tags": [],
+   "utt": {
+    "text": "Sam, can you send the deck to the press team by Friday?",
+    "lang": "en",
+    "speaker": {
+     "name": "Priya",
+     "voice": "voice-A",
+     "seat": "s1",
+     "conf": 0.9,
+     "guest": false
+    },
+    "source": "person",
+    "context": "Pricing sync, topic: Q3 pricing. 22 min left. Here: Priya (owner), Sam, Lin."
+   },
+   "names": [
+    "Priya",
+    "Sam",
+    "Lin"
+   ],
+   "expected": "create_task",
+   "ok": [
+    "create_task"
+   ],
+   "owner": "Sam",
+   "args": {
+    "due": true
+   }
+  },
+  {
+   "id": "m02",
+   "category": "task",
+   "tags": [],
+   "utt": {
+    "text": "Lin, please pull the churn numbers for the Starter test before Thursday.",
+    "lang": "en",
+    "speaker": {
+     "name": "Priya",
+     "voice": "voice-A",
+     "seat": "s1",
+     "conf": 0.9,
+     "guest": false
+    },
+    "source": "person",
+    "context": "Pricing sync, topic: Q3 pricing. 22 min left. Here: Priya (owner), Sam, Lin."
+   },
+   "names": [
+    "Priya",
+    "Sam",
+    "Lin"
+   ],
+   "expected": "create_task",
+   "ok": [
+    "create_task"
+   ],
+   "owner": "Lin",
+   "args": {
+    "due": true
+   }
+  },
+  {
+   "id": "m03",
+   "category": "task",
+   "tags": [],
+   "utt": {
+    "text": "I'll draft the launch email tomorrow.",
+    "lang": "en",
+    "speaker": {
+     "name": "Sam",
+     "voice": "voice-A",
+     "seat": "s1",
+     "conf": 0.9,
+     "guest": false
+    },
+    "source": "person",
+    "context": "Pricing sync, topic: Q3 pricing. 22 min left. Here: Priya (owner), Sam, Lin."
+   },
+   "names": [
+    "Priya",
+    "Sam",
+    "Lin"
+   ],
+   "expected": "create_task",
+   "ok": [
+    "create_task"
+   ],
+   "owner": "Sam",
+   "args": {
+    "due": true
+   }
+  },
+  {
+   "id": "m04",
+   "category": "task",
+   "tags": [],
+   "utt": {
+    "text": "I can take the finance review, give me until end of week.",
+    "lang": "en",
+    "speaker": {
+     "name": "Lin",
+     "voice": "voice-A",
+     "seat": "s1",
+     "conf": 0.9,
+     "guest": false
+    },
+    "source": "person",
+    "context": "Pricing sync, topic: Q3 pricing. 22 min left. Here: Priya (owner), Sam, Lin."
+   },
+   "names": [
+    "Priya",
+    "Sam",
+    "Lin"
+   ],
+   "expected": "create_task",
+   "ok": [
+    "create_task"
+   ],
+   "owner": "Lin",
+   "args": {
+    "due": true
+   }
+  },
+  {
+   "id": "m05",
+   "category": "task",
+   "tags": [],
+   "utt": {
+    "text": "Someone needs to update the pricing page by next week.",
+    "lang": "en",
+    "speaker": {
+     "name": "Priya",
+     "voice": "voice-A",
+     "seat": "s1",
+     "conf": 0.9,
+     "guest": false
+    },
+    "source": "person",
+    "context": "Pricing sync, topic: Q3 pricing. 22 min left. Here: Priya (owner), Sam, Lin."
+   },
+   "names": [
+    "Priya",
+    "Sam",
+    "Lin"
+   ],
+   "expected": "create_task",
+   "ok": [
+    "create_task"
+   ],
+   "owner": null,
+   "args": {
+    "due": true
+   }
+  },
+  {
+   "id": "m06",
+   "category": "task",
+   "tags": [
+    "zh",
+    "mixed"
+   ],
+   "utt": {
+    "text": "Sam，你周三前把报告发我。",
+    "lang": "zh",
+    "speaker": {
+     "name": "Priya",
+     "voice": "voice-A",
+     "seat": "s1",
+     "conf": 0.9,
+     "guest": false
+    },
+    "source": "person",
+    "context": "Pricing sync, topic: Q3 pricing. 22 min left. Here: Priya (owner), Sam, Lin."
+   },
+   "names": [
+    "Priya",
+    "Sam",
+    "Lin"
+   ],
+   "expected": "create_task",
+   "ok": [
+    "create_task"
+   ],
+   "owner": "Sam",
+   "args": {
+    "due": true
+   }
+  },
+  {
+   "id": "m07",
+   "category": "task",
+   "tags": [],
+   "utt": {
+    "text": "Priya, can you confirm the August 1 date with legal?",
+    "lang": "en",
+    "speaker": {
+     "name": "Sam",
+     "voice": "voice-A",
+     "seat": "s1",
+     "conf": 0.9,
+     "guest": false
+    },
+    "source": "person",
+    "context": "Pricing sync, topic: Q3 pricing. 22 min left. Here: Priya (owner), Sam, Lin."
+   },
+   "names": [
+    "Priya",
+    "Sam",
+    "Lin"
+   ],
+   "expected": "create_task",
+   "ok": [
+    "create_task"
+   ],
+   "owner": "Priya",
+   "args": {
+    "due": false
+   }
+  },
+  {
+   "id": "m08",
+   "category": "task",
+   "tags": [],
+   "utt": {
+    "text": "Let's have Lin write up the grandfathering options for next Monday.",
+    "lang": "en",
+    "speaker": {
+     "name": "Priya",
+     "voice": "voice-A",
+     "seat": "s1",
+     "conf": 0.9,
+     "guest": false
+    },
+    "source": "person",
+    "context": "Pricing sync, topic: Q3 pricing. 22 min left. Here: Priya (owner), Sam, Lin."
+   },
+   "names": [
+    "Priya",
+    "Sam",
+    "Lin"
+   ],
+   "expected": "create_task",
+   "ok": [
+    "create_task"
+   ],
+   "owner": "Lin",
+   "args": {
+    "due": true
+   }
+  },
+  {
+   "id": "m09",
+   "category": "task",
+   "tags": [],
+   "utt": {
+    "text": "Action item: Sam owns the press kit, due the 9th.",
+    "lang": "en",
+    "speaker": {
+     "name": "Priya",
+     "voice": "voice-A",
+     "seat": "s1",
+     "conf": 0.9,
+     "guest": false
+    },
+    "source": "person",
+    "context": "Pricing sync, topic: Q3 pricing. 22 min left. Here: Priya (owner), Sam, Lin."
+   },
+   "names": [
+    "Priya",
+    "Sam",
+    "Lin"
+   ],
+   "expected": "create_task",
+   "ok": [
+    "create_task"
+   ],
+   "owner": "Sam",
+   "args": {
+    "due": true
+   }
+  },
+  {
+   "id": "m10",
+   "category": "task",
+   "tags": [
+    "ambiguous-owner"
+   ],
+   "utt": {
+    "text": "Can you follow up with the Berlin team about the firmware date?",
+    "lang": "en",
+    "speaker": {
+     "name": "Priya",
+     "voice": "voice-A",
+     "seat": "s1",
+     "conf": 0.9,
+     "guest": false
+    },
+    "source": "person",
+    "context": "Pricing sync, topic: Q3 pricing. 22 min left. Here: Priya (owner), Sam, Lin."
+   },
+   "names": [
+    "Priya",
+    "Sam",
+    "Lin"
+   ],
+   "expected": "create_task",
+   "ok": [
+    "create_task"
+   ],
+   "owner": null,
+   "args": null
+  },
+  {
+   "id": "m11",
+   "category": "task",
+   "tags": [
+    "zh"
+   ],
+   "utt": {
+    "text": "我来写方案，下周一给大家。",
+    "lang": "zh",
+    "speaker": {
+     "name": "Lin",
+     "voice": "voice-A",
+     "seat": "s1",
+     "conf": 0.9,
+     "guest": false
+    },
+    "source": "person",
+    "context": "Pricing sync, topic: Q3 pricing. 22 min left. Here: Priya (owner), Sam, Lin."
+   },
+   "names": [
+    "Priya",
+    "Sam",
+    "Lin"
+   ],
+   "expected": "create_task",
+   "ok": [
+    "create_task"
+   ],
+   "owner": "Lin",
+   "args": {
+    "due": true
+   }
+  },
+  {
+   "id": "m12",
+   "category": "task",
+   "tags": [],
+   "utt": {
+    "text": "Sam, EOD today for the demo script, okay?",
+    "lang": "en",
+    "speaker": {
+     "name": "Priya",
+     "voice": "voice-A",
+     "seat": "s1",
+     "conf": 0.9,
+     "guest": false
+    },
+    "source": "person",
+    "context": "Pricing sync, topic: Q3 pricing. 22 min left. Here: Priya (owner), Sam, Lin."
+   },
+   "names": [
+    "Priya",
+    "Sam",
+    "Lin"
+   ],
+   "expected": "create_task",
+   "ok": [
+    "create_task"
+   ],
+   "owner": "Sam",
+   "args": {
+    "due": true
+   }
+  },
+  {
+   "id": "m13",
+   "category": "decision",
+   "tags": [],
+   "utt": {
+    "text": "Let's go with the thirty-nine dollar Starter price.",
+    "lang": "en",
+    "speaker": {
+     "name": "Priya",
+     "voice": "voice-A",
+     "seat": "s1",
+     "conf": 0.9,
+     "guest": false
+    },
+    "source": "person",
+    "context": "Pricing sync, topic: Q3 pricing. 22 min left. Here: Priya (owner), Sam, Lin."
+   },
+   "names": [
+    "Priya",
+    "Sam",
+    "Lin"
+   ],
+   "expected": "log_decision",
+   "ok": [
+    "log_decision"
+   ],
+   "owner": null,
+   "args": null
+  },
+  {
+   "id": "m14",
+   "category": "decision",
+   "tags": [],
+   "utt": {
+    "text": "We agreed to launch in the US, Canada and Germany first.",
+    "lang": "en",
+    "speaker": {
+     "name": "Sam",
+     "voice": "voice-A",
+     "seat": "s1",
+     "conf": 0.9,
+     "guest": false
+    },
+    "source": "person",
+    "context": "Pricing sync, topic: Q3 pricing. 22 min left. Here: Priya (owner), Sam, Lin."
+   },
+   "names": [
+    "Priya",
+    "Sam",
+    "Lin"
+   ],
+   "expected": "log_decision",
+   "ok": [
+    "log_decision"
+   ],
+   "owner": null,
+   "args": null
+  },
+  {
+   "id": "m15",
+   "category": "decision",
+   "tags": [],
+   "utt": {
+    "text": "Okay, decision: the pricing page goes live September 16, not August 1.",
+    "lang": "en",
+    "speaker": {
+     "name": "Priya",
+     "voice": "voice-A",
+     "seat": "s1",
+     "conf": 0.9,
+     "guest": false
+    },
+    "source": "person",
+    "context": "Pricing sync, topic: Q3 pricing. 22 min left. Here: Priya (owner), Sam, Lin."
+   },
+   "names": [
+    "Priya",
+    "Sam",
+    "Lin"
+   ],
+   "expected": "log_decision",
+   "ok": [
+    "log_decision"
+   ],
+   "owner": null,
+   "args": null
+  },
+  {
+   "id": "m16",
+   "category": "decision",
+   "tags": [
+    "zh"
+   ],
+   "utt": {
+    "text": "那就定这个方案，九月十六号上线。",
+    "lang": "zh",
+    "speaker": {
+     "name": "Priya",
+     "voice": "voice-A",
+     "seat": "s1",
+     "conf": 0.9,
+     "guest": false
+    },
+    "source": "person",
+    "context": "Pricing sync, topic: Q3 pricing. 22 min left. Here: Priya (owner), Sam, Lin."
+   },
+   "names": [
+    "Priya",
+    "Sam",
+    "Lin"
+   ],
+   "expected": "log_decision",
+   "ok": [
+    "log_decision"
+   ],
+   "owner": null,
+   "args": null
+  },
+  {
+   "id": "m17",
+   "category": "decision",
+   "tags": [],
+   "utt": {
+    "text": "So we're going with option B and dropping the annual discount.",
+    "lang": "en",
+    "speaker": {
+     "name": "Lin",
+     "voice": "voice-A",
+     "seat": "s1",
+     "conf": 0.9,
+     "guest": false
+    },
+    "source": "person",
+    "context": "Pricing sync, topic: Q3 pricing. 22 min left. Here: Priya (owner), Sam, Lin."
+   },
+   "names": [
+    "Priya",
+    "Sam",
+    "Lin"
+   ],
+   "expected": "log_decision",
+   "ok": [
+    "log_decision"
+   ],
+   "owner": null,
+   "args": null
+  },
+  {
+   "id": "m18",
+   "category": "decision",
+   "tags": [],
+   "utt": {
+    "text": "Fine, Team plan stays at seventy-nine for the year. Settled.",
+    "lang": "en",
+    "speaker": {
+     "name": "Priya",
+     "voice": "voice-A",
+     "seat": "s1",
+     "conf": 0.9,
+     "guest": false
+    },
+    "source": "person",
+    "context": "Pricing sync, topic: Q3 pricing. 22 min left. Here: Priya (owner), Sam, Lin."
+   },
+   "names": [
+    "Priya",
+    "Sam",
+    "Lin"
+   ],
+   "expected": "log_decision",
+   "ok": [
+    "log_decision"
+   ],
+   "owner": null,
+   "args": null
+  },
+  {
+   "id": "m19",
+   "category": "decision",
+   "tags": [],
+   "utt": {
+    "text": "We'll keep Japan for Q4, that's final.",
+    "lang": "en",
+    "speaker": {
+     "name": "Sam",
+     "voice": "voice-A",
+     "seat": "s1",
+     "conf": 0.9,
+     "guest": false
+    },
+    "source": "person",
+    "context": "Pricing sync, topic: Q3 pricing. 22 min left. Here: Priya (owner), Sam, Lin."
+   },
+   "names": [
+    "Priya",
+    "Sam",
+    "Lin"
+   ],
+   "expected": "log_decision",
+   "ok": [
+    "log_decision"
+   ],
+   "owner": null,
+   "args": null
+  },
+  {
+   "id": "m20",
+   "category": "decision",
+   "tags": [],
+   "utt": {
+    "text": "Let's lock the launch name as Nimbus 2.",
+    "lang": "en",
+    "speaker": {
+     "name": "Priya",
+     "voice": "voice-A",
+     "seat": "s1",
+     "conf": 0.9,
+     "guest": false
+    },
+    "source": "person",
+    "context": "Pricing sync, topic: Q3 pricing. 22 min left. Here: Priya (owner), Sam, Lin."
+   },
+   "names": [
+    "Priya",
+    "Sam",
+    "Lin"
+   ],
+   "expected": "log_decision",
+   "ok": [
+    "log_decision"
+   ],
+   "owner": null,
+   "args": null
+  },
+  {
+   "id": "m21",
+   "category": "question",
+   "tags": [],
+   "utt": {
+    "text": "What did we decide last time about the Team plan price?",
+    "lang": "en",
+    "speaker": {
+     "name": "Sam",
+     "voice": "voice-A",
+     "seat": "s1",
+     "conf": 0.9,
+     "guest": false
+    },
+    "source": "person",
+    "context": "Pricing sync, topic: Q3 pricing. 22 min left. Here: Priya (owner), Sam, Lin."
+   },
+   "names": [
+    "Priya",
+    "Sam",
+    "Lin"
+   ],
+   "expected": "answer_question",
+   "ok": [
+    "answer_question"
+   ],
+   "owner": null,
+   "args": null
+  },
+  {
+   "id": "m22",
+   "category": "question",
+   "tags": [],
+   "utt": {
+    "text": "What's our refund policy for annual plans?",
+    "lang": "en",
+    "speaker": {
+     "name": "Lin",
+     "voice": "voice-A",
+     "seat": "s1",
+     "conf": 0.9,
+     "guest": false
+    },
+    "source": "person",
+    "context": "Pricing sync, topic: Q3 pricing. 22 min left. Here: Priya (owner), Sam, Lin."
+   },
+   "names": [
+    "Priya",
+    "Sam",
+    "Lin"
+   ],
+   "expected": "answer_question",
+   "ok": [
+    "answer_question"
+   ],
+   "owner": null,
+   "args": null
+  },
+  {
+   "id": "m23",
+   "category": "question",
+   "tags": [],
+   "utt": {
+    "text": "When is the press briefing again?",
+    "lang": "en",
+    "speaker": {
+     "name": "Sam",
+     "voice": "voice-A",
+     "seat": "s1",
+     "conf": 0.9,
+     "guest": false
+    },
+    "source": "person",
+    "context": "Pricing sync, topic: Q3 pricing. 22 min left. Here: Priya (owner), Sam, Lin."
+   },
+   "names": [
+    "Priya",
+    "Sam",
+    "Lin"
+   ],
+   "expected": "answer_question",
+   "ok": [
+    "answer_question"
+   ],
+   "owner": null,
+   "args": null
+  },
+  {
+   "id": "m24",
+   "category": "question",
+   "tags": [],
+   "utt": {
+    "text": "Remind me what the firmware certification deadline is.",
+    "lang": "en",
+    "speaker": {
+     "name": "Priya",
+     "voice": "voice-A",
+     "seat": "s1",
+     "conf": 0.9,
+     "guest": false
+    },
+    "source": "person",
+    "context": "Pricing sync, topic: Q3 pricing. 22 min left. Here: Priya (owner), Sam, Lin."
+   },
+   "names": [
+    "Priya",
+    "Sam",
+    "Lin"
+   ],
+   "expected": "answer_question",
+   "ok": [
+    "answer_question"
+   ],
+   "owner": null,
+   "args": null
+  },
+  {
+   "id": "m25",
+   "category": "question",
+   "tags": [],
+   "utt": {
+    "text": "Do we know which regions the Starter test ran in?",
+    "lang": "en",
+    "speaker": {
+     "name": "Lin",
+     "voice": "voice-A",
+     "seat": "s1",
+     "conf": 0.9,
+     "guest": false
+    },
+    "source": "person",
+    "context": "Pricing sync, topic: Q3 pricing. 22 min left. Here: Priya (owner), Sam, Lin."
+   },
+   "names": [
+    "Priya",
+    "Sam",
+    "Lin"
+   ],
+   "expected": "answer_question",
+   "ok": [
+    "answer_question"
+   ],
+   "owner": null,
+   "args": null
+  },
+  {
+   "id": "m26",
+   "category": "question",
+   "tags": [
+    "zh"
+   ],
+   "utt": {
+    "text": "我们上次关于定价定了什么？",
+    "lang": "zh",
+    "speaker": {
+     "name": "Sam",
+     "voice": "voice-A",
+     "seat": "s1",
+     "conf": 0.9,
+     "guest": false
+    },
+    "source": "person",
+    "context": "Pricing sync, topic: Q3 pricing. 22 min left. Here: Priya (owner), Sam, Lin."
+   },
+   "names": [
+    "Priya",
+    "Sam",
+    "Lin"
+   ],
+   "expected": "answer_question",
+   "ok": [
+    "answer_question"
+   ],
+   "owner": null,
+   "args": null
+  },
+  {
+   "id": "m27",
+   "category": "question",
+   "tags": [],
+   "utt": {
+    "text": "What does the launch plan say about pre-order shipments?",
+    "lang": "en",
+    "speaker": {
+     "name": "Priya",
+     "voice": "voice-A",
+     "seat": "s1",
+     "conf": 0.9,
+     "guest": false
+    },
+    "source": "person",
+    "context": "Pricing sync, topic: Q3 pricing. 22 min left. Here: Priya (owner), Sam, Lin."
+   },
+   "names": [
+    "Priya",
+    "Sam",
+    "Lin"
+   ],
+   "expected": "answer_question",
+   "ok": [
+    "answer_question"
+   ],
+   "owner": null,
+   "args": null
+  },
+  {
+   "id": "m28",
+   "category": "question",
+   "tags": [
+    "docs"
+   ],
+   "utt": {
+    "text": "Can you share the pricing doc in the channel?",
+    "lang": "en",
+    "speaker": {
+     "name": "Sam",
+     "voice": "voice-A",
+     "seat": "s1",
+     "conf": 0.9,
+     "guest": false
+    },
+    "source": "person",
+    "context": "Pricing sync, topic: Q3 pricing. 22 min left. Here: Priya (owner), Sam, Lin."
+   },
+   "names": [
+    "Priya",
+    "Sam",
+    "Lin"
+   ],
+   "expected": "share_docs",
+   "ok": [
+    "share_docs"
+   ],
+   "owner": null,
+   "args": null
+  },
+  {
+   "id": "m29",
+   "category": "room",
+   "tags": [],
+   "utt": {
+    "text": "It's freezing in here.",
+    "lang": "en",
+    "speaker": {
+     "name": "Sam",
+     "voice": "voice-A",
+     "seat": "s1",
+     "conf": 0.9,
+     "guest": false
+    },
+    "source": "person",
+    "context": "Pricing sync, topic: Q3 pricing. 22 min left. Here: Priya (owner), Sam, Lin."
+   },
+   "names": [
+    "Priya",
+    "Sam",
+    "Lin"
+   ],
+   "expected": "set_fan",
+   "ok": [
+    "set_fan"
+   ],
+   "owner": null,
+   "args": {
+    "on": false
+   }
+  },
+  {
+   "id": "m30",
+   "category": "room",
+   "tags": [],
+   "utt": {
+    "text": "It's really stuffy, can we get some air?",
+    "lang": "en",
+    "speaker": {
+     "name": "Priya",
+     "voice": "voice-A",
+     "seat": "s1",
+     "conf": 0.9,
+     "guest": false
+    },
+    "source": "person",
+    "context": "Pricing sync, topic: Q3 pricing. 22 min left. Here: Priya (owner), Sam, Lin."
+   },
+   "names": [
+    "Priya",
+    "Sam",
+    "Lin"
+   ],
+   "expected": "set_fan",
+   "ok": [
+    "set_fan"
+   ],
+   "owner": null,
+   "args": {
+    "on": true
+   }
+  },
+  {
+   "id": "m31",
+   "category": "room",
+   "tags": [],
+   "utt": {
+    "text": "Can we dim the lights? There's glare on the screen.",
+    "lang": "en",
+    "speaker": {
+     "name": "Lin",
+     "voice": "voice-A",
+     "seat": "s1",
+     "conf": 0.9,
+     "guest": false
+    },
+    "source": "person",
+    "context": "Pricing sync, topic: Q3 pricing. 22 min left. Here: Priya (owner), Sam, Lin."
+   },
+   "names": [
+    "Priya",
+    "Sam",
+    "Lin"
+   ],
+   "expected": "set_light",
+   "ok": [
+    "set_light"
+   ],
+   "owner": null,
+   "args": {
+    "scene": "dim"
+   }
+  },
+  {
+   "id": "m32",
+   "category": "room",
+   "tags": [],
+   "utt": {
+    "text": "It's too dark to read the handout, lights up please.",
+    "lang": "en",
+    "speaker": {
+     "name": "Priya",
+     "voice": "voice-A",
+     "seat": "s1",
+     "conf": 0.9,
+     "guest": false
+    },
+    "source": "person",
+    "context": "Pricing sync, topic: Q3 pricing. 22 min left. Here: Priya (owner), Sam, Lin."
+   },
+   "names": [
+    "Priya",
+    "Sam",
+    "Lin"
+   ],
+   "expected": "set_light",
+   "ok": [
+    "set_light"
+   ],
+   "owner": null,
+   "args": {
+    "scene": "bright"
+   }
+  },
+  {
+   "id": "m33",
+   "category": "room",
+   "tags": [],
+   "utt": {
+    "text": "Let's put the slides up.",
+    "lang": "en",
+    "speaker": {
+     "name": "Sam",
+     "voice": "voice-A",
+     "seat": "s1",
+     "conf": 0.9,
+     "guest": false
+    },
+    "source": "person",
+    "context": "Pricing sync, topic: Q3 pricing. 22 min left. Here: Priya (owner), Sam, Lin."
+   },
+   "names": [
+    "Priya",
+    "Sam",
+    "Lin"
+   ],
+   "expected": "set_light",
+   "ok": [
+    "set_light"
+   ],
+   "owner": null,
+   "args": {
+    "scene": "slides"
+   }
+  },
+  {
+   "id": "m34",
+   "category": "room",
+   "tags": [
+    "zh"
+   ],
+   "utt": {
+    "text": "太冷了，把风扇关掉吧。",
+    "lang": "zh",
+    "speaker": {
+     "name": "Priya",
+     "voice": "voice-A",
+     "seat": "s1",
+     "conf": 0.9,
+     "guest": false
+    },
+    "source": "person",
+    "context": "Pricing sync, topic: Q3 pricing. 22 min left. Here: Priya (owner), Sam, Lin."
+   },
+   "names": [
+    "Priya",
+    "Sam",
+    "Lin"
+   ],
+   "expected": "set_fan",
+   "ok": [
+    "set_fan"
+   ],
+   "owner": null,
+   "args": {
+    "on": false
+   }
+  },
+  {
+   "id": "m35",
+   "category": "room",
+   "tags": [
+    "zh"
+   ],
+   "utt": {
+    "text": "灯太暗了，调亮一点。",
+    "lang": "zh",
+    "speaker": {
+     "name": "Lin",
+     "voice": "voice-A",
+     "seat": "s1",
+     "conf": 0.9,
+     "guest": false
+    },
+    "source": "person",
+    "context": "Pricing sync, topic: Q3 pricing. 22 min left. Here: Priya (owner), Sam, Lin."
+   },
+   "names": [
+    "Priya",
+    "Sam",
+    "Lin"
+   ],
+   "expected": "set_light",
+   "ok": [
+    "set_light"
+   ],
+   "owner": null,
+   "args": {
+    "scene": "bright"
+   }
+  },
+  {
+   "id": "m36",
+   "category": "room",
+   "tags": [],
+   "utt": {
+    "text": "Is it just me or is it boiling in this room?",
+    "lang": "en",
+    "speaker": {
+     "name": "Sam",
+     "voice": "voice-A",
+     "seat": "s1",
+     "conf": 0.9,
+     "guest": false
+    },
+    "source": "person",
+    "context": "Pricing sync, topic: Q3 pricing. 22 min left. Here: Priya (owner), Sam, Lin."
+   },
+   "names": [
+    "Priya",
+    "Sam",
+    "Lin"
+   ],
+   "expected": "set_fan",
+   "ok": [
+    "set_fan"
+   ],
+   "owner": null,
+   "args": {
+    "on": true
+   }
+  },
+  {
+   "id": "m37",
+   "category": "room",
+   "tags": [],
+   "utt": {
+    "text": "Turn the fan off, I'm getting a cold.",
+    "lang": "en",
+    "speaker": {
+     "name": "Lin",
+     "voice": "voice-A",
+     "seat": "s1",
+     "conf": 0.9,
+     "guest": false
+    },
+    "source": "person",
+    "context": "Pricing sync, topic: Q3 pricing. 22 min left. Here: Priya (owner), Sam, Lin."
+   },
+   "names": [
+    "Priya",
+    "Sam",
+    "Lin"
+   ],
+   "expected": "set_fan",
+   "ok": [
+    "set_fan"
+   ],
+   "owner": null,
+   "args": {
+    "on": false
+   }
+  },
+  {
+   "id": "m38",
+   "category": "room",
+   "tags": [],
+   "utt": {
+    "text": "Too bright in here for the projector.",
+    "lang": "en",
+    "speaker": {
+     "name": "Priya",
+     "voice": "voice-A",
+     "seat": "s1",
+     "conf": 0.9,
+     "guest": false
+    },
+    "source": "person",
+    "context": "Pricing sync, topic: Q3 pricing. 22 min left. Here: Priya (owner), Sam, Lin."
+   },
+   "names": [
+    "Priya",
+    "Sam",
+    "Lin"
+   ],
+   "expected": "set_light",
+   "ok": [
+    "set_light"
+   ],
+   "owner": null,
+   "args": {
+    "scene": "dim"
+   }
+  },
+  {
+   "id": "m39",
+   "category": "sensitive",
+   "tags": [],
+   "utt": {
+    "text": "Her salary is 120k and she wants 140.",
+    "lang": "en",
+    "speaker": {
+     "name": "Priya",
+     "voice": "voice-A",
+     "seat": "s1",
+     "conf": 0.9,
+     "guest": false
+    },
+    "source": "person",
+    "context": "Pricing sync, topic: Q3 pricing. 22 min left. Here: Priya (owner), Sam, Lin."
+   },
+   "names": [
+    "Priya",
+    "Sam",
+    "Lin"
+   ],
+   "expected": "pause_notes",
+   "ok": [
+    "pause_notes"
+   ],
+   "owner": null,
+   "args": null
+  },
+  {
+   "id": "m40",
+   "category": "sensitive",
+   "tags": [],
+   "utt": {
+    "text": "We may have to let two people go in Berlin.",
+    "lang": "en",
+    "speaker": {
+     "name": "Sam",
+     "voice": "voice-A",
+     "seat": "s1",
+     "conf": 0.9,
+     "guest": false
+    },
+    "source": "person",
+    "context": "Pricing sync, topic: Q3 pricing. 22 min left. Here: Priya (owner), Sam, Lin."
+   },
+   "names": [
+    "Priya",
+    "Sam",
+    "Lin"
+   ],
+   "expected": "pause_notes",
+   "ok": [
+    "pause_notes"
+   ],
+   "owner": null,
+   "args": null
+  },
+  {
+   "id": "m41",
+   "category": "sensitive",
+   "tags": [],
+   "utt": {
+    "text": "Lin's performance review did not go well, HR is involved.",
+    "lang": "en",
+    "speaker": {
+     "name": "Priya",
+     "voice": "voice-A",
+     "seat": "s1",
+     "conf": 0.9,
+     "guest": false
+    },
+    "source": "person",
+    "context": "Pricing sync, topic: Q3 pricing. 22 min left. Here: Priya (owner), Sam, Lin."
+   },
+   "names": [
+    "Priya",
+    "Sam",
+    "Lin"
+   ],
+   "expected": "pause_notes",
+   "ok": [
+    "pause_notes"
+   ],
+   "owner": null,
+   "args": null
+  },
+  {
+   "id": "m42",
+   "category": "sensitive",
+   "tags": [],
+   "utt": {
+    "text": "He's out on medical leave for the surgery, so don't count on him.",
+    "lang": "en",
+    "speaker": {
+     "name": "Sam",
+     "voice": "voice-A",
+     "seat": "s1",
+     "conf": 0.9,
+     "guest": false
+    },
+    "source": "person",
+    "context": "Pricing sync, topic: Q3 pricing. 22 min left. Here: Priya (owner), Sam, Lin."
+   },
+   "names": [
+    "Priya",
+    "Sam",
+    "Lin"
+   ],
+   "expected": "pause_notes",
+   "ok": [
+    "pause_notes"
+   ],
+   "owner": null,
+   "args": null
+  },
+  {
+   "id": "m43",
+   "category": "sensitive",
+   "tags": [],
+   "utt": {
+    "text": "Legal thinks the patent claim could get us sued.",
+    "lang": "en",
+    "speaker": {
+     "name": "Lin",
+     "voice": "voice-A",
+     "seat": "s1",
+     "conf": 0.9,
+     "guest": false
+    },
+    "source": "person",
+    "context": "Pricing sync, topic: Q3 pricing. 22 min left. Here: Priya (owner), Sam, Lin."
+   },
+   "names": [
+    "Priya",
+    "Sam",
+    "Lin"
+   ],
+   "expected": "pause_notes",
+   "ok": [
+    "pause_notes"
+   ],
+   "owner": null,
+   "args": null
+  },
+  {
+   "id": "m44",
+   "category": "sensitive",
+   "tags": [],
+   "utt": {
+    "text": "The layoffs will be announced in Q3.",
+    "lang": "en",
+    "speaker": {
+     "name": "Priya",
+     "voice": "voice-A",
+     "seat": "s1",
+     "conf": 0.9,
+     "guest": false
+    },
+    "source": "person",
+    "context": "Pricing sync, topic: Q3 pricing. 22 min left. Here: Priya (owner), Sam, Lin."
+   },
+   "names": [
+    "Priya",
+    "Sam",
+    "Lin"
+   ],
+   "expected": "pause_notes",
+   "ok": [
+    "pause_notes"
+   ],
+   "owner": null,
+   "args": null
+  },
+  {
+   "id": "m45",
+   "category": "sensitive",
+   "tags": [
+    "zh"
+   ],
+   "utt": {
+    "text": "裁员名单下周才定，先别说出去。",
+    "lang": "zh",
+    "speaker": {
+     "name": "Priya",
+     "voice": "voice-A",
+     "seat": "s1",
+     "conf": 0.9,
+     "guest": false
+    },
+    "source": "person",
+    "context": "Pricing sync, topic: Q3 pricing. 22 min left. Here: Priya (owner), Sam, Lin."
+   },
+   "names": [
+    "Priya",
+    "Sam",
+    "Lin"
+   ],
+   "expected": "pause_notes",
+   "ok": [
+    "pause_notes"
+   ],
+   "owner": null,
+   "args": null
+  },
+  {
+   "id": "m46",
+   "category": "sensitive",
+   "tags": [],
+   "utt": {
+    "text": "Between us, Sam's comp is way above band.",
+    "lang": "en",
+    "speaker": {
+     "name": "Lin",
+     "voice": "voice-A",
+     "seat": "s1",
+     "conf": 0.9,
+     "guest": false
+    },
+    "source": "person",
+    "context": "Pricing sync, topic: Q3 pricing. 22 min left. Here: Priya (owner), Sam, Lin."
+   },
+   "names": [
+    "Priya",
+    "Sam",
+    "Lin"
+   ],
+   "expected": "pause_notes",
+   "ok": [
+    "pause_notes"
+   ],
+   "owner": null,
+   "args": null
+  },
+  {
+   "id": "m47",
+   "category": "small_talk",
+   "tags": [
+    "joke"
+   ],
+   "utt": {
+    "text": "Let's just fire Bob, ha ha.",
+    "lang": "en",
+    "speaker": {
+     "name": "Sam",
+     "voice": "voice-A",
+     "seat": "s1",
+     "conf": 0.9,
+     "guest": false
+    },
+    "source": "person",
+    "context": "Pricing sync, topic: Q3 pricing. 22 min left. Here: Priya (owner), Sam, Lin."
+   },
+   "names": [
+    "Priya",
+    "Sam",
+    "Lin"
+   ],
+   "expected": "none",
+   "ok": [
+    "none"
+   ],
+   "owner": null,
+   "args": null
+  },
+  {
+   "id": "m48",
+   "category": "small_talk",
+   "tags": [],
+   "utt": {
+    "text": "Hi everyone, I'm Lin, sorry I'm late.",
+    "lang": "en",
+    "speaker": {
+     "name": "Lin",
+     "voice": "voice-A",
+     "seat": "s1",
+     "conf": 0.9,
+     "guest": false
+    },
+    "source": "person",
+    "context": "Pricing sync, topic: Q3 pricing. 22 min left. Here: Priya (owner), Sam, Lin."
+   },
+   "names": [
+    "Priya",
+    "Sam",
+    "Lin"
+   ],
+   "expected": "none",
+   "ok": [
+    "none"
+   ],
+   "owner": null,
+   "args": null
+  },
+  {
+   "id": "m49",
+   "category": "small_talk",
+   "tags": [
+    "joke"
+   ],
+   "utt": {
+    "text": "If this meeting runs over I'm quitting, lol.",
+    "lang": "en",
+    "speaker": {
+     "name": "Sam",
+     "voice": "voice-A",
+     "seat": "s1",
+     "conf": 0.9,
+     "guest": false
+    },
+    "source": "person",
+    "context": "Pricing sync, topic: Q3 pricing. 22 min left. Here: Priya (owner), Sam, Lin."
+   },
+   "names": [
+    "Priya",
+    "Sam",
+    "Lin"
+   ],
+   "expected": "none",
+   "ok": [
+    "none"
+   ],
+   "owner": null,
+   "args": null
+  },
+  {
+   "id": "m50",
+   "category": "small_talk",
+   "tags": [],
+   "utt": {
+    "text": "Nice slides, did you make those yourself?",
+    "lang": "en",
+    "speaker": {
+     "name": "Priya",
+     "voice": "voice-A",
+     "seat": "s1",
+     "conf": 0.9,
+     "guest": false
+    },
+    "source": "person",
+    "context": "Pricing sync, topic: Q3 pricing. 22 min left. Here: Priya (owner), Sam, Lin."
+   },
+   "names": [
+    "Priya",
+    "Sam",
+    "Lin"
+   ],
+   "expected": "none",
+   "ok": [
+    "none"
+   ],
+   "owner": null,
+   "args": null
+  },
+  {
+   "id": "m51",
+   "category": "small_talk",
+   "tags": [],
+   "utt": {
+    "text": "Good morning all, coffee's on the side table.",
+    "lang": "en",
+    "speaker": {
+     "name": "Priya",
+     "voice": "voice-A",
+     "seat": "s1",
+     "conf": 0.9,
+     "guest": false
+    },
+    "source": "person",
+    "context": "Pricing sync, topic: Q3 pricing. 22 min left. Here: Priya (owner), Sam, Lin."
+   },
+   "names": [
+    "Priya",
+    "Sam",
+    "Lin"
+   ],
+   "expected": "none",
+   "ok": [
+    "none"
+   ],
+   "owner": null,
+   "args": null
+  },
+  {
+   "id": "m52",
+   "category": "small_talk",
+   "tags": [
+    "joke"
+   ],
+   "utt": {
+    "text": "I'm kidding, obviously we're not raising it to ninety.",
+    "lang": "en",
+    "speaker": {
+     "name": "Sam",
+     "voice": "voice-A",
+     "seat": "s1",
+     "conf": 0.9,
+     "guest": false
+    },
+    "source": "person",
+    "context": "Pricing sync, topic: Q3 pricing. 22 min left. Here: Priya (owner), Sam, Lin."
+   },
+   "names": [
+    "Priya",
+    "Sam",
+    "Lin"
+   ],
+   "expected": "none",
+   "ok": [
+    "none"
+   ],
+   "owner": null,
+   "args": null
+  },
+  {
+   "id": "m53",
+   "category": "small_talk",
+   "tags": [
+    "zh",
+    "joke"
+   ],
+   "utt": {
+    "text": "哈哈，那我们都要加班了。",
+    "lang": "zh",
+    "speaker": {
+     "name": "Lin",
+     "voice": "voice-A",
+     "seat": "s1",
+     "conf": 0.9,
+     "guest": false
+    },
+    "source": "person",
+    "context": "Pricing sync, topic: Q3 pricing. 22 min left. Here: Priya (owner), Sam, Lin."
+   },
+   "names": [
+    "Priya",
+    "Sam",
+    "Lin"
+   ],
+   "expected": "none",
+   "ok": [
+    "none"
+   ],
+   "owner": null,
+   "args": null
+  },
+  {
+   "id": "m54",
+   "category": "small_talk",
+   "tags": [
+    "joke"
+   ],
+   "utt": {
+    "text": "Honestly I'd fire the coffee machine before anyone else.",
+    "lang": "en",
+    "speaker": {
+     "name": "Lin",
+     "voice": "voice-A",
+     "seat": "s1",
+     "conf": 0.9,
+     "guest": false
+    },
+    "source": "person",
+    "context": "Pricing sync, topic: Q3 pricing. 22 min left. Here: Priya (owner), Sam, Lin."
+   },
+   "names": [
+    "Priya",
+    "Sam",
+    "Lin"
+   ],
+   "expected": "none",
+   "ok": [
+    "none"
+   ],
+   "owner": null,
+   "args": null
+  },
+  {
+   "id": "m55",
+   "category": "off_topic",
+   "tags": [],
+   "utt": {
+    "text": "Did anyone watch the game last night?",
+    "lang": "en",
+    "speaker": {
+     "name": "Sam",
+     "voice": "voice-A",
+     "seat": "s1",
+     "conf": 0.9,
+     "guest": false
+    },
+    "source": "person",
+    "context": "Pricing sync, topic: Q3 pricing. 22 min left. Here: Priya (owner), Sam, Lin."
+   },
+   "names": [
+    "Priya",
+    "Sam",
+    "Lin"
+   ],
+   "expected": "none",
+   "ok": [
+    "none"
+   ],
+   "owner": null,
+   "args": null
+  },
+  {
+   "id": "m56",
+   "category": "off_topic",
+   "tags": [],
+   "utt": {
+    "text": "Traffic on the bridge was unbelievable this morning.",
+    "lang": "en",
+    "speaker": {
+     "name": "Priya",
+     "voice": "voice-A",
+     "seat": "s1",
+     "conf": 0.9,
+     "guest": false
+    },
+    "source": "person",
+    "context": "Pricing sync, topic: Q3 pricing. 22 min left. Here: Priya (owner), Sam, Lin."
+   },
+   "names": [
+    "Priya",
+    "Sam",
+    "Lin"
+   ],
+   "expected": "none",
+   "ok": [
+    "none"
+   ],
+   "owner": null,
+   "args": null
+  },
+  {
+   "id": "m57",
+   "category": "off_topic",
+   "tags": [],
+   "utt": {
+    "text": "We should do the team lunch at the taco place.",
+    "lang": "en",
+    "speaker": {
+     "name": "Lin",
+     "voice": "voice-A",
+     "seat": "s1",
+     "conf": 0.9,
+     "guest": false
+    },
+    "source": "person",
+    "context": "Pricing sync, topic: Q3 pricing. 22 min left. Here: Priya (owner), Sam, Lin."
+   },
+   "names": [
+    "Priya",
+    "Sam",
+    "Lin"
+   ],
+   "expected": "none",
+   "ok": [
+    "none",
+    "park_topic"
+   ],
+   "owner": null,
+   "args": null
+  },
+  {
+   "id": "m58",
+   "category": "off_topic",
+   "tags": [],
+   "utt": {
+    "text": "My kid's school called again, one sec.",
+    "lang": "en",
+    "speaker": {
+     "name": "Sam",
+     "voice": "voice-A",
+     "seat": "s1",
+     "conf": 0.9,
+     "guest": false
+    },
+    "source": "person",
+    "context": "Pricing sync, topic: Q3 pricing. 22 min left. Here: Priya (owner), Sam, Lin."
+   },
+   "names": [
+    "Priya",
+    "Sam",
+    "Lin"
+   ],
+   "expected": "none",
+   "ok": [
+    "none"
+   ],
+   "owner": null,
+   "args": null
+  },
+  {
+   "id": "m59",
+   "category": "none",
+   "tags": [],
+   "utt": {
+    "text": "The six-week test in Germany and Canada showed no change in churn.",
+    "lang": "en",
+    "speaker": {
+     "name": "Priya",
+     "voice": "voice-A",
+     "seat": "s1",
+     "conf": 0.9,
+     "guest": false
+    },
+    "source": "person",
+    "context": "Pricing sync, topic: Q3 pricing. 22 min left. Here: Priya (owner), Sam, Lin."
+   },
+   "names": [
+    "Priya",
+    "Sam",
+    "Lin"
+   ],
+   "expected": "none",
+   "ok": [
+    "none"
+   ],
+   "owner": null,
+   "args": null
+  },
+  {
+   "id": "m60",
+   "category": "none",
+   "tags": [],
+   "utt": {
+    "text": "Marketing wants September first for the page, the proposal says August.",
+    "lang": "en",
+    "speaker": {
+     "name": "Sam",
+     "voice": "voice-A",
+     "seat": "s1",
+     "conf": 0.9,
+     "guest": false
+    },
+    "source": "person",
+    "context": "Pricing sync, topic: Q3 pricing. 22 min left. Here: Priya (owner), Sam, Lin."
+   },
+   "names": [
+    "Priya",
+    "Sam",
+    "Lin"
+   ],
+   "expected": "none",
+   "ok": [
+    "none"
+   ],
+   "owner": null,
+   "args": null
+  },
+  {
+   "id": "m61",
+   "category": "none",
+   "tags": [],
+   "utt": {
+    "text": "I think the annual customers will be annoyed either way.",
+    "lang": "en",
+    "speaker": {
+     "name": "Lin",
+     "voice": "voice-A",
+     "seat": "s1",
+     "conf": 0.9,
+     "guest": false
+    },
+    "source": "person",
+    "context": "Pricing sync, topic: Q3 pricing. 22 min left. Here: Priya (owner), Sam, Lin."
+   },
+   "names": [
+    "Priya",
+    "Sam",
+    "Lin"
+   ],
+   "expected": "none",
+   "ok": [
+    "none"
+   ],
+   "owner": null,
+   "args": null
+  },
+  {
+   "id": "m62",
+   "category": "none",
+   "tags": [],
+   "utt": {
+    "text": "The Team plan is still our biggest revenue line.",
+    "lang": "en",
+    "speaker": {
+     "name": "Priya",
+     "voice": "voice-A",
+     "seat": "s1",
+     "conf": 0.9,
+     "guest": false
+    },
+    "source": "person",
+    "context": "Pricing sync, topic: Q3 pricing. 22 min left. Here: Priya (owner), Sam, Lin."
+   },
+   "names": [
+    "Priya",
+    "Sam",
+    "Lin"
+   ],
+   "expected": "none",
+   "ok": [
+    "none"
+   ],
+   "owner": null,
+   "args": null
+  },
+  {
+   "id": "m63",
+   "category": "none",
+   "tags": [],
+   "utt": {
+    "text": "Right, so that's the context for the Starter increase.",
+    "lang": "en",
+    "speaker": {
+     "name": "Priya",
+     "voice": "voice-A",
+     "seat": "s1",
+     "conf": 0.9,
+     "guest": false
+    },
+    "source": "person",
+    "context": "Pricing sync, topic: Q3 pricing. 22 min left. Here: Priya (owner), Sam, Lin."
+   },
+   "names": [
+    "Priya",
+    "Sam",
+    "Lin"
+   ],
+   "expected": "none",
+   "ok": [
+    "none"
+   ],
+   "owner": null,
+   "args": null
+  },
+  {
+   "id": "m64",
+   "category": "none",
+   "tags": [],
+   "utt": {
+    "text": "Firmware 2.1 is in certification now, we hear back on the 28th.",
+    "lang": "en",
+    "speaker": {
+     "name": "Sam",
+     "voice": "voice-A",
+     "seat": "s1",
+     "conf": 0.9,
+     "guest": false
+    },
+    "source": "person",
+    "context": "Pricing sync, topic: Q3 pricing. 22 min left. Here: Priya (owner), Sam, Lin."
+   },
+   "names": [
+    "Priya",
+    "Sam",
+    "Lin"
+   ],
+   "expected": "none",
+   "ok": [
+    "none"
+   ],
+   "owner": null,
+   "args": null
+  },
+  {
+   "id": "m65",
+   "category": "media",
+   "tags": [
+    "media"
+   ],
+   "utt": {
+    "text": "Sam, send the deck by Friday.",
+    "lang": "en",
+    "speaker": {
+     "name": null,
+     "voice": "voice-screen",
+     "seat": null,
+     "conf": 0.6,
+     "guest": false
+    },
+    "source": "media",
+    "context": "Pricing sync, topic: Q3 pricing. 22 min left. Here: Priya (owner), Sam, Lin."
+   },
+   "names": [
+    "Priya",
+    "Sam",
+    "Lin"
+   ],
+   "expected": "none",
+   "ok": [
+    "none",
+    "create_task"
+   ],
+   "owner": null,
+   "args": null
+  },
+  {
+   "id": "m66",
+   "category": "media",
+   "tags": [
+    "media"
+   ],
+   "utt": {
+    "text": "And now, our pricing is going up to ninety dollars a month.",
+    "lang": "en",
+    "speaker": {
+     "name": null,
+     "voice": "voice-screen",
+     "seat": null,
+     "conf": 0.6,
+     "guest": false
+    },
+    "source": "media",
+    "context": "Pricing sync, topic: Q3 pricing. 22 min left. Here: Priya (owner), Sam, Lin."
+   },
+   "names": [
+    "Priya",
+    "Sam",
+    "Lin"
+   ],
+   "expected": "none",
+   "ok": [
+    "none",
+    "log_decision"
+   ],
+   "owner": null,
+   "args": null
+  },
+  {
+   "id": "m67",
+   "category": "media",
+   "tags": [
+    "media"
+   ],
+   "utt": {
+    "text": "Please dim the lights for the next segment.",
+    "lang": "en",
+    "speaker": {
+     "name": null,
+     "voice": "voice-screen",
+     "seat": null,
+     "conf": 0.6,
+     "guest": false
+    },
+    "source": "media",
+    "context": "Pricing sync, topic: Q3 pricing. 22 min left. Here: Priya (owner), Sam, Lin."
+   },
+   "names": [
+    "Priya",
+    "Sam",
+    "Lin"
+   ],
+   "expected": "none",
+   "ok": [
+    "none",
+    "set_light"
+   ],
+   "owner": null,
+   "args": null
+  },
+  {
+   "id": "m68",
+   "category": "none",
+   "tags": [
+    "hard"
+   ],
+   "utt": {
+    "text": "Sam already sent the deck on Friday, so that's done.",
+    "lang": "en",
+    "speaker": {
+     "name": "Priya",
+     "voice": "voice-A",
+     "seat": "s1",
+     "conf": 0.9,
+     "guest": false
+    },
+    "source": "person",
+    "context": "Pricing sync, topic: Q3 pricing. 22 min left. Here: Priya (owner), Sam, Lin."
+   },
+   "names": [
+    "Priya",
+    "Sam",
+    "Lin"
+   ],
+   "expected": "none",
+   "ok": [
+    "none"
+   ],
+   "owner": null,
+   "args": null
+  },
+  {
+   "id": "m69",
+   "category": "none",
+   "tags": [
+    "hard"
+   ],
+   "utt": {
+    "text": "Last quarter we decided too fast and regretted it.",
+    "lang": "en",
+    "speaker": {
+     "name": "Lin",
+     "voice": "voice-A",
+     "seat": "s1",
+     "conf": 0.9,
+     "guest": false
+    },
+    "source": "person",
+    "context": "Pricing sync, topic: Q3 pricing. 22 min left. Here: Priya (owner), Sam, Lin."
+   },
+   "names": [
+    "Priya",
+    "Sam",
+    "Lin"
+   ],
+   "expected": "none",
+   "ok": [
+    "none"
+   ],
+   "owner": null,
+   "args": null
+  },
+  {
+   "id": "m70",
+   "category": "none",
+   "tags": [
+    "hard"
+   ],
+   "utt": {
+    "text": "It was freezing in the Berlin office last week.",
+    "lang": "en",
+    "speaker": {
+     "name": "Sam",
+     "voice": "voice-A",
+     "seat": "s1",
+     "conf": 0.9,
+     "guest": false
+    },
+    "source": "person",
+    "context": "Pricing sync, topic: Q3 pricing. 22 min left. Here: Priya (owner), Sam, Lin."
+   },
+   "names": [
+    "Priya",
+    "Sam",
+    "Lin"
+   ],
+   "expected": "none",
+   "ok": [
+    "none"
+   ],
+   "owner": null,
+   "args": null
+  },
+  {
+   "id": "m71",
+   "category": "question",
+   "tags": [],
+   "utt": {
+    "text": "Can someone look up when Firmware 2.1 certification is due?",
+    "lang": "en",
+    "speaker": {
+     "name": "Lin",
+     "voice": "voice-A",
+     "seat": "s1",
+     "conf": 0.9,
+     "guest": false
+    },
+    "source": "person",
+    "context": "Pricing sync, topic: Q3 pricing. 22 min left. Here: Priya (owner), Sam, Lin."
+   },
+   "names": [
+    "Priya",
+    "Sam",
+    "Lin"
+   ],
+   "expected": "answer_question",
+   "ok": [
+    "answer_question"
+   ],
+   "owner": null,
+   "args": null
+  },
+  {
+   "id": "m72",
+   "category": "task",
+   "tags": [],
+   "utt": {
+    "text": "Priya, I need the pricing copy from you by Wednesday.",
+    "lang": "en",
+    "speaker": {
+     "name": "Sam",
+     "voice": "voice-A",
+     "seat": "s1",
+     "conf": 0.9,
+     "guest": false
+    },
+    "source": "person",
+    "context": "Pricing sync, topic: Q3 pricing. 22 min left. Here: Priya (owner), Sam, Lin."
+   },
+   "names": [
+    "Priya",
+    "Sam",
+    "Lin"
+   ],
+   "expected": "create_task",
+   "ok": [
+    "create_task"
+   ],
+   "owner": "Priya",
+   "args": {
+    "due": true
+   }
+  }
+ ]
+}

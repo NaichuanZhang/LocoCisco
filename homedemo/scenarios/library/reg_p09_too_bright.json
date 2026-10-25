@@ -1,0 +1,60 @@
+{
+  "id": "reg_p09_too_bright",
+  "title": "\"It's way too bright, my eyes hurt.\"",
+  "blurb": "Complaint under full-brightness bedroom lights at 23:00: lights off or dimmer. Keyword misses.",
+  "tags": [
+    "regression",
+    "speech",
+    "seed:p9",
+    "keyword-misses"
+  ],
+  "steps": [
+    {
+      "do": "set_time",
+      "time": "23:00",
+      "weekday": "Tuesday"
+    },
+    {
+      "do": "set_device",
+      "device": "light_bedroom_main",
+      "state": {
+        "on": true,
+        "brightness": 100
+      }
+    },
+    {
+      "do": "set_env",
+      "room": "bedroom_main",
+      "lux": 400
+    },
+    {
+      "do": "move",
+      "who": "alex",
+      "to": "bedroom_main"
+    },
+    {
+      "do": "say",
+      "who": "alex",
+      "text": "It's way too bright, my eyes hurt.",
+      "lang": "en"
+    },
+    {
+      "do": "expect",
+      "what": "proposal",
+      "by": "keyword",
+      "action": "none",
+      "within": 5
+    },
+    {
+      "do": "expect",
+      "what": "outcome",
+      "action": "lights_off",
+      "accept": [
+        "done",
+        "asked"
+      ],
+      "within": 12,
+      "room": "bedroom_main"
+    }
+  ]
+}

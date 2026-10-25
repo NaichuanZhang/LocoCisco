@@ -1,0 +1,53 @@
+{
+  "id": "reg_p11_mandarin_lights_off",
+  "title": "“把灯关了吧，我要睡了。”",
+  "blurb": "Mandarin request at 23:30 with the bedroom lights on: lights off or dimmer.",
+  "tags": [
+    "regression",
+    "speech",
+    "seed:p11",
+    "mandarin"
+  ],
+  "steps": [
+    {
+      "do": "set_time",
+      "time": "23:30",
+      "weekday": "Tuesday"
+    },
+    {
+      "do": "set_device",
+      "device": "light_bedroom_main",
+      "state": {
+        "on": true,
+        "brightness": 70
+      }
+    },
+    {
+      "do": "set_env",
+      "room": "bedroom_main",
+      "lux": 300
+    },
+    {
+      "do": "move",
+      "who": "alex",
+      "to": "bedroom_main"
+    },
+    {
+      "do": "say",
+      "who": "alex",
+      "text": "把灯关了吧，我要睡了。",
+      "lang": "zh"
+    },
+    {
+      "do": "expect",
+      "what": "outcome",
+      "action": "lights_off",
+      "accept": [
+        "done",
+        "asked"
+      ],
+      "within": 12,
+      "room": "bedroom_main"
+    }
+  ]
+}

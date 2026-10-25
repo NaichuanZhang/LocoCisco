@@ -1,0 +1,7 @@
+# Per-person transcriber scoring (eval/transcribe/score.py). Exact pins, resolved 2026-10-24 (x86_64, py3.12).
+# All pure python or with manylinux aarch64 cp312 wheels (scipy, rapidfuzz, regex).
+jiwer==4.0.0
+whisper-normalizer==0.1.15
+scipy==1.18.1
+rapidfuzz==3.14.6
+regex==2026.9.29
