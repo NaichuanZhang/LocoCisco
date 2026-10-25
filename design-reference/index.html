@@ -15,7 +15,11 @@
     </script>
     <!-- The word's centre line, widths, folds, bars and dot, from ../tools/build-logo.mjs -->
     <script src="assets/lococisco-data.js"></script>
+    <!-- The Dell × NVIDIA ending: real brand marks, then the two avatars (../tools/export-avatars.mjs exports them) -->
+    <script src="assets/brand-logos.js"></script>
+    <script src="assets/avatars.js"></script>
     <style>
+      @font-face { font-family: 'Figtree'; src: url(assets/fonts/figtree-800.woff2) format('woff2'); font-weight: 800; font-display: block; }
       :root { --ground: #ffffff; }
       * { margin: 0; padding: 0; box-sizing: border-box; }
       html, body {
@@ -25,8 +29,8 @@
         background: var(--ground);
       }
       #root { position: relative; width: 1920px; height: 1080px; overflow: hidden; background: var(--ground); }
-      /* Two stacked picture layers: the ribbon (canvas) and the finished logo (SVG) above it. */
-      #silk, #logo { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; display: block; }
+      /* Stacked picture layers: the ribbon (canvas), the finished logo (SVG) and the collab avatars (SVG). */
+      #silk, #logo, #pals { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; display: block; }
     </style>
   </head>
   <body>
@@ -34,13 +38,13 @@
       id="root"
       data-composition-id="main"
       data-start="0"
-      data-duration="4.8"
+      data-duration="6.8"
       data-fps="60"
       data-width="1920"
       data-height="1080"
-      data-poster-time="4.5"
+      data-poster-time="6.4"
       role="img"
-      aria-label="Logo intro: a satin ribbon whips in, writes LocoCisco in one joined stroke and becomes the lettering, then nine bridge bars rise above it like voice levels and settle"
+      aria-label="Logo intro: a satin ribbon whips in, writes LocoCisco in one joined stroke and becomes the lettering, then nine bridge bars rise above it like voice levels and settle. The logo lifts, a little Dell box and an NVIDIA NemoClaw lobster hop in below it, bump fist to claw, and the Dell and NVIDIA logos appear between them"
     >
       <canvas id="silk" aria-hidden="true"></canvas>
       <svg id="logo" viewBox="0 0 1920 1080" aria-hidden="true">
@@ -61,7 +65,16 @@
           <g id="lc-sheen"><rect id="lc-sheen-band" fill="url(#lc-sheen-fill)" /></g>
         </g>
       </svg>
-      <audio id="sound" class="clip" src="assets/sound.wav" data-start="0" data-duration="4.8"
+      <svg id="pals" viewBox="0 0 1920 1080" aria-hidden="true">
+        <defs id="pals-defs"></defs>
+        <g id="pal-shadows"><g id="pal-dell-shadow"></g><g id="pal-nemo-shadow"></g></g>
+        <g id="pal-dell" visibility="hidden"></g>
+        <g id="pal-nemo" visibility="hidden"></g>
+        <g id="pal-burst"></g>
+        <g id="pal-label"></g>
+        <g id="pal-x" opacity="0"><path d="M-10 -10L10 10M10 -10L-10 10" stroke="url(#px-grad)" stroke-width="6" stroke-linecap="round" fill="none" /></g>
+      </svg>
+      <audio id="sound" class="clip" src="assets/sound.wav" data-start="0" data-duration="6.8"
              data-track-index="2" data-volume="1" preload="auto"></audio>
     </div>
     <script>
@@ -70,8 +83,8 @@
       // ---- configuration: every timing, size and light value lives here ----
       // (../tools/make-sound.mjs reads this block too, so the sound follows any change)
       const CFG = /*@cfg*/{
-        duration: 4.8,
-        posterTime: 4.5,
+        duration: 6.8,
+        posterTime: 6.4,
         // Free flight before the word (stage px), smoothed through these points and on into the L's
         // entry stroke: in from off-screen right, two S-waves along the top, one loop at upper left,
         // then a hook down the left side that swings up into the L.
@@ -101,6 +114,22 @@
         },
         dot: { at: 3.3, dur: 0.3, fade: 0.1, ease: 'power3.out' },   // the i's dot
         sheen: { start: 3.4, dur: 0.5, width: 240, alpha: 0.42, skew: -18, ease: 'power2.inOut' },
+        // The Dell × NVIDIA ending. The logo keeps its smooth, no-bounce motion; the two avatars are allowed
+        // to be playful (squash and stretch, overshoot, blinks). Avatars: assets/avatars.js.
+        pals: {
+          lift: { start: 3.85, dur: 0.6, y: -90 },          // the finished logo glides up to make room
+          ground: 935, meetX: 960, lean: 16,                // feet line; they meet at the centre; lean-in distance (px)
+          dell: { hop: 4.1, land: 4.55 },                   // the Dell box hops up from below, left of centre
+          nemo: { hop: 4.35, land: 4.8 },                   // NemoClaw follows on the right
+          hop: { from: 430, height: 230, drift: 70, tilt: 9 }, // starts below the frame, peaks ~65 px over the floor (stays clear of the word)
+          squash: { amt: 0.2, decay: 0.13, hz: 3.2 },       // landing squash that springs back
+          snaps: [4.92, 5.04, 5.8],                         // NemoClaw's right claw clacks hello (and once more at the end)
+          bump: { reach: 4.96, meet: 5.16, back: 5.42 },    // reach out and lean in, fist meets claw, settle back
+          spark: { at: 5.16, pop: 0.22, scale: 2.2, fly: [5.36, 5.72] }, // the × pops out of the bump, then drops into the label
+          label: { y: 996, reveal: [5.52, 5.86], stagger: 0.06, dellH: 56, nvH: 34, gap: 26, xScale: 1.5 },
+          blinks: { dell: [4.66, 5.98, 6.52], nemo: [4.98, 6.24] },
+          bob: { start: 5.9, amp: 3, period: 1.4 },          // a gentle idle bob through the hold
+        },
       }/*@end*/;
 
       const RB = CFG.ribbon, TAU = Math.PI * 2;
@@ -342,10 +371,143 @@
         ctx.restore();
       }
 
+      // ---- the Dell × NVIDIA ending: two avatars hop in, bump fist to claw, and the logos appear ----
+      // Everything here is a function of the timeline's time (seekable), drawn by renderPals(t).
+      const PL = CFG.pals, AV = window.AVATARS, BR = window.BRANDS, S0 = AV.scale, DEG = 180 / Math.PI;
+      const byId = (id) => document.getElementById(id);
+      const lbClipL = PL.meetX - 16, lbClipR = PL.meetX + 16;
+      byId('pals-defs').innerHTML = AV.dell.defs + AV.nemo.defs +
+        '<linearGradient id="px-grad" gradientUnits="userSpaceOnUse" x1="-10" y1="0" x2="10" y2="0">' +
+        GRAD.map(([x, r, g, b]) => `<stop offset="${((x - gx0) / (gx1 - gx0)).toFixed(3)}" stop-color="rgb(${r},${g},${b})"/>`).join('') + '</linearGradient>' +
+        `<clipPath id="lb-clip-l"><rect x="0" y="880" width="${lbClipL}" height="200"/></clipPath>` +
+        `<clipPath id="lb-clip-r"><rect x="${lbClipR}" y="880" width="${1920 - lbClipR}" height="200"/></clipPath>`;
+      byId('pal-dell').innerHTML = AV.dell.body;
+      byId('pal-nemo').innerHTML = AV.nemo.body;
+      byId('pal-dell-shadow').innerHTML = AV.dell.shadow;
+      byId('pal-nemo-shadow').innerHTML = AV.nemo.shadow;
+      const dellEl = byId('pal-dell'), nemoEl = byId('pal-nemo');
+      const dShadow = byId('pal-dell-shadow'), nShadow = byId('pal-nemo-shadow');
+
+      // Contact geometry: the Dell's right fist and NemoClaw's left claw meet at meetX.
+      const dRig = AV.dell.rig, nRig = AV.nemo.rig;
+      const dArm0 = Math.atan2(32, 22), dReach = -10 / DEG;                       // arm hangs down-out → points at its friend
+      const fist = [dRig.shoulder.r[0] + dRig.armLen * Math.cos(dReach), dRig.shoulder.r[1] + dRig.armLen * Math.sin(dReach)];
+      const nVec = [nRig.claw.l[0] - nRig.shoulder.l[0], nRig.claw.l[1] - nRig.shoulder.l[1]];
+      const nArm0 = Math.atan2(nVec[1], nVec[0]), nLen = Math.hypot(nVec[0], nVec[1]), nReach = -160 / DEG;
+      const clawAt = [nRig.shoulder.l[0] + nLen * Math.cos(nReach), nRig.shoulder.l[1] + nLen * Math.sin(nReach)];
+      const dellXb = PL.meetX - S0 * (fist[0] + dRig.fistR), nemoXb = PL.meetX + S0 * (nRig.clawR - clawAt[0]);
+      const dellX0 = dellXb - PL.lean, nemoX0 = nemoXb + PL.lean;
+      const sparkY = PL.ground + S0 * (fist[1] + clawAt[1]) / 2;
+
+      // The × and its burst of rays (Dell blue and NVIDIA green), then the two real logos.
+      const xEl = byId('pal-x'), burstEl = byId('pal-burst');
+      burstEl.innerHTML = Array.from({ length: 8 }, (_, i) =>
+        `<line stroke="${i % 2 ? '#76B900' : '#007DB8'}" stroke-width="5" stroke-linecap="round" x1="0" y1="0" x2="0" y2="0"/>`).join('');
+      const rays = Array.from(burstEl.children);
+      const LB = PL.label, dellW = LB.dellH, nvVB = BR.nvidia.viewBox.split(/\s+/).map(Number), nvW = LB.nvH * nvVB[2] / nvVB[3];
+      byId('pal-label').innerHTML =
+        `<g clip-path="url(#lb-clip-l)"><g id="lb-dell"><svg x="${PL.meetX - LB.gap - dellW}" y="${LB.y - LB.dellH / 2}" width="${dellW}" height="${LB.dellH}" viewBox="${BR.dell.viewBox}">${BR.dell.markup}</svg></g></g>` +
+        `<g clip-path="url(#lb-clip-r)"><g id="lb-nv"><svg x="${PL.meetX + LB.gap}" y="${LB.y - LB.nvH / 2}" width="${nvW.toFixed(1)}" height="${LB.nvH}" viewBox="${BR.nvidia.viewBox}">${BR.nvidia.markup}</svg></g></g>`;
+      const lbDell = byId('lb-dell'), lbNv = byId('lb-nv');
+      const part = {};
+      ['dl-arm-l', 'dl-arm-r', 'dl-eye-l', 'dl-eye-r', 'dl-pup-l', 'dl-pup-r', 'nc-arm-l', 'nc-arm-r', 'nc-claw-l', 'nc-claw-r',
+        'nc-eye-l', 'nc-eye-r', 'nc-pup-l', 'nc-pup-r', 'nc-ant-l', 'nc-ant-r'].forEach((id) => { part[id] = byId(id); });
+
+      const f2 = (v) => v.toFixed(2);
+      const out3 = (u) => 1 - Math.pow(1 - u, 3);
+      const inOut = (u) => (u < 0.5 ? 2 * u * u : 1 - Math.pow(-2 * u + 2, 2) / 2);
+      const backOut = (u) => { const c = 1.9; return 1 + (c + 1) * Math.pow(u - 1, 3) + c * Math.pow(u - 1, 2); };
+      const pulse = (t, at, len) => (t > at && t < at + len ? Math.sin(Math.PI * (t - at) / len) : 0);
+      const blinkK = (t, list) => Math.max(0, ...list.map((b) => pulse(t, b, 0.14)));
+      const snapK = (t) => Math.max(0, ...PL.snaps.map((s) => { const d = t - s; return d < 0 ? 0 : d < 0.05 ? smooth(0, 0.05, d) : 1 - smooth(0.05, 0.17, d); }));
+
+      // A hop up from below the frame: parabola in, stretch in flight, squash on landing that springs back.
+      function hopState(t, A, side) {
+        const H = PL.hop, u = clamp((t - A.hop) / (A.land - A.hop), 0, 1);
+        const y = H.from * (1 - u) - 4 * H.height * u * (1 - u), vy = -H.from - 4 * H.height * (1 - 2 * u);
+        let sx = 1, sy = 1;
+        if (t < A.land) { const k = 0.08 * Math.min(1, Math.abs(vy) / 1600); sy = 1 + k; sx = 1 - 0.6 * k; }
+        else { const d = t - A.land, q = PL.squash.amt * Math.exp(-d / PL.squash.decay) * Math.cos(2 * Math.PI * PL.squash.hz * d); sy = 1 - q; sx = 1 + 0.7 * q; }
+        return { y, sx, sy, dx: side * H.drift * (1 - out3(u)), rot: side * H.tilt * Math.sin(Math.PI * u), shown: t > A.hop, since: t - A.land };
+      }
+      function bumpState(t) {
+        const B = PL.bump;
+        const reach = smooth(B.reach, B.reach + 0.14, t) * (1 - smooth(B.meet + 0.08, B.back + 0.12, t));
+        let lean = 0;
+        if (t > B.reach && t <= B.meet) { const u = (t - B.reach) / (B.meet - B.reach); lean = PL.lean * u * u; }
+        else if (t > B.meet) { const d = t - B.meet; lean = PL.lean * Math.exp(-d / 0.09) * Math.cos(2 * Math.PI * 2 * d); }
+        return { reach, lean };
+      }
+      const bob = (t, phase) => -PL.bob.amp * Math.sin(2 * Math.PI * (t - PL.bob.start) / PL.bob.period + phase) * smooth(PL.bob.start, PL.bob.start + 0.3, t);
+      const rotAbout = (deg, [x, y]) => `rotate(${f2(deg)} ${x} ${y})`;
+      const blinkT = (k, [x, y]) => `translate(${x} ${y}) scale(1 ${f2(1 - 0.92 * k)}) translate(${-x} ${-y})`;
+
+      function placeAvatar(el, sh, x, h, b, bobY, sign) {
+        el.setAttribute('visibility', h.shown ? 'visible' : 'hidden');
+        el.setAttribute('transform', `translate(${f2(x + h.dx + sign * b.lean)} ${f2(PL.ground + h.y + bobY)}) rotate(${f2(h.rot)}) scale(${(S0 * h.sx).toFixed(4)} ${(S0 * h.sy).toFixed(4)})`);
+        const up = Math.max(0, -(h.y + bobY)), k = h.y > 0 ? 0 : clamp(1 - up / 160, 0, 1);
+        sh.setAttribute('opacity', f2(k));
+        sh.setAttribute('transform', `translate(${f2(x + h.dx + sign * b.lean)} ${PL.ground}) scale(${(S0 * (0.55 + 0.45 * k) * h.sx).toFixed(4)} ${S0})`);
+      }
+
+      function renderPals(t) {
+        const b = bumpState(t), hd = hopState(t, PL.dell, -1), hn = hopState(t, PL.nemo, 1);
+        placeAvatar(dellEl, dShadow, dellX0, hd, b, bob(t, 0), 1);
+        placeAvatar(nemoEl, nShadow, nemoX0, hn, b, bob(t, 1.7), -1);
+        // eyes: look at each other for the bump, glance down at the logos, then back at us
+        const look = smooth(4.9, 5.0, t) * (1 - smooth(5.45, 5.6, t)), down = smooth(5.55, 5.7, t) * (1 - smooth(6.2, 6.4, t));
+        const kd = blinkK(t, PL.blinks.dell), kn = blinkK(t, PL.blinks.nemo);
+        part['dl-eye-l'].setAttribute('transform', blinkT(kd, AV.dell.eyes.l));
+        part['dl-eye-r'].setAttribute('transform', blinkT(kd, AV.dell.eyes.r));
+        part['nc-eye-l'].setAttribute('transform', blinkT(kn, AV.nemo.eyes.l));
+        part['nc-eye-r'].setAttribute('transform', blinkT(kn, AV.nemo.eyes.r));
+        const pd = `translate(${f2(3 * look)} ${f2(2.5 * down)})`, pn = `translate(${f2(-3 * look)} ${f2(2.5 * down)})`;
+        part['dl-pup-l'].setAttribute('transform', pd); part['dl-pup-r'].setAttribute('transform', pd);
+        part['nc-pup-l'].setAttribute('transform', pn); part['nc-pup-r'].setAttribute('transform', pn);
+        // arms: the Dell's right fist reaches out; NemoClaw's left claw closes into a fist and meets it
+        part['dl-arm-r'].setAttribute('transform', rotAbout(b.reach * (dReach - dArm0) * DEG, dRig.shoulder.r));
+        part['dl-arm-l'].setAttribute('transform', rotAbout(6 * Math.sin(Math.PI * clamp(hd.since / 0.35, 0, 1)), dRig.shoulder.l));
+        part['nc-arm-l'].setAttribute('transform', rotAbout(b.reach * (nReach - nArm0) * DEG, nRig.shoulder.l));
+        const wave = -10 * Math.sin(2 * Math.PI * 5 * (t - 4.86)) * smooth(4.86, 4.9, t) * (1 - smooth(5.08, 5.14, t))
+          - 8 * Math.sin(2 * Math.PI * 4 * (t - 5.76)) * smooth(5.76, 5.8, t) * (1 - smooth(5.96, 6.02, t));
+        part['nc-arm-r'].setAttribute('transform', rotAbout(wave, nRig.shoulder.r));
+        part['nc-claw-l'].setAttribute('d', AV.clawPath(nRig.claw.l[0], nRig.claw.l[1], nRig.clawR, nRig.dir.l, nRig.open - 0.78 * b.reach));
+        part['nc-claw-r'].setAttribute('d', AV.clawPath(nRig.claw.r[0], nRig.claw.r[1], nRig.clawR, nRig.dir.r, nRig.open - 0.82 * snapK(t)));
+        // antennae wobble after the landing and after the bump
+        const wob = (d, a) => (d > 0 ? a * Math.exp(-d / 0.25) * Math.sin(2 * Math.PI * 3.5 * d) : 0);
+        const ant = wob(hn.since, 12) + wob(t - PL.bump.meet, 8);
+        part['nc-ant-l'].setAttribute('transform', rotAbout(-ant, nRig.antBase.l));
+        part['nc-ant-r'].setAttribute('transform', rotAbout(ant, nRig.antBase.r));
+
+        // the × pops out of the bump, then drops into the label between the two logos
+        const SP = PL.spark;
+        let xo = 0, xs = 0, xr = 0, xx = PL.meetX, xy = sparkY;
+        if (t > SP.at) {
+          const u = clamp((t - SP.at) / SP.pop, 0, 1), f = clamp((t - SP.fly[0]) / (SP.fly[1] - SP.fly[0]), 0, 1), e = inOut(f);
+          xo = smooth(0, 0.3, u); xr = -90 * (1 - out3(u)) + 180 * e;
+          xs = SP.scale * backOut(u) + (LB.xScale - SP.scale) * e;
+          xy = sparkY + (LB.y - sparkY) * e; xx = PL.meetX + 10 * Math.sin(Math.PI * e);
+        }
+        xEl.setAttribute('opacity', f2(xo));
+        xEl.setAttribute('transform', `translate(${f2(xx)} ${f2(xy)}) rotate(${f2(xr)}) scale(${f2(xs)})`);
+        const ru = clamp((t - SP.at) / 0.32, 0, 1);
+        burstEl.setAttribute('opacity', t > SP.at && ru < 1 ? f2(1 - ru) : 0);
+        rays.forEach((ray, i) => {
+          const a = (i / 8) * Math.PI * 2 + Math.PI / 8, r0 = 18 + 26 * out3(ru), r1 = 30 + 44 * out3(ru);
+          ray.setAttribute('x1', f2(PL.meetX + r0 * Math.cos(a))); ray.setAttribute('y1', f2(sparkY + r0 * Math.sin(a)));
+          ray.setAttribute('x2', f2(PL.meetX + r1 * Math.cos(a))); ray.setAttribute('y2', f2(sparkY + r1 * Math.sin(a)));
+        });
+        // the logos slide out from behind the ×
+        const r = LB.reveal, uD = out3(clamp((t - r[0]) / (r[1] - r[0]), 0, 1)), uN = out3(clamp((t - r[0] - LB.stagger) / (r[1] - r[0]), 0, 1));
+        lbDell.setAttribute('transform', `translate(${f2((dellW + 12) * (1 - uD))} 0)`);
+        lbNv.setAttribute('transform', `translate(${f2(-(nvW + 12) * (1 - uN))} 0)`);
+      }
+
       function renderAt(t) {
         ctx.setTransform(R, 0, 0, R, 0, 0);
         ctx.clearRect(0, 0, 1920, 1080);
         if (t > RB.start && t < CFG.swap) drawRibbon(t);
+        renderPals(t);
       }
 
       function build() {
@@ -383,7 +545,11 @@
         tl.fromTo(sheenEl, { opacity: 0 }, { opacity: 1, duration: SH.dur * 0.35, ease: 'sine.out' }, SH.start);
         tl.to(sheenEl, { opacity: 0, duration: SH.dur * 0.35, ease: 'sine.in' }, SH.start + SH.dur * 0.65);
 
-        // The ribbon is drawn from the timeline's time, in preview and on export seeks.
+        // The finished logo glides up to make room for the avatars (smooth, no bounce).
+        const LF = CFG.pals.lift;
+        tl.fromTo(document.getElementById('logo'), { y: 0 }, { y: LF.y, duration: LF.dur, ease: 'power2.inOut' }, LF.start);
+
+        // The ribbon and the avatars are drawn from the timeline's time, in preview and on export seeks.
         let drawn = -1;
         window.addEventListener('hf-seek', (e) => {
           const t = Number(e && e.detail && e.detail.time);
@@ -409,7 +575,8 @@
         }
       }
 
-      const ready = Promise.resolve().then(build);
+      const fontReady = document.fonts && document.fonts.load ? document.fonts.load("800 13px 'Figtree'").catch(() => {}) : Promise.resolve();
+      const ready = fontReady.then(build);
       window.__hf = window.__hf || {};
       window.__hf.buildReady = window.__hf.buildReady || {};
       window.__hf.buildReady.silk = ready;
