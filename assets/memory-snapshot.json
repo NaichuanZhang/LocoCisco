@@ -1,0 +1,18 @@
+{
+  "observed_at_utc": "2026-10-25T22:29:47.492941+00:00",
+  "selected_gpu_allocated_bytes": 83995131904,
+  "selected_gpu_allocated_gib": 78.2265625,
+  "os_visible_memory_bytes": 130594054144,
+  "os_visible_memory_gib": 121.62519073486328,
+  "gpu_allocation_percent_of_os_visible_memory": 64.31773058471902,
+  "host_available_memory_gib": 23.497058868408203,
+  "host_available_percent": 19.319237015324067,
+  "scope": "Point-in-time GPU process allocation; includes preallocated KV caches, excludes CPU-only allocations and other processes; not peak measured under demo recording and not total host usage.",
+  "method": "Sum of nvidia-smi per-process GPU allocation for Qwen, Decider, Parakeet and demo/Light-ASD, divided by /proc/meminfo MemTotal. Unrelated Nemotron service excluded.",
+  "model_allocations_gib": {
+    "Qwen vLLM": 51.0898,
+    "Decider 12B": 25.3281,
+    "Parakeet NeMo-Speech": 1.415,
+    "LocoCisco demo / Light-ASD": 0.3936
+  }
+}
