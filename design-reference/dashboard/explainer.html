@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>LocoCisco — How it works · reference design</title>
+    <link rel="preload" href="fonts/figtree-400.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="fonts/figtree-600.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="tokens.css" />
+    <link rel="stylesheet" href="app.css" />
+    <link rel="stylesheet" href="explainer.css" />
+  </head>
+  <body>
+    <div class="viewport">
+      <div class="stage stage--ex" id="stage">
+        <header class="topbar">
+          <a class="brand" href="index.html" aria-label="LocoCisco dashboard">
+            <img class="brand-bars" src="assets/lococisco-bars.svg" alt="" />
+            <img class="brand-word" src="assets/lococisco-wordmark.svg" alt="LocoCisco" />
+          </a>
+          <div class="vrule" aria-hidden="true"></div>
+          <div class="meeting">
+            <div class="meeting-title">How it works</div>
+            <div class="meeting-sub" id="exSub"></div>
+          </div>
+          <nav class="tabs" id="tabs" role="tablist" aria-label="Explainer views"></nav>
+          <div class="grow"></div>
+          <button class="btn" id="tourBtn" type="button" aria-pressed="false"></button>
+          <a class="btn" id="dashLink" href="index.html"></a>
+        </header>
+
+        <main class="ex-main">
+          <!-- 1 · Vision -->
+          <section class="view" id="view-vision" role="tabpanel" aria-labelledby="tab-vision" hidden>
+            <div class="view-head" id="head-vision"></div>
+            <div class="vision">
+              <div class="vision-left">
+                <div class="footage" id="footage">
+                  <img class="footage-img" src="assets/meeting-frame.jpg" width="960" height="540"
+                       alt="Meeting video: five colleagues around a table in a glass-walled room" />
+                  <div class="footage-layer" id="seatLayer"></div>
+                  <div class="footage-layer" id="detLayer"></div>
+                  <div class="footage-layer" id="lmLayer"></div>
+                  <div class="f-chip f-chip--tl" id="fChipTL"></div>
+                  <div class="f-chip f-chip--tr" id="fChipTR"></div>
+                  <div class="f-chip f-chip--bl" id="fFrame"></div>
+                  <div class="f-chip f-chip--bc" id="fSpeaking"></div>
+                  <div class="f-mask" id="fMask" hidden></div>
+                </div>
+                <div class="card layers" id="layersCard"></div>
+              </div>
+              <div class="vision-right">
+                <div class="card" id="tracksCard"></div>
+                <div class="card" id="attrVision"></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- 2 · Transcription -->
+          <section class="view" id="view-transcription" role="tabpanel" aria-labelledby="tab-transcription" hidden>
+            <div class="view-head" id="head-transcription"></div>
+            <div class="trans">
+              <div class="card">
+                <div class="card-h" id="waveHead"></div>
+                <div class="card-b"><canvas class="wave-c" id="waveCanvas" role="img" aria-label="Audio waveform of the last 12 seconds with detected speech segments"></canvas></div>
+              </div>
+              <div class="trans-mid">
+                <div class="card" id="transcriptCard"></div>
+                <div class="card">
+                  <div class="card-h" id="vmapHead"></div>
+                  <div class="card-b">
+                    <canvas class="vmap-c" id="vmapCanvas" role="img" aria-label="Voice map: each speech segment as a point, clustered by voice"></canvas>
+                    <div class="vmap-read" id="vmapRead"></div>
+                  </div>
+                </div>
+                <div class="card" id="attrTrans"></div>
+              </div>
+              <div class="card">
+                <div class="card-h" id="lanesHead"></div>
+                <div class="card-b"><canvas class="lanes-c" id="lanesCanvas" role="img" aria-label="Who spoke when, across the whole meeting"></canvas></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- 3 · Decisions -->
+          <section class="view" id="view-decisions" role="tabpanel" aria-labelledby="tab-decisions" hidden>
+            <div class="view-head" id="head-decisions"></div>
+            <div class="dec">
+              <div class="card">
+                <div class="card-h" id="cascadeHead"></div>
+                <div class="card-b"><div class="cascade" id="cascade"></div></div>
+              </div>
+              <div class="dec-bottom">
+                <div class="card" id="confCard"></div>
+                <div class="card">
+                  <div class="card-h" id="streamHead"></div>
+                  <div class="card-b" id="streamBody"></div>
+                </div>
+                <div class="card" id="latCard"></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- 4 · Pipeline -->
+          <section class="view" id="view-pipeline" role="tabpanel" aria-labelledby="tab-pipeline" hidden>
+            <div class="view-head" id="head-pipeline"></div>
+            <div class="pipe">
+              <div class="card">
+                <div class="card-h" id="flowHead"></div>
+                <div class="card-b"><div class="flow" id="flow"></div></div>
+              </div>
+              <div class="pipe-bottom">
+                <div class="card" id="waterCard"></div>
+                <div class="card" id="memCard"></div>
+              </div>
+            </div>
+          </section>
+        </main>
+
+        <div class="card transport ex-transport" id="transport">
+          <button class="icon-btn icon-btn--primary" id="playBtn" type="button"></button>
+          <button class="icon-btn" id="restartBtn" type="button" aria-label="Restart (Shift+R)"></button>
+          <div class="clock mono" id="clock"></div>
+          <div class="timeline" id="timeline">
+            <div class="tl-track"><div class="tl-fill" id="tlFill"></div></div>
+            <div class="tl-marks" id="tlMarks"></div>
+          </div>
+          <div class="beat-label" id="beatLabel"></div>
+          <button class="speed-btn" id="speedBtn" type="button" aria-label="Playback speed"></button>
+          <div class="input-chip" id="inputChip"></div>
+          <span class="sample-chip" id="sampleChip">Sample data · reference design</span>
+          <button class="icon-btn" type="button" id="keysBtn" aria-label="Keyboard shortcuts (?)"></button>
+        </div>
+
+        <div class="ex-overlay" id="overlay" hidden></div>
+        <div class="shortcuts" id="shortcuts" hidden></div>
+      </div>
+    </div>
+    <script src="story.js"></script>
+    <script src="explainer-story.js"></script>
+    <script src="explainer.js"></script>
+  </body>
+</html>

@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>LocoCisco — presenter dashboard · reference design</title>
+    <link rel="preload" href="fonts/figtree-400.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="fonts/figtree-600.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="tokens.css" />
+    <link rel="stylesheet" href="app.css" />
+  </head>
+  <body>
+    <div class="viewport">
+      <div class="stage" id="stage">
+        <header class="topbar">
+          <div class="brand" aria-label="LocoCisco">
+            <img class="brand-bars" src="assets/lococisco-bars.svg" alt="" />
+            <img class="brand-word" src="assets/lococisco-wordmark.svg" alt="LocoCisco" />
+          </div>
+          <div class="vrule" aria-hidden="true"></div>
+          <div class="meeting">
+            <div class="meeting-title" id="meetingTitle"></div>
+            <div class="meeting-sub" id="meetingSub"></div>
+          </div>
+          <div class="input-chip" id="inputChip"></div>
+          <div class="grow"></div>
+          <div class="pill" id="notesPill" role="status"></div>
+          <div class="pill" id="capturePill" role="status"></div>
+          <div class="state" id="coreState"></div>
+          <div class="state" id="discordState"></div>
+          <button class="btn btn-record" id="recordBtn" type="button"></button>
+        </header>
+
+        <main class="presenter" id="presenter">
+          <section class="col col-left">
+            <div class="video" id="video">
+              <img class="video-frame" src="assets/meeting-frame.jpg" width="960" height="540"
+                   alt="Meeting video: five colleagues around a table in a glass-walled room" />
+              <div class="video-layer" id="faces"></div>
+              <div class="video-chip video-chip--source" id="sourceChip"></div>
+              <div class="video-chip video-chip--track" id="trackChip"></div>
+              <div class="live-caption" id="liveCaption" aria-live="polite"></div>
+              <div class="video-mask" id="videoMask" hidden></div>
+              <div class="video-overlay" id="overlay" hidden></div>
+            </div>
+
+            <div class="card transport" id="transport">
+              <button class="icon-btn" id="playBtn" type="button"></button>
+              <button class="icon-btn" id="restartBtn" type="button" aria-label="Restart (Shift+R)"></button>
+              <div class="clock mono" id="clock"></div>
+              <div class="timeline" id="timeline">
+                <div class="tl-track"><div class="tl-fill" id="tlFill"></div></div>
+                <div class="tl-marks" id="tlMarks"></div>
+              </div>
+              <div class="beat-label" id="beatLabel"></div>
+              <div class="audio-state" id="audioState"></div>
+              <button class="speed-btn" id="speedBtn" type="button" aria-label="Playback speed"></button>
+            </div>
+
+            <div class="room-row">
+              <div class="card" id="devicesCard"></div>
+              <div class="card" id="privacyCard"></div>
+              <div class="card" id="askCard"></div>
+            </div>
+          </section>
+
+          <section class="col col-mid">
+            <div class="card" id="peopleCard"></div>
+            <div class="card" id="captionsCard"></div>
+          </section>
+
+          <section class="col col-right">
+            <div class="card" id="notesCard"></div>
+            <div class="card card--click" id="decisionCard" role="button" tabindex="0" aria-label="Open decision explanation (D)"></div>
+            <div class="card" id="feedCard"></div>
+          </section>
+
+          <aside class="drawer" id="drawer" aria-hidden="true" aria-label="Decision explanation"></aside>
+        </main>
+
+        <main class="setup" id="setup" hidden></main>
+
+        <footer class="healthbar" id="health"></footer>
+
+        <div class="toast" id="toast" role="status" hidden></div>
+        <div class="shortcuts" id="shortcuts" hidden></div>
+      </div>
+    </div>
+    <script src="story.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
