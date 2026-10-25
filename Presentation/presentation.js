@@ -5,9 +5,14 @@
   const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
   const slides = $$('.slide');
   const deck = $('#deck');
+  const indexOf = id => slides.findIndex(slide => slide.id === id);
+  const currentId = () => slides[state.slide].id;
   const motionQuery = matchMedia('(prefers-reduced-motion: reduce)');
   const state = { slide: 0, build: 0, auto: false, model: 'silero' };
-  let animation, autoTimer, toastTimer, videoURL;
+  let animation, autoTimer, toastTimer, videoURL, closingAnimation;
+  let metricAnimations = [];
+  let closingMode = '';
+  const demoTargetSeconds = 120;
   const video = $('#demo-video');
   const modelOrder = ['silero', 'parakeet', 'campp', 'yunet', 'lightasd', 'decider', 'qwen'];
   const models = {
@@ -61,7 +66,7 @@
       fact: 'On-demand reasoning · every action still meets policy', graphic: 'experts'
     }
   };
-  const notes = [
+  const originalNotes = [
     ['The vision',
       'LocoCisco is a local-first, privacy-driven smart office system. The first use case is the meeting room: speech and computer vision provide context, a bounded Decider identifies what matters, and a local language model generates proposals and grounded answers.',
       'Advance twice: reveal local/private/office-aware pillars and captions, then useful follow-through. Emphasize that the intelligence runs on a Dell edge box without a wake word or required cloud inference.',
@@ -83,6 +88,14 @@
       'Point out speech plus visual speaker evidence, the Decider and any actual Qwen escalation, then the explicit privacy controls. Finish on “Your room. Your intelligence.”',
       'The optional included Demo.mp4 is source footage, not a recording of runtime output. Its names, translations and visual labels are baked into the input. The placeholder does not automatically load the earlier low-frame-rate review capture.']
   ];
+  const notes = [originalNotes[4], originalNotes[0], originalNotes[1], originalNotes[2], originalNotes[3]];
+  notes[0][0] = 'Opening demo — two minutes';
+  notes[0][2] = 'Open with the video. Target two minutes; the on-screen timer follows video playback without stretching or looping shorter recordings. Then advance to the product vision.';
+  const closingNotes = {
+    funfacts: ['Design fun facts', 'Once the local model was set up, the team used it for some development as well, saving cloud tokens. This is a user-provided behind-the-scenes fact; no numeric token saving is claimed.', 'The selected GPU processes allocated 78.2 GiB, about 64% of 121.6 GiB OS-visible unified memory at the recorded snapshot. Includes reserved caches, excludes CPU allocations and unrelated services. This does not mean 36% of the host is free; host available memory was about 19%.', 'The model stack can support more ideas; additional use cases and capacity still need validation.'],
+    thanks: ['Thank you, sponsors', 'Thank our sponsors and everyone who made the event possible. We had a lot of fun building this.', 'Pause on the thank-you, then advance one last time for the playful animated logo.', 'No need to name unconfirmed sponsors; the final brand artwork comes from the project’s updated Dell × NVIDIA logo asset.'],
+    logo: ['The happy ending', 'Let the complete ribbon and avatar animation play once. The Dell box and NVIDIA NemoClaw avatars hop in and bump fist to claw.', 'The animation holds on its final frame. Use the replay control if you want to show it again.', 'The final animation is adapted from mainline 6de9ded; all assets run locally and reduced-motion viewers see the completed frame.']
+  };
 
   function resize() {
     const scale = Math.min(innerWidth / 1600, innerHeight / 900);
@@ -102,7 +115,7 @@
   }
   function setBuildVisibility(slide, build, withAnimation) {
     $$('.build', slide).forEach(el => {
-      if (window.gsap) gsap.killTweensOf(el);
+      if (window.gsap) {gsap.killTweensOf(el); gsap.set(el, {x: 0, y: 0, scale: 1, rotation: 0});}
       const visible = Number(el.dataset.build) <= build;
       const changed = el.dataset.revealed !== String(visible);
       el.dataset.revealed = String(visible);
@@ -110,7 +123,7 @@
       el.style.opacity = visible ? '1' : '0';
       el.inert = !visible;
       el.setAttribute('aria-hidden', String(!visible));
-      if (visible && changed && withAnimation) animate(el, {opacity: 0, y: 18}, {opacity: 1, y: 0, duration: .65, ease: 'power3.out'});
+      if (visible && changed && withAnimation) animate(el, {opacity: 0, y: 24, scale: .97, rotation: -.6}, {opacity: 1, y: 0, scale: 1, rotation: 0, duration: .75, ease: 'back.out(1.35)'});
     });
   }
   function updateControls() {
@@ -120,12 +133,12 @@
       else button.removeAttribute('aria-current');
     });
     const max = Number(slides[state.slide].dataset.builds);
-    $('#build-count').textContent = state.slide === 4 ? 'PRESS PLAY' : `BUILD ${state.build + 1} / ${max + 1}`;
+    $('#build-count').textContent = currentId() === 'demo' ? 'DEMO · 02:00' : currentId() === 'business' && state.build === 5 ? 'THANK YOU' : `BUILD ${state.build + 1} / ${max + 1}`;
     $('#previous-button').disabled = state.slide === 0 && state.build === 0;
     $('#next-button').disabled = state.slide === slides.length - 1 && state.build === max;
     $('#deck-progress-fill').style.width = `${((state.slide + (state.build + 1) / (max + 1)) / slides.length) * 100}%`;
     $('#slide-announcer').textContent = `Slide ${state.slide + 1} of 5: ${slides[state.slide].dataset.title}. Build ${state.build + 1} of ${max + 1}.`;
-    const [title, ...paragraphs] = notes[state.slide];
+    const [title, ...paragraphs] = (currentId() === 'business' && state.build >= 3) ? closingNotes[['funfacts','thanks','logo'][state.build - 3]] : notes[state.slide];
     $('#notes-title').textContent = title;
     $('#notes-content').replaceChildren(...paragraphs.map((text, index) => {
       const p = document.createElement('p'); p.textContent = text;
@@ -159,7 +172,7 @@
     $('#detail-why').textContent = model.why;
     $('#detail-fact').textContent = model.fact;
     $('#detail-graphic').innerHTML = modelGraphic(model.graphic);
-    if (withAnimation) animate($$('.model-detail h3, .detail-runtime, .detail-block, .detail-fact, .detail-graphic'), {opacity: 0, y: 7}, {opacity: 1, y: 0, duration: .35, stagger: .025, ease: 'power2.out', overwrite: true});
+    if (withAnimation) animate($$('.model-detail h3, .detail-runtime, .detail-block, .detail-fact, .detail-graphic'), {opacity: 0, y: 10}, {opacity: 1, y: 0, duration: .42, stagger: .025, ease: 'back.out(1.2)', overwrite: true});
   }
   function setPhase(phase, withAnimation) {
     $('.model-map').dataset.activePhase = String(phase);
@@ -170,35 +183,78 @@
     selectModel(['silero', 'lightasd', 'decider', 'qwen'][phase], withAnimation);
     if (withAnimation) {
       const lane = $(`[data-phase="${phase}"]`);
-      animate(lane, {x: -5}, {x: 0, duration: .5, ease: 'power2.out'});
+      animate(lane, {x: -8, rotation: -.35}, {x: 0, rotation: 0, duration: .65, ease: 'back.out(1.5)'});
     }
   }
   function animateHardware(build, withAnimation) {
+    metricAnimations.forEach(tween => tween.kill());
+    metricAnimations = [];
+    $$('[data-counter]').forEach(el => {el.textContent = el.dataset.counter;});
     const gpu = $('.gpu-lane');
     gpu.style.opacity = build === 0 ? '.42' : '1';
-    if (build === 1 && withAnimation) animate($$('.gpu-lane .compute-chip'), {opacity: .3, x: 14}, {opacity: 1, x: 0, duration: .45, stagger: .09, ease: 'power2.out'});
+    if (build === 1 && withAnimation) animate($$('.gpu-lane .compute-chip'), {opacity: .3, x: 24, rotation: -3}, {opacity: 1, x: 0, rotation: 0, duration: .65, stagger: .1, ease: 'back.out(1.7)'});
     if (build === 2 && withAnimation && window.gsap && !motionQuery.matches) {
       $$('[data-counter]').forEach(el => {
         const counter = {value: 0};
-        gsap.to(counter, {value: Number(el.dataset.counter), duration: 1.2, ease: 'power2.out', onUpdate: () => el.textContent = counter.value.toFixed(1)});
+        metricAnimations.push(gsap.to(counter, {value: Number(el.dataset.counter), duration: 1.2, ease: 'power2.out', onUpdate: () => el.textContent = counter.value.toFixed(1)}));
       });
     }
+  }
+  function updateDemoTime() {
+    const remaining = Math.max(0, demoTargetSeconds - Math.floor(video.currentTime || 0));
+    $('#demo-time').textContent = `${String(Math.floor(remaining / 60)).padStart(2, '0')}:${String(remaining % 60).padStart(2, '0')}`;
+  }
+  function logoCommand(action) {
+    const frame = $('#logo-frame');
+    if (frame.contentWindow && frame.getAttribute('src')) frame.contentWindow.postMessage({type: 'loco-logo', action}, '*');
+  }
+  function renderClosing(withAnimation) {
+    const active = currentId() === 'business';
+    const mode = active && state.build >= 3 ? ['funfacts', 'thanks', 'logo'][state.build - 3] : '';
+    const changed = mode !== closingMode;
+    if (changed && closingAnimation) {closingAnimation.progress(1); closingAnimation.kill(); closingAnimation = null;}
+    $('#business-main').hidden = active && state.build >= 3;
+    ['funfacts', 'thanks', 'logo'].forEach(key => {
+      const view = $(`#${key}-view`);
+      view.hidden = key !== mode;
+      view.inert = key !== mode;
+    });
+    if (mode !== 'logo') logoCommand('pause');
+    if (mode === 'logo' && changed) {
+      const frame = $('#logo-frame');
+      if (!frame.getAttribute('src')) frame.src = frame.dataset.src;
+      else logoCommand(motionQuery.matches || !withAnimation ? 'finish' : 'play');
+    }
+    if (changed && mode && mode !== 'logo') {
+      const view = $(`#${mode}-view`);
+      if (withAnimation) closingAnimation = animate($$('.closing-pop', view), {opacity: 0, y: 26, scale: .95, rotation: -1}, {opacity: 1, y: 0, scale: 1, rotation: 0, duration: .8, stagger: .085, ease: 'back.out(1.4)'});
+      else if (window.gsap) gsap.set($$('.closing-pop', view), {opacity: 1, x: 0, y: 0, scale: 1, rotation: 0});
+      if (mode === 'funfacts' && withAnimation) {
+        animate($$('.fun-memory-meter .allocated'), {scaleY: .1, opacity: 0}, {scaleY: 1, opacity: 1, duration: .45, stagger: .05, ease: 'back.out(2)', delay: .35});
+        animate($('.avatar-pair'), {y: 22, rotation: -3}, {y: 0, rotation: 0, duration: .95, ease: 'elastic.out(1,.5)', delay: .2});
+      }
+      if (mode === 'thanks' && withAnimation) {
+        animate($$('#confetti-field i'), {y: -180, rotation: -90, opacity: 0}, {y: 0, rotation: i => (i % 2 ? 25 : -35), opacity: .75, duration: 1.5, stagger: .035, ease: 'back.out(1)', delay: .12});
+      }
+    }
+    closingMode = mode;
   }
   function render(withAnimation = true, entering = false) {
     const current = slides[state.slide];
     // Finish interrupted entrances so fast navigation never leaves a slide transparent.
     if (animation) { animation.progress(1); animation.kill(); animation = null; }
     slides.forEach((slide, index) => {slide.hidden = index !== state.slide; slide.classList.toggle('active', index === state.slide); slide.inert = index !== state.slide;});
-    if (window.gsap) gsap.set($$('.enter', current), {opacity: 1, y: 0});
+    if (window.gsap) gsap.set($$('.enter', current), {opacity: 1, y: 0, scale: 1, rotation: 0});
     else $$('.enter', current).forEach(el => {el.style.opacity = '1'; el.style.transform = '';});
     setBuildVisibility(current, state.build, withAnimation);
     if (entering && withAnimation) {
-      animation = animate($$('.enter', current), {opacity: 0, y: 17}, {opacity: 1, y: 0, duration: .7, stagger: .045, ease: 'power3.out', overwrite: true});
+      animation = animate($$('.enter', current), {opacity: 0, y: 24, scale: .988, rotation: -.45}, {opacity: 1, y: 0, scale: 1, rotation: 0, duration: .8, stagger: .055, ease: 'back.out(1.15)', overwrite: true});
     }
-    if (state.slide === 1) setPhase(state.build, withAnimation);
-    if (state.slide === 2) animateHardware(state.build, withAnimation);
-    if (state.slide !== 4) video.pause();
-    if (state.slide === 4 && state.auto) setAuto(false);
+    if (currentId() === 'models') setPhase(state.build, withAnimation);
+    if (currentId() === 'hardware') animateHardware(state.build, withAnimation);
+    if (currentId() !== 'demo') video.pause();
+    if ((currentId() === 'demo' || (currentId() === 'business' && state.build === 5)) && state.auto) setAuto(false);
+    renderClosing(withAnimation);
     updateControls();
   }
   function goTo(index, build = 0, withAnimation = true) {
@@ -219,10 +275,10 @@
   }
   function restartAutoTimer() {
     clearTimeout(autoTimer);
-    if (state.auto && state.slide < 4 && !document.hidden && !$$('dialog[open]').length) autoTimer = setTimeout(next, 8500);
+    if (state.auto && currentId() !== 'demo' && !(currentId() === 'business' && state.build === 5) && !document.hidden && !$$('dialog[open]').length) autoTimer = setTimeout(next, 8500);
   }
   function setAuto(enabled) {
-    state.auto = enabled && state.slide !== 4;
+    state.auto = enabled && currentId() !== 'demo' && !(currentId() === 'business' && state.build === 5);
     const button = $('#autoplay-button');
     button.setAttribute('aria-pressed', String(state.auto));
     button.setAttribute('aria-label', state.auto ? 'Pause auto-advance' : 'Start auto-advance');
@@ -257,7 +313,7 @@
     $('#replace-video').hidden = false;
     $('#video-caption').hidden = false;
     $('#video-caption').textContent = isSource ? 'SOURCE FOOTAGE · Baked-in names, translations and graphics are not runtime output.' : `LOCAL RECORDING · ${label}`;
-    video.load(); setAuto(false);
+    video.load(); updateDemoTime(); setAuto(false);
   }
   function releaseVideoURL() {
     if (videoURL) URL.revokeObjectURL(videoURL);
@@ -270,10 +326,10 @@
   }
 
   $$('[data-go]').forEach(button => button.addEventListener('click', () => goTo(Number(button.dataset.go))));
-  $$('[data-phase-jump]').forEach(button => button.addEventListener('click', () => goTo(1, Number(button.dataset.phaseJump))));
+  $$('[data-phase-jump]').forEach(button => button.addEventListener('click', () => goTo(indexOf('models'), Number(button.dataset.phaseJump))));
   $$('.model-node').forEach(button => button.addEventListener('click', () => {
     const key = button.dataset.model;
-    goTo(1, models[key].phase);
+    goTo(indexOf('models'), models[key].phase);
     selectModel(key);
   }));
   $('.brand').addEventListener('click', event => {event.preventDefault(); goTo(0);});
@@ -307,6 +363,8 @@
     video.hidden = true; $('#video-placeholder').hidden = false; $('#video-caption').hidden = true;
   });
   video.addEventListener('play', () => setAuto(false));
+  video.addEventListener('timeupdate', updateDemoTime);
+  video.addEventListener('emptied', updateDemoTime);
   document.addEventListener('keydown', event => {
     if (event.altKey || event.ctrlKey || event.metaKey) return;
     if (event.target instanceof Element && event.target.closest('input,textarea,select,[contenteditable="true"],video')) return;
@@ -325,14 +383,29 @@
     else if (key === '?') {event.preventDefault(); toggleDialog('#help-dialog');}
   });
   window.addEventListener('resize', resize);
+  $('#replay-logo').addEventListener('click', () => logoCommand(motionQuery.matches ? 'finish' : 'play'));
+  window.addEventListener('message', event => {
+    if (event.source === $('#logo-frame').contentWindow && event.data?.type === 'loco-logo-ready') {
+      logoCommand(closingMode === 'logo' ? (motionQuery.matches ? 'finish' : 'play') : 'pause');
+    }
+  });
   window.addEventListener('hashchange', () => {const route = readHash(); goTo(route.index, route.build);});
   document.addEventListener('visibilitychange', () => {deck.classList.toggle('motion-paused', document.hidden); restartAutoTimer();});
   document.addEventListener('fullscreenchange', () => {$('#fullscreen-button').setAttribute('aria-label', document.fullscreenElement ? 'Exit fullscreen' : 'Enter fullscreen'); resize();});
   window.addEventListener('pagehide', releaseVideoURL);
   window.addEventListener('beforeprint', () => {if (window.gsap) gsap.globalTimeline.getChildren().forEach(tween => tween.progress(1));});
   window.Deck = Object.freeze({goTo, next, previous, selectModel, get state() {return {...state};}});
+  let confettiSeed = 29;
+  const confettiRandom = () => ((confettiSeed = (Math.imul(confettiSeed, 1664525) + 1013904223) >>> 0) / 4294967296);
+  $('#confetti-field').replaceChildren(...Array.from({length: 28}, (_, index) => {
+    const piece = document.createElement('i');
+    piece.style.left = `${5 + confettiRandom() * 90}%`;
+    piece.style.top = `${4 + confettiRandom() * 87}%`;
+    piece.style.transform = `rotate(${index * 19}deg)`;
+    return piece;
+  }));
   resize();
   const route = readHash(); state.slide = route.index; state.build = Math.min(route.build, Number(slides[route.index].dataset.builds));
   render(false);
-  animation = animate($$('.enter', slides[state.slide]), {opacity: 0, y: 17}, {opacity: 1, y: 0, duration: .85, stagger: .07, ease: 'power3.out'});
+  animation = animate($$('.enter', slides[state.slide]), {opacity: 0, y: 24, scale: .988, rotation: -.45}, {opacity: 1, y: 0, scale: 1, rotation: 0, duration: .85, stagger: .07, ease: 'back.out(1.15)'});
 })();

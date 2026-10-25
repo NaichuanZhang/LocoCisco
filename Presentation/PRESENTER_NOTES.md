@@ -1,10 +1,28 @@
 # LocoCisco — five-slide talk track
 
-Suggested pace: approximately 4–5 minutes, including your demo recording.
+Suggested pace: approximately 5–6 minutes, including a two-minute opening demo.
 Right arrow reveals information; use 1–5 to jump between slides. The figures and
 model details reflect the current local meeting build, inspected October 25, 2026.
 
-## 1. A smarter room. A private one. (~35 seconds)
+## 1. Opening demo — target two minutes
+
+Begin with the video. Target **2 minutes**; the visible countdown follows video playback,
+and stops counting when paused. Short source clips are never stretched or looped.
+
+Choose an accepted final recording from this device. It plays in the browser via
+a local object URL and is not uploaded. Playback requires a click. Replacing a
+video releases the prior object URL; the choice does not survive a reload.
+
+“Watch the speech and vision evidence, the decision route and policy verdict,
+and the explicit privacy controls. Your room. Your intelligence.”
+
+The included `Demo.mp4` option is explicitly **source footage**. Its names,
+translations and visual graphics are baked into the input and must not be
+described as runtime inference. The deck intentionally starts with an empty video
+placeholder and does not auto-select an unaccepted review recording.
+
+
+## 2. A smarter room. A private one. (~35 seconds)
 
 “We’re building a local-first, privacy-driven intelligent office. Our first use case
 is the meeting: understand the words, add visual speaker context, and turn supported
@@ -21,7 +39,8 @@ has controlled-test evidence, but genuine-video task/decision success is not est
 by the recorded backend reports. Frame product behavior as designed capability rather
 than guaranteed semantic accuracy.
 
-## 2. Seven models. One understanding. (~90 seconds)
+
+## 3. Seven models. One understanding. (~90 seconds)
 
 “Instead of asking a large language model to do every job, we use specialists.”
 
@@ -53,7 +72,8 @@ retrieval uses a hashed bag-of-words baseline, not another neural model. Regex P
 tracking, fusion and policy are code, not additional neural models. Whisper,
 Sortformer, pyannote and motion-only ASD were evaluated alternatives.
 
-## 3. One box. The whole stack. (~45 seconds)
+
+## 4. One box. The whole stack. (~45 seconds)
 
 “The Dell Pro Max with NVIDIA GB10 gives us 128 GB unified memory. Three CPU
 specialists handle continuous lightweight perception. The GPU handles Parakeet,
@@ -76,7 +96,8 @@ call it an accepted smooth final recording or claim literal spare headroom. Sepa
 of 2.15–2.79 seconds, anonymous identities, no committed task/decision items and an
 unsupported fake-lamp action. Avoid combining measurements across fixtures.
 
-## 4. Rethink the room. Own the intelligence. (~45 seconds)
+
+## 5. Rethink the room. Own the intelligence. (~45 seconds)
 
 “Our commercial direction is an edge appliance that can replace traditional Cisco
 room hardware over time. We intend to sell Dell hardware, LocoCisco software, and
@@ -95,19 +116,32 @@ require cloud transcription or lack privacy controls. Product privacy includes
 explicit off-record barriers; it is not automatic redaction of everything, and it
 does not erase original source media or already-saved/exported recordings.
 
-## 5. Less note-taking. More meeting. (video + ~15 seconds)
+### Closing builds on slide 5 (~40 seconds)
 
-Choose an accepted final recording from this device. It plays in the browser via
-a local object URL and is not uploaded. Playback requires a click. Replacing a
-video releases the prior object URL; the choice does not survive a reload.
+After the three commercial builds, advance to **design fun facts**:
 
-“Watch the speech and vision evidence, the decision route and policy verdict,
-and the explicit privacy controls. Your room. Your intelligence.”
+- Once the local model was set up, we used it for some development, saving cloud
+  tokens. This story comes directly from the team; no numeric saving is asserted.
+- The local GPU stack allocated **78.23 GiB**, or **64.32% of 121.63 GiB**
+  OS-visible unified memory, in the October 25, 22:29:47 UTC snapshot.
+  Say “about 64% allocated to our local GPU model stack.” This includes reserved
+  model caches; it excludes CPU allocations and other applications. It is not a
+  peak memory benchmark and does not mean the remaining 36% is free. Host available
+  memory at that moment was approximately 19.3%.
+- “One meeting room is just the beginning” describes the product direction, not
+  measured multi-room capacity.
 
-The included `Demo.mp4` option is explicitly **source footage**. Its names,
-translations and visual graphics are baked into the input and must not be
-described as runtime inference. The deck intentionally starts with an empty video
-placeholder and does not auto-select an unaccepted review recording.
+The public [memory snapshot](assets/memory-snapshot.json) records the method and
+per-role allocations: Qwen 51.09 GiB, Decider 25.33 GiB, Parakeet 1.42 GiB and
+Demo/Light-ASD 0.39 GiB. The separate Nemotron service is excluded.
+
+Advance again: **thank the sponsors** and say “We had a lot of fun building this.”
+Then advance one last time for the complete **animated logo** from mainline
+`6de9ded`: a satin ribbon writes LocoCisco, the Dell box and NVIDIA NemoClaw avatars
+hop in and bump fist to claw, and the real brand marks settle between them.
+The animation plays once and holds the completed frame. It is silent; reduced-motion
+viewers see the finished artwork. The replay control repeats the ending.
+
 
 ## Evidence references
 
