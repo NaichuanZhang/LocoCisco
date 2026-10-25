@@ -11,6 +11,3 @@ lococisco-runtime/
 .env
 .env.*
 !.env.example
-
-# Keep the submission Q&A local only
-Presentation/QA.md
