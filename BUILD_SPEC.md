@@ -677,17 +677,19 @@ recording for slides; keep diagnostic or synthetic fixtures visibly distinct.
 
 ## 13. Repository and publication boundaries
 
-This public repository contains the build specification, README,
-`design-reference/` browser designs/assets, and `Presentation/` materials,
+This public repository contains the application source, tests, deployment scripts,
+build specification, README, `design-reference/` browser designs/assets, and `Presentation/` materials,
 including the official source video, screenplay, slide deck and outline.
 The reference dashboards have scripted sample data. Presentation narrative and
 source-video effects are not evidence that a corresponding feature is enabled
 or validated in the local application.
 
-Application source remains in the separate `lococisco/` checkout; models,
-dependency caches, generated recordings, runtime media copies and validation
-artifacts live outside this public source tree. Credentials and deployment-specific
-account/network configuration are not presentation assets.
+The active Dell deployment still mounts the separate `lococisco/` checkout; its
+reviewed source snapshot is also published here. Large downloaded models,
+dependency caches, generated recordings and runtime media copies remain outside
+Git. Small licensed Silero/YuNet models, synthetic test fixtures and written
+validation reports are included. Credentials and installed account/network
+configuration are excluded.
 
 Publishing these design/presentation materials does not publish the application
 history or grant new redistribution rights to model weights, third-party data,
