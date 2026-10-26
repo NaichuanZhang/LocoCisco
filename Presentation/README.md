@@ -4,8 +4,9 @@
 
 Open **[index.html](index.html)** in a desktop browser. It is a five-slide, 16:9
 presentation with local fonts, a vendored GSAP animation library, model explanations,
-presenter notes and a local video player. No build step, CDN, backend or internet
-connection is required. Keep this directory and its `assets/` folder together.
+presenter notes and the demo video. No build step, CDN or backend is required.
+The demo video streams from YouTube; everything else works offline. Keep this
+directory and its `assets/` folder together.
 
 For a local HTTP preview, from this directory run:
 
@@ -43,11 +44,15 @@ their content revealed; enable background graphics for the colors.
 
 ## Demo video
 
-Slide 1 initially shows a placeholder. **Choose demo video** opens a local file
-picker; the browser plays a local object URL without uploading the recording.
-The two-minute countdown follows playback and pauses with the video; it does not loop or stretch short clips. Use **Replace video** to select another file. MP4/H.264 is the most portable choice.
-Playback is deliberately manual and pauses when you leave the slide. A chosen file
-is not persisted across page reloads.
+Slide 1 embeds the 2:10 demo from YouTube:
+[watch it on YouTube](https://www.youtube.com/watch?v=BwpJ4tsxdyU). Press play to
+start it. The countdown follows playback, and the video pauses when you leave the slide.
+
+YouTube does not play embeds on a `file://` page. Opened that way, the slide shows a
+**Watch on YouTube** link instead; serve the deck over HTTP to keep the embed.
+Offline, **Play a local file** opens a file picker. The browser plays a local object
+URL without uploading it; MP4/H.264 is the most portable choice. A chosen file is
+not persisted across page reloads.
 
 The optional **included source footage** button plays `Demo.mp4`. This file is the
 existing input fixture, **not runtime output**. An on-screen label distinguishes
@@ -60,7 +65,7 @@ silently substituted.
 The deck follows the current `BUILD_SPEC.md`, model configuration and implementation,
 not the earlier broad `PRESENTATION_OUTLINE.md`. It covers:
 
-1. **Opening demo**, with a local video slot and two-minute playback countdown.
+1. **Opening demo**, the 2:10 YouTube demo with a playback countdown.
 2. Local-first, privacy-driven smart office product.
 3. All seven enabled models and their decision/policy pipeline.
 4. Dell GB10 compute placement and measured sensor timings.
