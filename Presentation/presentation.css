@@ -114,3 +114,6 @@
 .usecase-scope{margin-left:auto;color:#929c82;font-size:10px}
 @keyframes home-signal{to{stroke-dashoffset:-22}}
 @media print{.future-teaser{display:none!important}}
+.demo-youtube{position:absolute;inset:0;width:100%;height:100%;border:0;display:block;background:#0e1911}
+.slide-demo .demo-youtube[hidden]{display:none}
+.slide-demo .video-placeholder .watch-youtube{margin-top:22px}

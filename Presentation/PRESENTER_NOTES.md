@@ -4,22 +4,21 @@ Suggested pace: approximately 5–6 minutes, including a two-minute opening demo
 Right arrow reveals information; use 1–5 to jump between slides. The figures and
 model details reflect the current local meeting build, inspected October 25, 2026.
 
-## 1. Opening demo — target two minutes
+## 1. Opening demo — 2:10
 
-Begin with the video. Target **2 minutes**; the visible countdown follows video playback,
-and stops counting when paused. Short source clips are never stretched or looped.
+Begin with the video. It runs **2:10** and plays from
+[YouTube](https://www.youtube.com/watch?v=BwpJ4tsxdyU) inside the slide; the visible
+countdown follows playback and stops counting when paused. Playback requires a click.
 
-Choose an accepted final recording from this device. It plays in the browser via
-a local object URL and is not uploaded. Playback requires a click. Replacing a
-video releases the prior object URL; the choice does not survive a reload.
+Without internet, use **Play a local file** to choose the MP4 from this device. It
+plays via a local object URL and is not uploaded; the choice does not survive a reload.
 
 “Watch the speech and vision evidence, the decision route and policy verdict,
 and the explicit privacy controls. Your room. Your intelligence.”
 
 The included `Demo.mp4` option is explicitly **source footage**. Its names,
 translations and visual graphics are baked into the input and must not be
-described as runtime inference. The deck intentionally starts with an empty video
-placeholder and does not auto-select an unaccepted review recording.
+described as runtime inference.
 
 
 ## 2. A smarter room. A private one. (~35 seconds)
