@@ -1,4 +1,4 @@
-/* LocoCisco presentation. Local assets only; no network services or inference. */
+/* LocoCisco presentation. Local assets, plus the YouTube demo embed on slide 1. No inference. */
 (() => {
   'use strict';
   const $ = (selector, root = document) => root.querySelector(selector);
@@ -12,8 +12,11 @@
   const state = { slide: 0, build: 0, auto: false, model: 'silero' };
   let animation, autoTimer, toastTimer, videoURL;
   let metricAnimations = [];
-  const demoTargetSeconds = 120;
+  const demoTargetSeconds = 130;
   const video = $('#demo-video');
+  const youtube = $('#demo-youtube');
+  const youtubeOrigins = ['https://www.youtube-nocookie.com', 'https://www.youtube.com'];
+  let youtubeTime = 0;
   const modelOrder = ['silero', 'parakeet', 'campp', 'yunet', 'lightasd', 'decider', 'qwen'];
   const models = {
     silero: {
@@ -84,13 +87,13 @@
       'Advance to reveal upgradeable software, then the cost thesis: consolidate models on owned compute, reuse suitable room peripherals and avoid metered cloud inference for the core workflow.',
       'Lower total cost is an ambition, not a quoted saving. There is no Cisco pricing study, validated replacement qualification, production SLA or proven multi-room capacity in this project. Off-record does not erase original or already-exported recordings.'],
     ['The demo',
-      'Choose a final demo recording from this device. The browser uses a local object URL; the file is not uploaded. Video playback starts only after you press play. Arrow keys are left to the player when it has focus.',
+      'The demo video plays from YouTube inside the slide. Press play to start it. Without internet, use Play a local file; the browser uses a local object URL and does not upload it. Arrow keys are left to the player when it has focus.',
       'Point out speech plus visual speaker evidence, the Decider and any actual Qwen escalation, then the explicit privacy controls. Finish on “Your room. Your intelligence.”',
       'The optional included Demo.mp4 is source footage, not a recording of runtime output. Its names, translations and visual labels are baked into the input. The placeholder does not automatically load the earlier low-frame-rate review capture.']
   ];
   const notes = [originalNotes[4], originalNotes[0], originalNotes[1], originalNotes[2], originalNotes[3]];
-  notes[0][0] = 'Opening demo — two minutes';
-  notes[0][2] = 'Open with the video. Target two minutes; the on-screen timer follows video playback without stretching or looping shorter recordings. Then advance to the product vision.';
+  notes[0][0] = 'Opening demo — 2:10';
+  notes[0][2] = 'Open with the video. It runs 2:10; the on-screen timer follows playback. Then advance to the product vision.';
   notes[4] = [
     'Private intelligence, wherever people talk',
     'Near term: any business or government entity where people communicate and confidentiality is critical. Examples include team and HR conversations, legal or financial consultations, sensitive customer discussions, citizen services, casework and internal agency briefings.',
@@ -134,7 +137,7 @@
       else button.removeAttribute('aria-current');
     });
     const max = Number(slides[state.slide].dataset.builds);
-    $('#build-count').textContent = currentId() === 'demo' ? 'DEMO · 02:00' : `BUILD ${state.build + 1} / ${max + 1}`;
+    $('#build-count').textContent = currentId() === 'demo' ? 'DEMO · 02:10' : `BUILD ${state.build + 1} / ${max + 1}`;
     $('#previous-button').disabled = state.slide === 0 && state.build === 0;
     $('#next-button').disabled = state.slide === slides.length - 1 && state.build === max;
     $('#deck-progress-fill').style.width = `${((state.slide + (state.build + 1) / (max + 1)) / slides.length) * 100}%`;
@@ -201,8 +204,11 @@
       });
     }
   }
+  function demoSeconds() {
+    return youtube && !youtube.hidden ? youtubeTime : (video.currentTime || 0);
+  }
   function updateDemoTime() {
-    const remaining = Math.max(0, demoTargetSeconds - Math.floor(video.currentTime || 0));
+    const remaining = Math.max(0, demoTargetSeconds - Math.floor(demoSeconds()));
     $('#demo-time').textContent = `${String(Math.floor(remaining / 60)).padStart(2, '0')}:${String(remaining % 60).padStart(2, '0')}`;
   }
   function render(withAnimation = true, entering = false) {
@@ -218,7 +224,7 @@
     }
     if (currentId() === 'models') setPhase(state.build, withAnimation);
     if (currentId() === 'hardware') animateHardware(state.build, withAnimation);
-    if (currentId() !== 'demo') video.pause();
+    if (currentId() !== 'demo') {video.pause(); youtubeCommand('pauseVideo');}
     if ((currentId() === 'demo' || atEnd()) && state.auto) setAuto(false);
     updateControls();
   }
@@ -270,8 +276,23 @@
       dialog.showModal(); clearTimeout(autoTimer);
     }
   }
+  function youtubeCommand(func) {
+    if (youtube && !youtube.hidden && youtube.contentWindow) youtube.contentWindow.postMessage(JSON.stringify({event: 'command', func, args: []}), '*');
+  }
+  let youtubeHeard = false;
+  function listenToYoutube() {
+    // The player starts reporting time once it hears this; repeat until it answers.
+    let tries = 0;
+    const ping = () => {
+      if (youtubeHeard || tries++ > 20 || !youtube || !youtube.contentWindow) return;
+      youtube.contentWindow.postMessage(JSON.stringify({event: 'listening', id: 'demo-youtube', channel: 'widget'}), '*');
+      setTimeout(ping, 500);
+    };
+    ping();
+  }
   function loadVideo(source, label, isSource) {
-    video.pause();
+    video.pause(); youtubeCommand('pauseVideo');
+    if (youtube) youtube.hidden = true;
     $('#video-error').hidden = true;
     video.src = source; video.hidden = false;
     $('#video-placeholder').hidden = true;
@@ -327,6 +348,20 @@
     $('#video-error').hidden = false;
     video.hidden = true; $('#video-placeholder').hidden = false; $('#video-caption').hidden = true;
   });
+  if (youtube) {
+    // YouTube refuses embeds on file:// pages; offer the link and local playback instead.
+    if (location.protocol === 'file:') {youtube.hidden = true; youtube.removeAttribute('src'); $('#video-placeholder').hidden = false;}
+    youtube.addEventListener('load', listenToYoutube);
+    window.addEventListener('message', event => {
+      if (event.source !== youtube.contentWindow || !youtubeOrigins.includes(event.origin) || typeof event.data !== 'string') return;
+      let data; try {data = JSON.parse(event.data);} catch (_) {return;}
+      youtubeHeard = true;
+      const info = data && data.info;
+      if (!info || typeof info !== 'object') return;
+      if (typeof info.currentTime === 'number') {youtubeTime = info.currentTime; updateDemoTime();}
+      if (info.playerState === 1) setAuto(false);
+    });
+  }
   video.addEventListener('play', () => setAuto(false));
   video.addEventListener('timeupdate', updateDemoTime);
   video.addEventListener('emptied', updateDemoTime);
