@@ -45,8 +45,8 @@ uv pip install --python .venv/bin/python -r requirements/meeting.txt -r requirem
 .venv/bin/python -m unspoken.meeting --profile fake --mode sim --port 8781
 # same with the real CPU deciders on this box, LLM escalation off
 .venv/bin/python -m unspoken.meeting --profile dev --mode sim --port 8781 --no-escalate
-# live mode on the GB10 (mic + camera through unspoken.sensors, real lamp/fan, Discord through the bridge)
-UNSPOKEN_PROFILE=gb10 UNSPOKEN_MCP_TOKEN=... .venv/bin/python -m unspoken.meeting --mode live
+# live mode on the Mac Studio (mic + camera through unspoken.sensors, real lamp/fan, Discord through the bridge)
+UNSPOKEN_PROFILE=mac UNSPOKEN_MCP_TOKEN=... .venv/bin/python -m unspoken.meeting --mode live
 # replay a recording through the real sensors, or a bus trace (.jsonl written with --trace)
 .venv/bin/python -m unspoken.meeting --mode replay --replay tests/sensors/fixtures/meeting3.wav --profile dev
 
@@ -63,7 +63,7 @@ from `config/bridge.toml [mcp]`).
 
 Profiles: `fake` (keyword decider, everything else off), `dev` (Strands Decider 2B on :8765 and 12B on :8766
 on this box's CPU, LLM off), `dev-local` (dev + an OpenAI-compatible llama.cpp server on 127.0.0.1:8010 as
-the llm role; needs the `openai` package), `gb10` (whatever `config/models.toml` says; `unspoken.models`
+the llm role; needs the `openai` package), `mac` (whatever `config/models.toml` says; `unspoken.models`
 owns it). When `unspoken.models` is not importable the fallback `fakes.LocalRegistry` serves these profiles.
 
 ## Config (`config/meeting.toml`)

@@ -2,25 +2,26 @@
 
 The main demo uses the official `Presentation/Demo.mp4` checked into the public repository's
 `presentation` branch. Its audio and video frames pass through the real local speech, speaker,
-vision and decision models at playback time. The 30.08-second clip is staged on this Dell box;
+vision and decision models at playback time. The 30.08-second clip is staged on this Mac;
 no USB microphone or camera is needed.
 
 ## Start the prepared stack
 
-From this checkout:
+From this checkout, with LM Studio and the decider already up:
 
 ```bash
-export UNSPOKEN_LOCAL_API_KEY_FILE="$HOME/.nemoclaw/dual-station-vllm-api-key"
+# 1. In LM Studio, load Qwen3-8B (4-bit) and start its local server (http://localhost:1234).
+# 2. Start the decider:  strands-decider serve --model decider-2b --port 8765
+export UNSPOKEN_PROFILE=mac
 deploy/demo/up.sh
 ```
 
-The variable contains a **file path**, not the credential. Do not paste the credential into shell
-arguments, chat, source, or Git. The browser container mounts that file read-only.
+LM Studio's OpenAI server uses a non-secret placeholder key (`lm-studio`); there is no credential file
+to manage. The decider is a local service and the sensing models run in process on the CPU.
 
-Open **http://127.0.0.1:8780/** on the Dell. The launcher reuses the existing Qwen service and loaded
-GPU image; it leaves the pre-existing Qwen and Nano containers alone. It starts/reuses the prepared
-Parakeet speech service, Decider container and LocoCisco browser container. It fails when preparation
-is missing instead of downloading or installing anything at startup.
+Open **http://127.0.0.1:8780/** on the Mac. The launcher reuses the running LM Studio Qwen server and the
+local Decider service, and runs Parakeet and the other sensing models in process on the CPU. It fails when
+preparation is missing instead of downloading or installing anything at startup.
 
 All seven required roles must pass their local probes before a take can start. TTS, a second Decider,
 and external integrations are not prerequisites. Press **O** to open recording setup and use
@@ -101,14 +102,14 @@ intentionally records the demo; ordinary microphone/camera operation is a separa
 
 ## Local preparation and provenance
 
-Runtime files live in `../lococisco-runtime`, outside Git. The prepared Python environment uses the
-offline kit's ARM64 wheels. Torch/CUDA are reused from the already-loaded NVIDIA image; the missing
-standalone GPU-wheel dependencies are not downloaded.
+Runtime files live in `../lococisco-runtime`, outside Git. The prepared Python environment is a macOS
+(Apple Silicon, arm64) venv (uv/pip). Torch for Apple Silicon is reused from that venv; nothing is
+downloaded during the take, and there are no containers.
 
 Model artifacts used here are Parakeet TDT 0.6B v3, Silero VAD, WeSpeaker CAM++, YuNet, Light-ASD,
-the Strands Decider 12B adapter plus Gemma 4 base, and the existing Qwen3.6 35B-A3B NVFP4 service.
-The Decider's isolated user-site environment uses the bundled wheels; the host and existing model
-containers are not upgraded. `HF_HUB_OFFLINE` and `TRANSFORMERS_OFFLINE` are enabled.
+the Strands Decider 2B adapter plus Gemma 4 base, and the Qwen3-8B (4-bit) model served by LM Studio.
+The Decider's isolated user-site environment uses the bundled wheels; the host environment and LM Studio
+are left as-is. `HF_HUB_OFFLINE` and `TRANSFORMERS_OFFLINE` are enabled.
 
 The official input is staged byte-for-byte from Git:
 
@@ -127,8 +128,8 @@ cp -n ../lococisco-public/Presentation/Demo.mp4 ../lococisco-runtime/media/lococ
 ```
 
 `LOCOCISCO_VIDEO` can explicitly select another local source, with `LOCOCISCO_ATTRIBUTION` for its
-attribution. An already-created browser container retains its original input bind mount; recreating
-that application container applies a changed default. The model services need no media-specific change.
+attribution. An already-running application keeps its original input until it is reloaded; restarting
+the application applies a changed default. The model services need no media-specific change.
 
 The older AMI fixtures remain available for reproducing saved backend validation; they are no longer
 the default demo input. The highlights fixture is **AMI Meeting Corpus, IS1009a**, licensed **CC BY 4.0**:

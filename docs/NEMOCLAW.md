@@ -1,9 +1,18 @@
 # LocoCisco on NemoClaw + OpenClaw + OpenShell, with Discord
 
-How the room brain (host process `unspoken`) plugs into the NemoClaw stack on the GB10, what each piece is
-allowed to reach, the exact day-of commands, and what to check when something does not come up. Everything
-here was built from the public docs cited inline; **nothing was run against a real NemoClaw install** (none on
-the dev desktop). Every step marked `[DAY-OF CHECK]` needs confirming on the box; §9 lists them all.
+> **Legacy — NVIDIA GB10 only.** NemoClaw is NVIDIA's managed-vLLM bring-up tooling and does **not** apply to the
+> Mac Studio (Apple M1 Max) target. This page is retained for reference and for the original GB10 build. On the
+> Mac the language model is served by **LM Studio** (OpenAI-compatible, `http://localhost:1234/v1`) with no Docker,
+> containers, or managed vLLM — see the [README](../README.md) and the `mac` profile in
+> [config/models.toml](../config/models.toml). The Discord bridge below (OpenClaw / OpenShell) is likewise GB10-era
+> tooling; on the Mac, Discord notifications and device actions are rehearsed as local output previews (see
+> [HACKDAY.md](HACKDAY.md) §6). Nothing in this document describes the current Mac path.
+
+How the room brain (host process `unspoken`) plugged into the NemoClaw stack on the GB10, what each piece was
+allowed to reach, the day-of commands, and what to check when something did not come up. Everything here was
+built from the public docs cited inline; **nothing was run against a real NemoClaw install** (none on the dev
+desktop). Every step marked `[DAY-OF CHECK]` needed confirming on the GB10; §9 lists them all. This was the GB10
+inference and Discord-bridge path; it has no bearing on the Mac Studio target.
 
 Sources used: NemoClaw docs index https://docs.nvidia.com/nemoclaw/latest/llms.txt (append `.md` to any page
 for Markdown); OpenClaw docs https://docs.openclaw.ai (source: https://github.com/openclaw/openclaw/tree/main/docs).

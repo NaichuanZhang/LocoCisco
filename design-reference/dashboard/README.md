@@ -12,7 +12,7 @@ no CDN.
 | Page | What it shows |
 |---|---|
 | `index.html` | The presenter dashboard: meeting video, captions, people, notes, decisions, Discord feed, room devices, off-record mode and model health. |
-| `explainer.html` | How it works: **Vision** (face boxes, landmarks, speaking scores), **Transcription** (partial → final text, voice map, who spoke when), **Decisions** (rules → Decider 12B → Qwen 35B → policy, replayed slowly) and **Pipeline** (local-only flow, latency, memory budget). |
+| `explainer.html` | How it works: **Vision** (face boxes, landmarks, speaking scores), **Transcription** (partial → final text, voice map, who spoke when), **Decisions** (rules → Decider 2B → Qwen on LM Studio → policy, replayed slowly) and **Pipeline** (local-only flow, latency, memory budget). |
 
 ## Keys
 

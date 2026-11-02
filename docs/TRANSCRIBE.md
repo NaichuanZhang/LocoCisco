@@ -7,10 +7,10 @@ Reports per stage: `docs/reports/tx-{asr,diar,asd,vlm,fuse,live}.md`.
 
 ```bash
 # offline: one video -> transcript.json / .txt / .srt / .md (+ scores.json with --ref)
-python -m unspoken.transcribe --video meeting.mp4 --out out/ [--profile cpu|gb10] [--ref CASE_DIR]
+python -m unspoken.transcribe --video meeting.mp4 --out out/ [--profile cpu|mac] [--ref CASE_DIR]
 # live: captions as people talk, viewer on loopback
 python -m unspoken.transcribe.live --video meeting.mp4 --profile dev-best --view-fps 25 --out out/transcript.json --web 127.0.0.1:8798
-python -m unspoken.transcribe.live --camera 0 --mic Jabra --profile gb10 --view-fps 25 --out out/transcript.json   # the room
+python -m unspoken.transcribe.live --camera 0 --mic Jabra --profile mac --view-fps 25 --out out/transcript.json   # the room
 ```
 
 ## Test data
@@ -29,15 +29,15 @@ Each ~830 s, plus 180 s `-dev` excerpts used for all tuning. Scorer: `eval/trans
 
 | Stage | Winner | Runs on |
 |---|---|---|
-| Words | Parakeet TDT 0.6B v3 (fp32 ONNX here; NeMo-Speech.cpp Q8 on the GB10) | CPU here, GPU on GB10 |
+| Words | Parakeet TDT 0.6B v3 (fp32 ONNX via onnx-asr) | CPU (here and on the Mac) |
 | Voices | WeSpeaker CAM++ on 1.5 s windows + spectral clustering (offline) / causal labels (live) | CPU |
-| Who is talking on camera | YuNet faces + Light-ASD (AVA weights, MIT) | CPU here, GPU on GB10 |
+| Who is talking on camera | YuNet faces + Light-ASD (AVA weights, MIT) | CPU (here and on the Mac) |
 | Fuse | `bind`: words to voice turns, voices to seats on whole-meeting evidence | CPU, < 1 s |
 
 Not picked, on the numbers: Whisper large-v3-turbo (same WER, 3-10x the CPU), Parakeet int8 export (drops whole
 sentences), Sortformer and pyannote clustering (higher DER), MotionASD (at chance), the Strands Decider and a
 local LLM as speaker fixers (changed 0-1 lines), a small VLM judge (good on big faces, blind at 25 px, never
-says "nobody on camera"; on the GB10 Qwen3.6 can be a tie-breaker).
+says "nobody on camera"; the VLM/whiteboard judge is disabled on the Mac target).
 
 ## Results (full cases, run once)
 
@@ -58,9 +58,9 @@ Live, real time, duo-AC-dev (`--profile dev-best`, this x86 CPU): cpWER 0.072, s
 0.51 s (p50) / 0.77 s (p95) after the VAD segment end (speech end + 0.2 s pad), RTF 1.0, ~3.6 cores. Demo: `unspoken.transcribe.live.render`
 burns the captions in at the moment they were emitted.
 
-## On the GB10
+## On the Mac Studio
 
-`--profile gb10` uses the speech server (:8770) for words and Light-ASD on CUDA (torch 2.14.1+cu130 from the
-USB, `requirements/gpu/transcribe-asd-torch.txt`). Voices and faces stay on the CPU. First check on the box:
-run the ASR scorer against the speech server on one `-dev` case; the Q8 GGUF must not drop windows the way the
-int8 ONNX export did.
+`--profile mac` runs Parakeet via onnx-asr for words and Light-ASD on the CPU (torch for Apple Silicon,
+`requirements/sensors.txt`). Voices and faces stay on the CPU too; everything is in process and local, with no
+speech server and no CUDA. First check on the box: run the ASR scorer against the onnx-asr Parakeet on one
+`-dev` case and confirm it does not drop windows the way the int8 ONNX export did.

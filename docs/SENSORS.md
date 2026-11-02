@@ -20,7 +20,7 @@ Everything runs in-process on the CPU of the box; the ASR can also be a server (
 cd <worktree> && scripts/dev-venv.sh && uv pip install --python .venv/bin/python -r requirements/sensors.txt
 .venv/bin/python -m unspoken.sensors.fetch_models            # 29 MB speaker model -> ~/.cache/unspoken/models
 .venv/bin/python -m unspoken.sensors.replay --audio tests/sensors/fixtures/meeting3.wav --fast          # JSON lines
-.venv/bin/python -m unspoken.sensors.replay --audio x.wav --video y.mp4 --profile gb10                   # real time
+.venv/bin/python -m unspoken.sensors.replay --audio x.wav --video y.mp4 --profile mac                    # real time
 .venv/bin/python -m pytest -q tests/sensors                   # 41 tests, ~10 s, no servers, no hardware
 ```
 
@@ -86,28 +86,28 @@ real room and move the rectangles until each chair is its own zone.
 - Voice embeddings and face tracks are per-session objects; `SensorHandle.stop()` resets them. No face
   recognition, no emotion or attention scoring: track ids are counters, voices are letters.
 - The in-process providers never open a network connection except `fetch_models` (explicit, sha256-pinned)
-  and faster-whisper's first model download (pre-seeded on the GB10 by the deploy USB).
+  and faster-whisper's first model download (pre-seeded on the Mac when the venv is set up).
 
-## aarch64 (GB10) status
+## macOS (Apple Silicon, arm64) status
 
 From PyPI wheel listings on 2026-10-24 (versions in `requirements/sensors.txt`):
 
-| Package | aarch64 wheel (cp312) | GB10 note |
+| Package | macOS arm64 wheel (cp312) | Mac note |
 |---|---|---|
-| onnxruntime 1.31.0 | yes (CPU) | CPU is plenty for Silero (2.3 MB) and CAM++ (29 MB); the GPU build has no prebuilt aarch64 CUDA 13 wheel (community source build only). Keep both on the 20 Arm cores. |
-| opencv-python-headless 4.14.0.94 | yes | V4L2 capture, YuNet, mp4 decode: CPU. |
-| faster-whisper 1.2.1 / ctranslate2 4.8.3 | pure / yes | The aarch64 ctranslate2 wheel is CPU-only: base.en int8 at ~0.5 s per segment per 4 cores is fine for a meeting. For large-v3 on the GPU use the speech server (`asr` role -> `openai-audio` provider, NeMo-Speech.cpp or whisper.cpp arm64 CUDA 13 builds, see research/r2/asr.md) or build ctranslate2 with CUDA. Nothing in this package changes. |
+| onnxruntime 1.31.0 | yes (CPU) | CPU is plenty for Silero (2.3 MB) and CAM++ (29 MB); there is no CUDA on the Mac, so the macOS arm64 CPU build (optional CoreML EP) is used. Keep both on the Apple Silicon CPU. |
+| opencv-python-headless 4.14.0.94 | yes | AVFoundation capture, YuNet, mp4 decode: CPU. |
+| faster-whisper 1.2.1 / ctranslate2 4.8.3 | pure / yes | The macOS arm64 ctranslate2 wheel is CPU-only: base.en int8 at ~0.5 s per segment per 4 cores is fine for a meeting. A bigger ASR model would run through the speech server (`asr` role -> `openai-audio` provider) on another host; there is no CUDA path on the Mac. Nothing in this package changes. |
 | tokenizers 0.23.3, av 19.0.2, kaldi-native-fbank 1.22.4, hf-xet 1.7.0, cffi 2.1.1, numpy 2.5.4 | yes | - |
-| sounddevice 0.5.6 | pure python | needs `libportaudio2` (apt); otherwise the pipeline uses `arecord` from `alsa-utils` automatically (`plughw:CARD=...` resamples to 16 kHz for us). |
-| torch (not used) | yes (CPU and cu130 aarch64 wheels from the PyTorch index) | only needed for Light-ASD below. |
+| sounddevice 0.5.6 | pure python | needs PortAudio (`brew install portaudio`); CoreAudio is the capture backend on macOS (resampled to 16 kHz for us). |
+| torch (not used here) | yes (Apple Silicon wheels with the MPS/Metal backend from the PyTorch index) | only needed for Light-ASD, which runs on the CPU. |
 | piper-tts 1.8.0 (fixture generation only) | yes | not a runtime dependency. |
 
-What needs CUDA on the GB10: nothing in this package. Everything here runs on the Arm cores
+What needs CUDA on the Mac: nothing — there is no CUDA. Everything here runs on the Apple Silicon CPU
 (VAD + diarization + faces + ASD well under one core; faster-whisper base.en ~1-2 cores while someone talks).
-Big ASR models belong on the GPU behind the speech server, selected in `config/models.toml`.
+A bigger ASR model would live behind a speech server on another host, selected in `config/models.toml`.
 
-Verify on the box: `UNSPOKEN_PROFILE=gb10 python -m unspoken.models check` (vad, asr, diarization, faces, asd
-all `ok`), `arecord -l` / `v4l2-ctl --list-devices` for the USB devices, then
+Verify on the box: `UNSPOKEN_PROFILE=mac python -m unspoken.models check` (vad, asr, diarization, faces, asd
+all `ok`), confirm the USB mic and camera appear (`python -m sounddevice`, System Information → Camera), then
 `python -m unspoken.sensors.replay --audio tests/sensors/fixtures/meeting3.wav --fast` and a live run with
 the speakerphone (`[audio] device = "Jabra"`) watching `audio.segment` lines appear within ~1 s of a sentence
 ending.
@@ -121,7 +121,7 @@ model (per-face speaking probability from 112x112 grey face crops at 25 fps + 13
 2. `asd.LightASD(spec)`: keep a per-track deque of the last 1 s of face crops (from the `faces` bboxes) and
    the last 1 s of PCM from the pipeline ring, run the model every update (~15 ms per face on CPU), EMA the
    logits into `FaceTrack.speaking`;
-3. `config/models.toml`: `[profiles.gb10.asd] provider = "python:unspoken.sensors.asd:LightASD"`.
+3. `config/models.toml`: `[profiles.mac.asd] provider = "python:unspoken.sensors.asd:LightASD"`.
 The pipeline, events and tests do not change; `tests/sensors/test_models.py::test_motion_asd_*` become the
 template for its unit tests (synthetic moving-mouth frames + a voice-like tone).
 

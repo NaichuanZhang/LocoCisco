@@ -1,7 +1,7 @@
-# LocoCisco for meetings: build plan (Dell x NVIDIA hack day, Sun 2026-10-25)
+# LocoCisco for meetings: build plan (Mac Studio, 2026-10-25)
 
 Goal: everything except model deployment is built and tested before the day. On the day we only bring
-models up on the GB10, run one check command, and rehearse.
+models up on the Mac Studio, run one check command, and rehearse.
 
 ## 1. How it fits together
 
@@ -14,7 +14,7 @@ models up on the GB10, run one check command, and rehearse.
                                                                  │
                                    Strands Decider (typed questions) ── sure? ─► proposal (local-decider)
                                                                  │ unsure
-                                   Strands agent + Qwen3.6 on vLLM (tools) ─► proposal (local-llm)
+                                   Strands agent + Qwen on LM Studio (tools) ─► proposal (local-llm)
                                                                  ▼
                                    policy (plain code: risk, guests, privacy) ─► verdict
                                                                  ▼
@@ -27,10 +27,10 @@ Two processes matter:
 
 | Process | Where | Job |
 |---|---|---|
-| `unspoken` | GB10 host, binds 127.0.0.1 | Real-time room brain: sensors, decider, policy, devices, room screen, MCP tools |
+| `unspoken` | Mac Studio host, binds 127.0.0.1 | Real-time room brain: sensors, decider, policy, devices, room screen, MCP tools |
 | OpenClaw agent | NemoClaw sandbox (OpenShell) | Discord face: posts notes/tasks/recaps, answers "@LocoCisco what did we decide?" by calling LocoCisco's tools |
 
-Both use the same local Qwen3.6 on vLLM. Nothing calls a remote model. The only internet egress is the
+Both use the same local Qwen served by LM Studio. Nothing calls a remote model. The only internet egress is the
 sandbox's Discord access, which the OpenShell policy allows and nothing else.
 
 Why the room brain is outside the sandbox: it needs the USB mic, camera and LAN devices, and it must
@@ -45,29 +45,29 @@ questions, not for 5 Hz camera frames.
 | Discord -> LocoCisco | OpenClaw agent calls LocoCisco tools: managed MCP server (`nemoclaw <sb> mcp add`) | NemoClaw requires HTTPS on a private (RFC1918) host IP with a bearer token, `--trusted-private-host`, and a CA it trusts. Loopback is rejected. We run a TLS proxy on the docker bridge IP, bound to that interface only |
 | Fallback A | OpenClaw skill + custom policy preset to a plain HTTP host API | If managed MCP will not converge |
 | Fallback B | `discord-rest` Notifier posts with the bot token from the host | Only if NemoClaw breaks on the day; the egress meter still counts every byte |
-| Inference | NemoClaw-managed vLLM (`nemoclaw-vllm`, :8000, Chat Completions, `qwen3_xml` tool parser) | LocoCisco calls the same server on 127.0.0.1:8000 |
+| Inference | Qwen served by LM Studio (OpenAI-compatible, `http://localhost:1234/v1`, Chat Completions + tools) | LocoCisco and the OpenClaw agent call the same local LM Studio server |
 | Channel | `DISCORD_BOT_TOKEN`, `DISCORD_SERVER_ID`, `DISCORD_REQUIRE_MENTION=1` exported before onboarding | Message Content intent on in the Developer Portal |
 
 Everything above is scripted in `deploy/nemoclaw/` and explained in `docs/NEMOCLAW.md` (bridge workstream).
 
 ## 3. Model switching
 
-One file: `config/models.toml`. One variable: `UNSPOKEN_PROFILE` (`dev`, `gb10`, `fake`).
+One file: `config/models.toml`. One variable: `UNSPOKEN_PROFILE` (`dev`, `mac`, `fake`).
 
 ```toml
-[profiles.gb10]
+[profiles.mac]
 local_only = true                       # refuses any provider that is not on this box or its LAN
 
-[profiles.gb10.decider]
+[profiles.mac.decider]
 provider = "strands-decider"
 url = "http://127.0.0.1:8765"
-label = "Strands Decider 12B (GPU)"
+label = "Strands Decider 2B (CPU/Metal)"
 
-[profiles.gb10.llm]
-provider = "openai"                     # any OpenAI-compatible server: vLLM, llama.cpp, Ollama
-url = "http://127.0.0.1:8000/v1"
-model = "nvidia/Qwen3.6-35B-A3B-NVFP4"
-label = "Qwen3.6 35B-A3B on vLLM"
+[profiles.mac.llm]
+provider = "openai"                     # any OpenAI-compatible server: LM Studio, llama.cpp, Ollama
+url = "http://localhost:1234/v1"
+model = "qwen3-8b"
+label = "Qwen3-8B (4-bit) on LM Studio"
 ```
 
 - Switch a model: edit one block, or override one key: `UNSPOKEN_LLM_MODEL=... UNSPOKEN_LLM_URL=...`.
@@ -80,14 +80,12 @@ Roles: decider, decider_big, llm, vlm, asr, vad, diarization, faces, asd, tts, e
 
 ## 4. Ports
 
-| Port | GB10 | Dev desktop |
+| Port | Mac | Dev desktop |
 |---|---|---|
-| 8000 | vLLM Qwen3.6 (NemoClaw-managed) | — |
+| 1234 | LM Studio Qwen (OpenAI server, Metal) | — |
 | 8010 | — | llama.cpp test server (small Qwen, CPU) for the OpenAI path |
-| 8765 | Strands Decider 12B (GPU) | Decider 2B (CPU, already running) |
-| 8766 | Decider 2B (optional) | Decider 12B (CPU, already running) |
-| 8770 | Speech server (ASR / diarization) | — |
-| 8771 | TTS | — |
+| 8765 | Strands Decider 2B (`strands-decider serve`) | Decider 2B (CPU, already running) |
+| 8766 | — (no second decider at 32 GB) | Decider 12B (CPU, already running) |
 | 8780 / 8781 | Room screen + API (127.0.0.1) | 8781 |
 | 8791 / 8792 | LocoCisco MCP (127.0.0.1) | 8792 |
 | 8443 | TLS proxy for MCP on the docker bridge IP only | — |
@@ -105,20 +103,23 @@ Roles: decider, decider_big, llm, vlm, asr, vad, diarization, faces, asd, tts, e
 | `unspoken/sensors/` | sensors | mic/camera capture, file replay, in-process VAD/ASR/diarization/faces/ASD providers |
 | `unspoken/devices/`, `config/room.toml` | devices | WiZ, Kasa, fakes, discovery CLI |
 | `unspoken/bridge/`, `deploy/nemoclaw/`, `docs/NEMOCLAW.md` | bridge | Notifiers, MCP server, OpenClaw skill, policy preset, TLS proxy |
-| `deploy/gb10/`, `deploy/usb/`, `docs/HACKDAY.md` | deploy | model serving scripts, USB packing, the day-of runbook |
+| `deploy/demo/`, `docs/HACKDAY.md` | deploy | demo launcher and local media tooling, the day-of runbook |
 | `homedemo/` | models (wiring only) | the original smart-home demo, kept working |
 
 Each workstream lists its Python deps in `requirements/<workstream>.txt`; the integrator merges them.
 
 ## 6. Day-of runbook (summary; full version in `docs/HACKDAY.md`)
 
-1. `deploy/gb10/00-preflight.sh` (GPU, memory, disk, USB contents).
-2. `deploy/usb/restore.sh` (docker images, HF cache, wheels).
-3. NemoClaw onboarding with Discord env set; managed vLLM on Qwen3.6.
-4. `deploy/gb10/up.sh` (decider, speech, TTS).
-5. `UNSPOKEN_PROFILE=gb10 python -m unspoken.models check` -> all green.
-6. `deploy/nemoclaw/connect.sh` (MCP + hooks + policy).
-7. `python -m unspoken.meeting --profile gb10 --mode live`, open the room screen, rehearse the 3-minute demo.
+1. Mac preflight: free memory, disk, and LM Studio installed with Qwen3-8B (4-bit) downloaded.
+2. macOS venv ready (`uv pip install -r requirements/...`) and model weights cached; no containers.
+3. In LM Studio, load Qwen3-8B (4-bit) and start its local server (`http://localhost:1234`); optional
+   NemoClaw onboarding with Discord env set for the bridge.
+4. `strands-decider serve --model decider-2b --port 8765` (Parakeet and the other sensing models run in
+   process on the CPU; no TTS).
+5. `UNSPOKEN_PROFILE=mac python -m unspoken.models check` -> all green.
+6. `deploy/nemoclaw/connect.sh` (MCP + hooks + policy), if the Discord bridge is being demoed.
+7. `UNSPOKEN_PROFILE=mac deploy/demo/up.sh` (or `python -m unspoken.meeting --profile mac --mode live`),
+   open the room screen, rehearse the 3-minute demo.
 
 ## 7. Risks
 
@@ -143,11 +144,12 @@ Built and merged: all seven workstreams (reports in `docs/reports/`). 840 tests 
 | MCP server through the TLS proxy, 401 without the token | ok (loopback) |
 | `unspoken.models check --profile dev-local` | 11/11 roles |
 
-Must be checked on the GB10 (in this order): decider 12B on the GPU, Qwen3.6 tool calls on vLLM (`reasoning=false`
-option), NeMo-Speech.cpp ASR, mic + camera seen by `unspoken.sensors.check`, NemoClaw sandbox trusts our CA
-(`mcp status` = match), `verify.sh --post --agent`, the WiZ lamp and Kasa plug, then `play demo_three_minutes
---profile gb10` and the live demo. The 12B eval on all 72 cases never finished on CPU; rerun it on the GPU
-(`eval/run_meeting_eval.py --model 12b --version v3`) and re-pick `act_threshold` if it differs from 0.60.
+Must be checked on the Mac Studio (in this order): the Decider 2B via `strands-decider serve`, Qwen3-8B tool
+calls on LM Studio (thinking disabled), Parakeet via onnx-asr, mic + camera seen by `unspoken.sensors.check`,
+NemoClaw sandbox trusts our CA (`mcp status` = match) if the Discord bridge is used, `verify.sh --post
+--agent`, the WiZ lamp and Kasa plug, then `play demo_three_minutes --profile mac` and the live demo. On
+32 GB the 2B is the only decider (no 12B); re-check `act_threshold` (0.60) against the 2B on the Mac if the
+routing bands need tuning.
 
 Integrator fixes after the merges: nothing said off the record or while paused is kept in the bus history
 (`Bus.retain` / `Bus.forget`); the room never escalates to a hosted LLM (`local_llm_enabled`); `--profile fake`

@@ -5,7 +5,7 @@ No wake word: you never say its name.
 LocoCisco is the product name; Python packages, CLI commands, environment variables and deployment
 identifiers retain `unspoken` for compatibility.
 
-## Browser demo on the Dell GB10
+## Browser demo on the Mac Studio
 
 The current build uses a local meeting video's audio and frames in place of a USB microphone and
 camera. Speech, speaker, vision and decision inference run locally using the already-staged models.

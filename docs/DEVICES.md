@@ -20,7 +20,7 @@ WiZ bulbs take commands from anyone on their Wi-Fi: there is no password on the 
 legacy protocol are the same. So:
 
 1. Bring a small travel router (any 2.4 GHz-capable router; the bulb and the plug are 2.4 GHz only).
-   Give it a WPA2 network nobody else knows (e.g. `unspoken-room`). The GB10 joins it too (Wi-Fi or a
+   Give it a WPA2 network nobody else knows (e.g. `unspoken-room`). The Mac Studio joins it too (Wi-Fi or a
    LAN cable to the router). The router does not need an uplink for the devices to work.
 2. **Pair each device once at home with its phone app** (WiZ app for the bulb, Kasa app for the plug),
    onto the travel router's Wi-Fi, so they remember that network. Pairing needs the phone on the same
@@ -153,12 +153,12 @@ for the fan; they drop straight into `EnvData.state` (`MT.ENV`).
   The TCP session is reused; a reset mid-session reconnects on the retry.
 - Nothing is logged above WARNING, and credentials are never logged.
 
-## 7. Dependencies (requirements/devices.txt) and aarch64
+## 7. Dependencies (requirements/devices.txt) and Apple Silicon
 
 - `python-kasa==0.11.0.1`: pure Python. Its dependencies as resolved on 2026-10-24: `aiohttp 3.14.5`,
   `aiosignal`, `aiohappyeyeballs`, `asyncclick`, `attrs`, `frozenlist`, `idna`, `mashumaro`,
   `multidict`, `propcache`, `yarl` ship universal (`py3-none-any`) wheels; `cryptography 50.0.2` and
-  `cffi 2.1.1` ship `manylinux aarch64` wheels for CPython 3.12. Nothing needs a compiler on the GB10.
+  `cffi 2.1.1` ship macOS arm64 (`macosx … arm64`) wheels for CPython 3.12. Nothing needs a compiler on the Mac.
 - WiZ: no dependency (own client). `pywizlight` was the alternative; not used, to keep the retry /
   debounce / never-raise behaviour explicit and testable against `FakeWizBulb`.
 

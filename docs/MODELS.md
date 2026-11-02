@@ -8,9 +8,9 @@ from unspoken.models import load_registry
 
 reg = load_registry()                 # profile: UNSPOKEN_PROFILE, default "dev"
 decider = reg.decider()               # unspoken.core.decider.Decider (role "decider")
-model = reg.strands_model("llm")      # strands Model: Qwen on vLLM / llama.cpp, or Claude on Bedrock in dev
+model = reg.strands_model("llm")      # strands Model: Qwen on LM Studio / llama.cpp, or Claude on Bedrock in dev
 asr, vad, tts = reg.asr(), reg.vad(), reg.tts()
-reg.label("llm")                      # "Qwen3.6 35B-A3B NVFP4 on vLLM (GPU)" for the room screen / X-ray
+reg.label("llm")                      # "Qwen3-8B (4-bit) on LM Studio (Metal)" for the room screen / X-ray
 await reg.check()                     # one RoleHealth per role; await reg.aclose() at shutdown
 ```
 
@@ -25,10 +25,10 @@ its getter raises `RoleDisabled`. Objects are built lazily on first use and cach
 | `dev` | this cloud desktop: Strands Decider 2B/12B on CPU, Claude on Bedrock as the llm (remote, dev only), fakes for hearing and vision |
 | `dev-local` | `dev` with nothing remote: the llm is a small Qwen3 on a local llama.cpp server (`scripts/dev-llm.sh start`); `local_only = true` |
 | `dev-sensors` | `dev-local` plus the real in-process sensors providers on the CPU (Silero VAD, faster-whisper, WeSpeaker, YuNet, MotionASD) |
-| `gb10` | the Dell Pro Max: everything local on the box (Decider 12B, Qwen3.6 on vLLM, NeMo-Speech.cpp ASR/TTS, in-process sensors); `local_only = true` |
+| `mac` | the Mac Studio (Apple M1 Max): everything local (Decider 2B, Qwen3-8B on LM Studio, Parakeet via onnx-asr, in-process sensors; no TTS/VLM); `local_only = true` |
 | `fake` | tests and the simulator: deterministic fakes everywhere, no servers |
 
-Pick one with `UNSPOKEN_PROFILE=gb10`, `load_registry("gb10")`, or `--profile gb10` on the CLIs
+Pick one with `UNSPOKEN_PROFILE=mac`, `load_registry("mac")`, or `--profile mac` on the CLIs
 (`python -m unspoken.models`, `python -m homedemo`, `python -m homedemo.play`).
 
 ## Switch a model in one edit
@@ -36,11 +36,11 @@ Pick one with `UNSPOKEN_PROFILE=gb10`, `load_registry("gb10")`, or `--profile gb
 Edit the role's block in the profile:
 
 ```toml
-[profiles.gb10.llm]
-provider = "openai"                     # any OpenAI-compatible server: vLLM, llama.cpp, Ollama
-url = "http://127.0.0.1:8000/v1"
-model = "nvidia/Qwen3.6-35B-A3B-NVFP4"
-label = "Qwen3.6 35B-A3B NVFP4 on vLLM (GPU)"
+[profiles.mac.llm]
+provider = "openai"                     # any OpenAI-compatible server: LM Studio, llama.cpp, Ollama
+url = "http://localhost:1234/v1"
+model = "qwen3-8b"
+label = "Qwen3-8B (4-bit) on LM Studio (Metal)"
 options = { max_tokens = 400, temperature = 0, timeout_s = 120 }
 ```
 
@@ -63,7 +63,7 @@ unspoken.models show` prints the resolved table and the overrides that were appl
 
 ### local_only
 
-`local_only = true` (gb10, dev-local, dev-sensors, fake) makes `load_registry` refuse, with
+`local_only = true` (mac, dev-local, dev-sensors, dev-best, fake) makes `load_registry` refuse, with
 `RemoteNotAllowed`, the `bedrock` provider and any `url` whose host is not loopback, RFC 1918
 (10/8, 172.16/12, 192.168/16, fc00::/7), `*.local` or `inference.local`. Hostnames are not resolved: a public
 name is refused even if it points at the LAN. This is the guarantee behind "nothing leaves the box".
@@ -80,7 +80,7 @@ ok, probe latency and a detail line; exit code 1 if any enabled role fails. The 
 question, llm/vlm = a 1-token chat completion (an uncached model with `max_tokens = 1`), embed = one string,
 asr = 0.5 s of silence, tts = "ok", pii = one sentence, vad/diarization/faces/asd = build the provider
 (loading the model is the cost) and open one stream/session. Server providers take `health` in options:
-`"/ready"` (NeMo-Speech.cpp, resolved against the server root), `"models"` (default, `{url}/models`) or a
+`"/ready"` (a speech server's readiness path, resolved against the server root), `"models"` (default, `{url}/models`) or a
 full URL.
 
 ```
@@ -99,7 +99,7 @@ llm          openai           http://127.0.0.1:8010/v1  ok  381 ms   stop=max_to
 |---|---|---|---|
 | decider, decider_big | `strands-decider` | `unspoken.core.decider.HttpDecider` on `POST {url}/v1/systemone` | `model` or `options.name` = client name (`decider-2b`), `timeout`, `max_concurrency` |
 | decider, decider_big | `fake` | `FakeDecider` | `script = [["substring", "question", "Option"], ...]`, `latency_ms` |
-| llm, vlm | `openai` | strands `OpenAIModel` on any OpenAI-compatible server. Tools go out as Chat Completions `tools`, tool calls come back as streamed `tool_calls` deltas (vLLM `--tool-call-parser`, llama.cpp `--jinja`) | `api_key` ("local"), `timeout`/`timeout_s`, `temperature` (0), `max_tokens`, `stream` (true), standard Chat Completions params (`tool_choice`, `top_p`, `seed`, ...) as themselves, anything else (`reasoning`, `chat_template_kwargs`) into `extra_body` |
+| llm, vlm | `openai` | strands `OpenAIModel` on any OpenAI-compatible server. Tools go out as Chat Completions `tools`, tool calls come back as streamed `tool_calls` deltas (LM Studio's tool/function calling, llama.cpp `--jinja`) | `api_key` ("local"), `timeout`/`timeout_s`, `temperature` (0), `max_tokens`, `stream` (true), standard Chat Completions params (`tool_choice`, `top_p`, `seed`, ...) as themselves, anything else (`reasoning`, `chat_template_kwargs`) into `extra_body` |
 | llm, vlm | `bedrock` | strands `BedrockModel` (dev only; refused when `local_only`) | `region`, `profile` (AWS profile), `temperature`, `max_tokens` |
 | llm, vlm | `scripted` (alias `fake`) | `unspoken.core.fakes.ScriptedModel` | `tool_calls = [["lights_on", {room = "living"}]]`, `reply`, `fail` |
 | asr | `openai-audio` | `POST {url}/audio/transcriptions`, multipart WAV, `model` field | `language`, `response_format` (`verbose_json` -> words), `temperature`, `health`; other keys are sent as extra form fields (`diarization = false`) |
@@ -117,7 +117,7 @@ llm          openai           http://127.0.0.1:8010/v1  ok  381 ms   stop=max_to
 The sensors workstream's real in-process providers are `python:unspoken.sensors.vad:SileroVAD`,
 `python:unspoken.sensors.asr_local:FasterWhisperASR`, `python:unspoken.sensors.diar:EmbeddingDiarizer`,
 `python:unspoken.sensors.faces:YuNetFaces`, `python:unspoken.sensors.asd:MotionASD` (see `dev-sensors`
-and `gb10`). Heavy imports (openai, strands, boto3, onnxruntime, ctranslate2) happen inside the builder of
+and `mac`). Heavy imports (openai, strands, boto3, onnxruntime, ctranslate2) happen inside the builder of
 the provider that needs them, so a profile that never uses one never imports it.
 
 ## Add a provider
@@ -139,7 +139,7 @@ the provider that needs them, so a profile that never uses one never imports it.
 
 `python -m homedemo [--profile dev-local] [--escalate bedrock|12b|llm]` takes its deciders from the
 registry: slot `2b` = role `decider`, `12b` = role `decider_big`, and `--escalate llm` runs the Strands house
-agent on the registry's `llm` role (Qwen on llama.cpp with `dev-local`, Qwen3.6 on vLLM with `gb10`). The
+agent on the registry's `llm` role (Qwen on llama.cpp with `dev-local`, Qwen on LM Studio with `mac`). The
 X-ray's model names and routes come from `reg.label(role)`. `--escalate bedrock` works as before (Claude
 from `Settings`).
 

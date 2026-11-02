@@ -49,7 +49,7 @@ system across sensitive verticals, then move straight into the product.
 
 ## 3. What LocoCisco already is (grounding)
 
-- A local-first meeting assistant built for edge hardware (Dell Pro Max / NVIDIA GB10).
+- A local-first meeting assistant built for edge hardware (Mac Studio, Apple M1 Max).
 - Runs the full stack locally: voice activity detection → speech recognition →
   speaker attribution → decision cascade → policy checks → actions.
 - No wake word; attributes captions to participants; extracts commitments,
@@ -216,7 +216,7 @@ five products. This sets up the architecture section: one platform, many clients
 
 ## 12. Architecture — edge server + IoT clients
 
-- **Edge server** (the GB10-class box): runs the heavy models — speech
+- **Edge server** (the Mac Studio-class box): runs the heavy models — speech
   recognition, speaker attribution, decision/language models, policy and egress
   control. One server serves a whole site.
 - **IoT clients**: light endpoints placed where interactions happen — meeting

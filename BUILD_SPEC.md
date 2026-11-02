@@ -31,7 +31,7 @@ Playback, resume, upload, check-in, and recording setup controls are hidden from
 the default canvas and available through keyboard shortcuts or operator setup.
 
 The core recording path uses already-staged models, dependencies, and media.
-It does not automatically download models, pull container images, install
+It does not automatically download models, install
 packages, or fall back to cloud inference. Network-dependent integrations are
 separate from the core browser demo.
 
@@ -475,11 +475,11 @@ instead of a download.
 
 `deploy/demo/run.sh` defaults to the staged official video.
 `LOCOCISCO_VIDEO` can explicitly select another local source and
-`LOCOCISCO_ATTRIBUTION` supplies its attribution. An existing application
-container retains its original input bind mount; changing a default file path
-alone does not switch that running container's input. Apply an intentional
-application reload/recreation and verify the loaded file. Model services need
-no media-specific replacement.
+`LOCOCISCO_ATTRIBUTION` supplies its attribution. An already-running application
+process keeps its original input; changing a default file path alone does not
+switch a process that is already running. Apply an intentional application
+reload and verify the loaded file. Model services need no media-specific
+replacement.
 
 Before accepting a recording:
 

@@ -63,7 +63,7 @@ not the earlier broad `PRESENTATION_OUTLINE.md`. It covers:
 1. **Opening demo**, with a local video slot and two-minute playback countdown.
 2. Local-first, privacy-driven smart office product.
 3. All seven enabled models and their decision/policy pipeline.
-4. Dell GB10 compute placement and measured sensor timings.
+4. Mac Studio (Apple M1 Max) compute placement and measured sensor timings.
 5. **Use cases and market opportunity:** confidential conversations across businesses
    and government in the near term, then a private smart-home hub in the long term.
 
@@ -93,7 +93,7 @@ certification for regulated settings.
 - `assets/avatar-*.svg`: current mainline character artwork.
 - `assets/memory-snapshot.json`: the earlier point-in-time GPU allocation evidence,
   preserved for reference; the current closing slide focuses on use cases.
-- The Dell device is a stylized vector illustration, not a hardware photograph.
+- The edge device shown is a stylized vector illustration, not a hardware photograph.
 
 Existing source media, PowerPoint and outline files are preserved.
 

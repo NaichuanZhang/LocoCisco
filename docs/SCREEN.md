@@ -1,6 +1,6 @@
 # The room screen (`unspoken/meeting/web`)
 
-The full-screen page on the meeting-room TV: the GB10's HDMI out, a kiosk browser pointed at
+The full-screen page on the meeting-room TV: the Mac Studio's HDMI out, a kiosk browser pointed at
 `http://127.0.0.1:8780/`. Readable from 3 m, and the judges' demo view. Vanilla HTML/CSS/JS, nothing
 vendored from a CDN, no network request except to its own server.
 
