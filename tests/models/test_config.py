@@ -73,7 +73,7 @@ def test_profile_defaults_to_dev_and_path_to_repo_config():
 
 def test_env_overrides_only_match_exact_role_names():
     env = {"UNSPOKEN_LLM_URL": "http://10.0.0.5:8000/v1", "UNSPOKEN_DECIDER_BIG_PROVIDER": "none",
-           "UNSPOKEN_PROFILE": "gb10", "UNSPOKEN_MCP_URL": "https://not-a-role", "UNSPOKEN_LLM_URI": "typo"}
+           "UNSPOKEN_PROFILE": "mac", "UNSPOKEN_MCP_URL": "https://not-a-role", "UNSPOKEN_LLM_URI": "typo"}
     assert env_overrides(env) == {"llm.url": "http://10.0.0.5:8000/v1", "decider_big.provider": "none"}
 
 
@@ -137,14 +137,14 @@ def test_load_registry_threads_profile_path_and_overrides(toml, monkeypatch):
 
 
 def test_repo_config_has_the_profiles_and_they_all_resolve():
-    for profile in ("dev", "dev-local", "dev-sensors", "dev-best", "gb10", "fake"):
+    for profile in ("dev", "dev-local", "dev-sensors", "dev-best", "mac", "fake"):
         r = resolve(profile, None, environ={})
         assert r.specs["decider"].provider in ("strands-decider", "fake"), profile
-    gb10 = resolve("gb10", None, environ={})
-    assert gb10.local_only and gb10.specs["llm"].url == "http://127.0.0.1:8000/v1"
-    assert gb10.specs["vad"].provider == "python:unspoken.sensors.vad:SileroVAD"
-    assert gb10.specs["asd"].provider == "python:unspoken.transcribe.asd_live:LightASDLive"     # transcriber test winner
-    assert gb10.specs["diarization"].provider == "python:unspoken.transcribe.diar:OnlineWindowDiarizer"
+    mac = resolve("mac", None, environ={})
+    assert mac.local_only and mac.specs["llm"].url == "http://localhost:1234/v1"
+    assert mac.specs["vad"].provider == "python:unspoken.sensors.vad:SileroVAD"
+    assert mac.specs["asd"].provider == "python:unspoken.transcribe.asd_live:LightASDLive"     # transcriber test winner
+    assert mac.specs["diarization"].provider == "python:unspoken.transcribe.diar:OnlineWindowDiarizer"
     best = resolve("dev-best", None, environ={})
     assert best.local_only and best.specs["asr"].provider == "python:unspoken.transcribe.asr_parakeet:ParakeetASR"
     dev_local = resolve("dev-local", None, environ={})

@@ -4,13 +4,13 @@ workstream. If one must change, say what, why and which field in your final repo
 Model roles
 -----------
 Every model the box runs has a ROLE. `config/models.toml` maps each role to a provider, per PROFILE
-("dev" = this cloud desktop, "gb10" = the Dell box, "fake" = tests). Code never names a model, a URL or
+("dev" = this cloud desktop, "mac" = the Mac Studio, "fake" = tests). Code never names a model, a URL or
 a vendor: it asks the registry for a role, so switching a model is a config edit, not a code change.
 
     from unspoken.models import load_registry
     reg = load_registry()                   # profile from UNSPOKEN_PROFILE (default "dev")
     decider = reg.decider()                 # unspoken.core.decider.Decider
-    model = reg.strands_model("llm")        # strands.models.Model (vLLM/llama.cpp via OpenAI API; Bedrock only in dev)
+    model = reg.strands_model("llm")        # strands.models.Model (LM Studio/llama.cpp via OpenAI API; Bedrock only in dev)
     asr = reg.asr()                         # ASR below
 
 A role whose provider is "none" is disabled: `reg.enabled(role)` is False and its getter raises
@@ -27,9 +27,9 @@ from .core.decider import Decider
 
 # --------------------------------------------------------------------------- roles
 ROLES: tuple[str, ...] = (
-    "decider",      # fast typed decisions (Strands Decider 12B on the GB10, 2B on the dev CPU)
+    "decider",      # fast typed decisions (Strands Decider 2B on the Mac, 2B on the dev CPU)
     "decider_big",  # optional second decider (e.g. 12B when "decider" is the 2B)
-    "llm",          # tool-calling chat model for escalations, recaps, doc answers (Qwen3.6 on vLLM)
+    "llm",          # tool-calling chat model for escalations, recaps, doc answers (Qwen3-8B on LM Studio)
     "vlm",          # image understanding (whiteboard, room scene); may point at the same server as llm
     "asr",          # speech -> text
     "vad",          # voice activity detection (speech segments)
@@ -48,7 +48,7 @@ class RoleDisabled(RuntimeError):
 
 
 class RemoteNotAllowed(RuntimeError):
-    """A local_only profile (gb10) refused a provider whose target is not on this machine or its LAN."""
+    """A local_only profile (mac) refused a provider whose target is not on this machine or its LAN."""
 
 
 @dataclass
@@ -69,7 +69,7 @@ class RoleHealth:
     target: str                       # URL, model path or "in-process"
     ok: bool
     latency_ms: float | None = None   # one tiny probe request, when the provider supports it
-    detail: str = ""                  # error text or a short note ("disabled", "12B, cuda")
+    detail: str = ""                  # error text or a short note ("disabled", "2B, cpu")
 
 
 class Registry(Protocol):

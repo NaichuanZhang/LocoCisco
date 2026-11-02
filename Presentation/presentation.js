@@ -25,7 +25,7 @@
     },
     parakeet: {
       phase: 0, category: 'SPEECH RECOGNITION', name: 'Parakeet TDT 0.6B v3',
-      runtime: 'Q8 · GPU · NeMo-Speech.cpp',
+      runtime: 'Q8 · CPU · onnx-asr',
       how: 'A token-and-duration transducer converts audio into words and their timestamps.',
       why: 'Compact speech specialist. Project tests found similar word error to Whisper turbo with less CPU compute.',
       fact: '0.6B parameters · quantized speech service', graphic: 'words'
@@ -46,41 +46,41 @@
     },
     lightasd: {
       phase: 1, category: 'AUDIOVISUAL SPEAKER EVIDENCE', name: 'Light-ASD',
-      runtime: 'AVA weights · PyTorch · GPU',
+      runtime: 'AVA weights · PyTorch · CPU',
       how: 'Combines face motion and audio features over time to score which visible person is speaking.',
       why: 'Learned audiovisual evidence beat the project’s motion-only baseline. A face alone is not enough.',
       fact: '1 s windows · ~0.2 s scoring cadence', graphic: 'face'
     },
     decider: {
-      phase: 2, category: 'BOUNDED DECISIONS', name: 'Strands Decider 12B',
-      runtime: 'Gemma 4 base + adapter · local GPU service',
+      phase: 2, category: 'BOUNDED DECISIONS', name: 'Strands Decider 2B',
+      runtime: 'Gemma base + adapter · local CPU service',
       how: 'Answers typed questions with scored options: actionable intent, action kind, owner and sensitivity.',
       why: 'Inspectable choices instead of free-form action text. Routes only uncertain cases to the local LLM.',
       fact: 'p ≥ .60 → policy · .40 ≤ p < .60 → Qwen\np < .40 → normally no action', graphic: 'choices'
     },
     qwen: {
-      phase: 3, category: 'LOCAL GENERATION', name: 'Qwen3.6 35B-A3B',
-      runtime: 'NVFP4 · vLLM · GPU · sparse experts',
-      how: 'Activates a subset of experts to generate tool proposals and answers grounded in retained meeting text.',
-      why: '35B model capacity with ~3B active parameters. Quantization reduces the weight footprint.',
+      phase: 3, category: 'LOCAL GENERATION', name: 'Qwen3-8B',
+      runtime: '4-bit · LM Studio · Metal GPU',
+      how: 'Generates tool proposals and answers grounded in retained meeting text, on demand.',
+      why: 'A compact 8B model. 4-bit quantization keeps the weight footprint small for 32 GB unified memory.',
       fact: 'On-demand reasoning · every action still meets policy', graphic: 'experts'
     }
   };
   const originalNotes = [
     ['The vision',
       'LocoCisco is a local-first, privacy-driven smart office system. The first use case is the meeting room: speech and computer vision provide context, a bounded Decider identifies what matters, and a local language model generates proposals and grounded answers.',
-      'Advance twice: reveal local/private/office-aware pillars and captions, then useful follow-through. Emphasize that the intelligence runs on a Dell edge box without a wake word or required cloud inference.',
+      'Advance twice: reveal local/private/office-aware pillars and captions, then useful follow-through. Emphasize that the intelligence runs on a Mac Studio without a wake word or required cloud inference.',
       'These are product capabilities and an architecture illustration. Generated items are proposals; real device and notification integrations are local previews in the current demo.'],
     ['Seven specialists, one pipeline',
-      'Advance through audio, vision, Decider, and generation plus policy. Click any model to explain its mechanism and the reason for its selection. Three CPU roles support four GPU roles.',
-      'Silero finds speech. Parakeet gives words; CAM++ gives anonymous voices. YuNet tracks faces; Light-ASD combines audio and face motion. Code fuses the evidence. Decider 12B asks bounded questions; Qwen generates only when needed or explicitly asked.',
+      'Advance through audio, vision, Decider, and generation plus policy. Click any model to explain its mechanism and the reason for its selection. Most roles run on CPU; the Metal GPU runs on-demand generation via LM Studio.',
+      'Silero finds speech. Parakeet gives words; CAM++ gives anonymous voices. YuNet tracks faces; Light-ASD combines audio and face motion. Code fuses the evidence. Decider 2B asks bounded questions; Qwen generates only when needed or explicitly asked.',
       'Decider ≥0.60 routes directly to policy, 0.40–0.60 may escalate, and <0.40 normally produces no action. These are routing thresholds, not calibrated accuracy. Captions do not wait for Decider. VLM, TTS and a second Decider are disabled.'],
-    ['The Dell advantage',
-      'This is the Dell Pro Max with NVIDIA GB10 and 128 GB unified memory. The architecture puts small continuous models on CPU and heavy inference on GPU. We reuse loaded services rather than reloading weights for every request.',
-      'Advance to discuss quantization and Qwen’s sparse experts, then reveal actual measurements: 44.8 ms average ASR request and 339.6 ms p95 from speech end to segment publication.',
+    ['The Mac advantage',
+      'This is the Mac Studio (Apple M1 Max) with 32 GB unified memory. The architecture puts small continuous models on CPU and on-demand generation on the Metal GPU via LM Studio. We reuse loaded services rather than reloading weights for every request.',
+      'Advance to discuss quantization and compact local generation, then reveal measurements taken on the original GB10 hardware: 44.8 ms average ASR request and 339.6 ms p95 from speech end to segment publication.',
       'Measured in a 30.08-second official-source review with five speech segments. Seven roles were ready; zero sensor errors were reported. These are sensor timings, not completed decision latency. The review dropped frames and is not proof of spare capacity or production throughput.'],
     ['The commercial opportunity',
-      'The commercial direction is an edge appliance that can replace traditional Cisco room hardware over time: Dell hardware, LocoCisco software, deployment and support. Start with privacy-conscious teams modernizing one meeting room.',
+      'The commercial direction is an edge appliance that can replace traditional Cisco room hardware over time: owned edge hardware, LocoCisco software, deployment and support. Start with privacy-conscious teams modernizing one meeting room.',
       'Advance to reveal upgradeable software, then the cost thesis: consolidate models on owned compute, reuse suitable room peripherals and avoid metered cloud inference for the core workflow.',
       'Lower total cost is an ambition, not a quoted saving. There is no Cisco pricing study, validated replacement qualification, production SLA or proven multi-room capacity in this project. Off-record does not erase original or already-exported recordings.'],
     ['The demo',
@@ -155,7 +155,7 @@
     if (kind === 'voices') return '<svg viewBox="0 0 300 60"><circle cx="36" cy="27" r="20"/><circle cx="128" cy="27" r="20"/><circle cx="220" cy="27" r="20"/><text x="30" y="32" fill="currentColor" stroke="none" font-size="14">A</text><text x="122" y="32" fill="currentColor" stroke="none" font-size="14">B</text><text x="214" y="32" fill="currentColor" stroke="none" font-size="14">C</text><path d="M62 27h40m51 0h41" stroke-dasharray="3 4"/></svg>';
     if (kind === 'face') return '<svg viewBox="0 0 300 60"><path d="M15 19V7h17m44 0h17v12M15 39v12h17m44 0h17V39"/><ellipse cx="54" cy="28" rx="14" ry="19"/><path d="M49 34q5 5 10 0M110 28h40m20-6v12m7-19v26m7-34v42m7-29v18m7-16v14m7-23v31m7-21v13m7-26v39m7-29v19"/></svg>';
     if (kind === 'choices') return '<svg viewBox="0 0 300 60"><rect x="0" y="4" width="189" height="10" rx="4" fill="currentColor" opacity=".6" stroke="none"/><rect x="0" y="25" width="98" height="10" rx="4" fill="currentColor" opacity=".3" stroke="none"/><rect x="0" y="46" width="39" height="10" rx="4" fill="currentColor" opacity=".15" stroke="none"/><path d="m213 9 5 5 9-10"/></svg>';
-    return '<span class="graphic-label">35B → ~3B active</span>';
+    return '<span class="graphic-label">Qwen3-8B · 4-bit</span>';
   }
   function selectModel(key, withAnimation = true) {
     const model = models[key]; if (!model) return;

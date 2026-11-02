@@ -1,10 +1,11 @@
 # Light-ASD runtime deps that are NOT in requirements/*.txt on purpose, because each needs its own source:
-#   torch: the build depends on the machine. Dev box (x86_64, CPU):
-#       uv pip install --python .venv/bin/python "torch==2.14.1+cpu" --index-url https://download.pytorch.org/whl/cpu
-#   GB10 (aarch64, CUDA 13): restore.sh installs torch==2.14.1+cu130 from the USB's wheels/torch-cu130
-#       (online: --index-url https://download.pytorch.org/whl/cu130). Kept out of requirements/*.txt so the USB's
-#       aarch64 wheelhouse never pulls a second, PyPI torch build next to the cu130 one.
-#   python_speech_features: sdist only on PyPI (pure python, MIT); prepare.sh builds a py3-none-any wheel of it into
-#       wheels/sdist, because the aarch64 wheelhouse is downloaded with --only-binary=:all:.
+#   torch: the build depends on the machine.
+#       Mac Studio (Apple Silicon, arm64): `uv pip install "torch==2.14.1"` installs the default macOS arm64
+#           wheel from PyPI. That build runs on the CPU and on the Apple M1 Max GPU via Metal (MPS); there is
+#           no CUDA index and no USB wheelhouse on the Mac target -- the plain PyPI wheel is the right one.
+#       Dev box (x86_64, CPU):
+#           uv pip install --python .venv/bin/python "torch==2.14.1+cpu" --index-url https://download.pytorch.org/whl/cpu
+#   python_speech_features: sdist only on PyPI (pure python, MIT); `uv pip install python_speech_features==0.6`
+#       builds it from that sdist.
 torch==2.14.1
 python_speech_features==0.6

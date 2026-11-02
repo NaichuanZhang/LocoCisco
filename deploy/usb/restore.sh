@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Legacy — NVIDIA GB10 only. The Mac Studio path is deploy/mac/. Retained for reference.
 # deploy/usb/restore.sh [USB_DIR] [--dry-run] [--verify] [--skip-images] [--native-decider]
 #
 # On the GB10, first thing after 00-preflight.sh. Everything goes to the user's home (no sudo):

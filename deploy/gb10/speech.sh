@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Legacy — NVIDIA GB10 only. The Mac Studio path is deploy/mac/. Retained for reference.
 # deploy/gb10/speech.sh asr|tts|all [--dry-run] [--stop] [--status]
 #
 # NVIDIA NeMo-Speech.cpp 0.2.0 (C++ runtime on ggml; arm64 + CUDA 13 build made for DGX Spark), loopback only.

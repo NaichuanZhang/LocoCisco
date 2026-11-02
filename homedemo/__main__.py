@@ -1,11 +1,14 @@
 """Run the demo: python -m homedemo [--port 8780] [--mode cascade|2b|12b|fake] [--escalate bedrock|12b|llm]
-                        [--profile dev|dev-local|gb10|fake] [--decider-2b-url http://127.0.0.1:8765]
+                        [--profile dev|dev-local|mac|fake] [--decider-2b-url http://127.0.0.1:8765]
                         [--trace traces/run.jsonl]
+
+Legacy / separate app: homedemo is a standalone smart-home demo with its own dev/Bedrock story; it is
+not the Mac Studio meeting-room target. The `gb10` profile was renamed `mac` in config/models.toml.
 
 The deciders come from the models registry (config/models.toml, --profile / UNSPOKEN_PROFILE). In cascade
 mode the Decider 2B answers first; when it is unsure, --escalate picks who decides: Claude Haiku 4.5 on
 Amazon Bedrock (default; AWS profile from Settings.bedrock_profile), the local 12B, or "llm" = the profile's
-llm role (a local Qwen on llama.cpp / vLLM in dev-local and gb10). The 12B server may be stopped: it is only
+llm role (a local Qwen on llama.cpp / vLLM in dev-local and mac). The 12B server may be stopped: it is only
 health-checked when it is needed as a fallback.
 
 Binds to 127.0.0.1 only (the UI has no auth by design). View it from a laptop with

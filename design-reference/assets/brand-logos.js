@@ -1,6 +1,9 @@
+// FLAG (legacy brand art): this file holds the REAL Dell and NVIDIA vector marks used by the
+// finale's partner reveal and the Dell box badge. The shapes cannot be text-neutralized; a
+// designer should replace or remove this brand-partner reveal for the Mac Studio target.
 // Real brand marks for the intro's "Dell × NVIDIA" label and the Dell box's badge, sanitised
 // to plain <g>/<path> markup from Wikimedia Commons (File:Dell_Logo.svg, File:NVIDIA_logo.svg).
-// Dell and NVIDIA are trademarks of their owners; they are used here only to name the hackathon partners.
+// Dell and NVIDIA are trademarks of their owners; they are used here only to name the original hackathon partners.
 (function (root) {
   root.BRANDS = {
   "dell": {

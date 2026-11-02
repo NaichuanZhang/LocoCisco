@@ -8,15 +8,15 @@ Resolution order (first wins):
 
 TOML shape (every profile is a table under [profiles]):
 
-    [profiles.gb10]
+    [profiles.mac]
     local_only = true                 # refuse any provider that is not on this box or its LAN
     extends = "dev"                   # optional: start from another profile's role blocks
 
-    [profiles.gb10.llm]               # one block per role (unspoken.contracts.ROLES)
+    [profiles.mac.llm]                # one block per role (unspoken.contracts.ROLES)
     provider = "openai"               # see unspoken/models/providers.py
-    url = "http://127.0.0.1:8000/v1"
-    model = "nvidia/Qwen3.6-35B-A3B-NVFP4"
-    label = "Qwen3.6 35B-A3B on vLLM"
+    url = "http://localhost:1234/v1"
+    model = "qwen3-8b"
+    label = "Qwen3-8B (4-bit) on LM Studio"
     options = { max_tokens = 300 }    # provider-specific keys, passed through as RoleSpec.options
 
 Unknown roles, unknown keys in a role block, and malformed overrides raise ConfigError with the file,

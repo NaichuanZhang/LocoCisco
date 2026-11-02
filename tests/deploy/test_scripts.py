@@ -1,5 +1,7 @@
-"""deploy/gb10 and deploy/usb: every script parses, shellchecks (when shellcheck is installed) and dry-runs
-cleanly with no GPU, no docker daemon, no model servers and no network. Live checks need UNSPOKEN_LIVE=1."""
+"""deploy/mac (the active Mac Studio path), and the legacy deploy/gb10 + deploy/usb: every script parses,
+shellchecks (when shellcheck is installed) and dry-runs cleanly with no GPU, no docker daemon, no model
+servers and no network. The gb10/usb scripts are kept for reference (legacy-bannered) and are still exercised
+while they are present. Live checks need UNSPOKEN_LIVE=1."""
 from __future__ import annotations
 
 import json
@@ -14,9 +16,14 @@ from pathlib import Path
 import pytest
 
 ROOT = Path(__file__).resolve().parents[2]
+MAC = ROOT / "deploy" / "mac"
 GB10 = ROOT / "deploy" / "gb10"
 USB = ROOT / "deploy" / "usb"
-SCRIPTS = sorted(GB10.glob("*.sh")) + sorted(USB.glob("*.sh"))
+GB10_PRESENT = GB10.is_dir()
+MAC_SCRIPTS = sorted(MAC.glob("*.sh"))
+# All scripts covered by the static checks: the active mac path plus the legacy dirs while they remain.
+SCRIPTS = MAC_SCRIPTS + sorted(GB10.glob("*.sh")) + sorted(USB.glob("*.sh"))
+needs_gb10 = pytest.mark.skipif(not GB10_PRESENT, reason="legacy deploy/gb10 removed")
 LIVE = os.environ.get("UNSPOKEN_LIVE") == "1"
 
 
@@ -60,12 +67,78 @@ def test_everything_binds_loopback() -> None:
 
 
 def test_no_secrets_in_tree() -> None:
-    for p in list(GB10.rglob("*")) + list(USB.rglob("*")):
+    for p in list(MAC.rglob("*")) + list(GB10.rglob("*")) + list(USB.rglob("*")):
         if p.is_file() and p.suffix in {".sh", ".py", ".txt", ".json"}:
             assert not re.search(r"hf_[A-Za-z0-9]{30,}|sk-[A-Za-z0-9]{20,}|xox[bp]-", p.read_text()), p
 
 
-# ----------------------------------------------------------------------------- gb10 dry runs
+# ----------------------------------------------------------------------------- mac dry runs
+def test_mac_decider_2b_native_dry_run(box: dict[str, str]) -> None:
+    """The Mac decider runs `strands-decider serve` natively (no container, no GPU) on :8765, loopback only."""
+    r = sh([str(MAC / "decider.sh"), "2b", "--dry-run"], env=box)
+    out = r.stdout + r.stderr
+    for needle in ("strands-decider", "serve", "--model decider-2b", "--host 127.0.0.1", "--port 8765", "nohup"):
+        assert needle in out, f"missing {needle!r} in\n{out}"
+    # the mac path never touches Docker / NVIDIA / vLLM
+    assert "docker" not in out and "--gpus" not in out
+    assert "nvidia" not in out.lower() and "vllm" not in out.lower() and "cuda" not in out.lower()
+
+
+def test_mac_decider_honours_port_override(box: dict[str, str]) -> None:
+    r = sh([str(MAC / "decider.sh"), "2b", "--dry-run"], env=dict(box, DECIDER_PORT="18765"))
+    out = r.stdout + r.stderr
+    assert "--port 18765" in out
+
+
+def test_mac_decider_rejects_12b(box: dict[str, str]) -> None:
+    """No 12B decider on the Mac (32 GB): decider.sh exits 2 like the gb10 bad-size path."""
+    r = sh([str(MAC / "decider.sh"), "12b", "--dry-run"], env=box, ok=False)
+    assert r.returncode == 2
+
+
+def test_mac_preflight_dry_run(box: dict[str, str]) -> None:
+    r = sh([str(MAC / "00-preflight.sh"), "--dry-run"], env=box)
+    out = r.stdout + r.stderr
+    assert "arm64" in out                                    # the required Apple-Silicon arch
+    assert "http://localhost:1234/v1/models" in out          # LM Studio reachability probe
+    assert "8765" in out and "8780" in out                   # the ports it reports on
+    assert "nvidia-smi" not in out and "--gpus" not in out and "docker" not in out
+
+
+def test_mac_check_dry_run(box: dict[str, str]) -> None:
+    r = sh([str(MAC / "check.sh"), "--dry-run"], env=box)
+    out = r.stdout + r.stderr
+    assert "UNSPOKEN_PROFILE=mac" in out
+    assert "unspoken.models check" in out
+    assert "unspoken.sensors.check" in out and "HF_HUB_OFFLINE=1" in out
+    assert "http://localhost:1234/v1/models" in out          # llm probe
+    assert ":8765/health" in out                             # decider probe
+
+
+def test_mac_up_dry_run(box: dict[str, str]) -> None:
+    r = sh([str(MAC / "up.sh"), "--dry-run"], env=box)
+    out = r.stdout + r.stderr
+    for step in ("1/4 preflight", "2/4 LM Studio", "3/4 decider 2B", "4/4 check"):
+        assert step in out, f"missing step {step!r} in\n{out}"
+    assert "UNSPOKEN_PROFILE=mac" in out                     # check.sh ran under the mac profile
+    assert "http://localhost:1234/v1/models" in out          # LM Studio probe (never launches the GUI)
+    assert "docker" not in out and "vllm" not in out.lower() and "--gpus" not in out
+
+
+def test_mac_down_dry_run(box: dict[str, str]) -> None:
+    r = sh([str(MAC / "down.sh"), "--dry-run"], env=box)
+    out = r.stdout + r.stderr
+    assert "decider" in out                                  # stops the native decider
+    assert "docker" not in out
+
+
+def test_mac_up_creates_no_files_in_dry_run(box: dict[str, str], tmp_path: Path) -> None:
+    sh([str(MAC / "up.sh"), "--dry-run"], env=box)
+    assert not (tmp_path / "logs").exists() and not (tmp_path / "state").exists()
+
+
+# ----------------------------------------------------------------------------- gb10 dry runs (legacy)
+@needs_gb10
 def test_decider_12b_docker_dry_run(box: dict[str, str]) -> None:
     r = sh([str(GB10 / "decider.sh"), "12b", "--dry-run"], env=box)
     out = r.stdout + r.stderr
@@ -77,6 +150,7 @@ def test_decider_12b_docker_dry_run(box: dict[str, str]) -> None:
     assert "cuda=" in out  # the torch sanity line in the entry script
 
 
+@needs_gb10
 def test_decider_2b_native_cpu_dry_run(box: dict[str, str]) -> None:
     env = dict(box, DECIDER_RUNTIME="native", DECIDER_DEVICE="cpu", DECIDER_PORT="18765", DECIDER_BIN="/nonexistent/strands-decider")
     r = sh([str(GB10 / "decider.sh"), "2b", "--dry-run"], env=env)
@@ -85,11 +159,13 @@ def test_decider_2b_native_cpu_dry_run(box: dict[str, str]) -> None:
     assert "docker" not in out.split("+ nohup", 1)[1]
 
 
+@needs_gb10
 def test_decider_rejects_bad_size(box: dict[str, str]) -> None:
     r = sh([str(GB10 / "decider.sh"), "7b", "--dry-run"], env=box, ok=False)
     assert r.returncode == 2
 
 
+@needs_gb10
 def test_speech_dry_run(box: dict[str, str]) -> None:
     r = sh([str(GB10 / "speech.sh"), "all", "--dry-run"], env=box)
     out = r.stdout + r.stderr
@@ -102,6 +178,7 @@ def test_speech_dry_run(box: dict[str, str]) -> None:
     assert "nemotron-3.5-asr-streaming-0.6b.q8_0.gguf" in out and "--diar-model" not in out
 
 
+@needs_gb10
 def test_vllm_dry_run(box: dict[str, str]) -> None:
     r = sh([str(GB10 / "vllm.sh"), "--dry-run"], env=box)
     out = r.stdout + r.stderr
@@ -114,6 +191,7 @@ def test_vllm_dry_run(box: dict[str, str]) -> None:
     assert "--speculative-config" not in out and "--gpu-memory-utilization 0.35" in out
 
 
+@needs_gb10
 @pytest.mark.parametrize("args", [["up.sh", "--with-2b"], ["down.sh"], ["status.sh"], ["check.sh"], ["00-preflight.sh"], ["down.sh", "--all"]],
                          ids=lambda a: " ".join(a))
 def test_orchestration_dry_runs(box: dict[str, str], args: list[str]) -> None:
@@ -128,6 +206,7 @@ def test_orchestration_dry_runs(box: dict[str, str], args: list[str]) -> None:
         assert "unspoken-decider-12b" in out and ":8765" in out
 
 
+@needs_gb10
 def test_up_creates_no_files_in_dry_run(box: dict[str, str], tmp_path: Path) -> None:
     sh([str(GB10 / "up.sh"), "--dry-run"], env=box)
     assert not (tmp_path / "logs").exists() and not (tmp_path / "state").exists()
@@ -298,29 +377,31 @@ def test_apt_resolver_offline(monkeypatch: pytest.MonkeyPatch) -> None:
 
 
 # ----------------------------------------------------------------------------- docs
-def test_models_toml_gb10_matches_the_deploy_ports() -> None:
-    """The gb10 profile in config/models.toml (the source of truth HACKDAY.md points at) uses the ports the
-    deploy scripts serve, loopback only, and names sensors factories that exist."""
+def test_models_toml_mac_matches_the_deploy_ports() -> None:
+    """The mac profile in config/models.toml uses the endpoints the deploy/mac scripts serve, loopback /
+    localhost only, and names sensor factories that exist."""
     import tomllib
-    gb10 = tomllib.loads((ROOT / "config" / "models.toml").read_text())["profiles"]["gb10"]
-    assert gb10.get("local_only") is True
-    assert gb10["decider"]["url"] == "http://127.0.0.1:8765" and gb10["decider"]["provider"] == "strands-decider"
-    assert gb10["llm"]["url"] == "http://127.0.0.1:8000/v1" and gb10["llm"]["model"] == "nvidia/Qwen3.6-35B-A3B-NVFP4"
-    assert gb10["asr"]["url"] == "http://127.0.0.1:8770/v1" and gb10["asr"]["provider"] == "openai-audio"
-    assert gb10["tts"]["url"] == "http://127.0.0.1:8771/v1" and gb10["tts"]["provider"] == "openai-speech"
-    for role, block in gb10.items():
+    mac = tomllib.loads((ROOT / "config" / "models.toml").read_text())["profiles"]["mac"]
+    assert mac.get("local_only") is True
+    assert mac["decider"]["url"] == "http://127.0.0.1:8765" and mac["decider"]["provider"] == "strands-decider"
+    assert mac["llm"]["url"] == "http://localhost:1234/v1" and mac["llm"]["model"] == "qwen3-8b"
+    # ASR is the in-process onnx-asr Parakeet provider (CPU), not an HTTP server: no :8770 url any more.
+    assert mac["asr"]["provider"] == "python:unspoken.transcribe.asr_parakeet:ParakeetASR"
+    assert "url" not in mac["asr"]
+    # No TTS server on the Mac target.
+    assert mac["tts"]["provider"] == "none" and "url" not in mac["tts"]
+    # Any role that does expose a url is loopback / localhost only.
+    for role, block in mac.items():
         if isinstance(block, dict) and "url" in block:
-            assert block["url"].startswith("http://127.0.0.1:"), role
-    providers = {r: gb10[r]["provider"] for r in ("vad", "diarization", "faces", "asd")}
-    # the winners of the per-person transcriber test (docs/TRANSCRIBE.md); Light-ASD on the GPU needs wheels/torch-cu130
+            assert block["url"].startswith(("http://127.0.0.1:", "http://localhost:")), role
+    providers = {r: mac[r]["provider"] for r in ("vad", "diarization", "faces", "asd")}
+    # the winners of the per-person transcriber test (docs/TRANSCRIBE.md), all on the CPU on the Mac
     assert providers == {"vad": "python:unspoken.sensors.vad:SileroVAD",
                          "diarization": "python:unspoken.transcribe.diar:OnlineWindowDiarizer",
                          "faces": "python:unspoken.sensors.faces:YuNetFaces",
                          "asd": "python:unspoken.transcribe.asd_live:LightASDLive"}
-    assert gb10["asd"]["options"]["device"] == "cuda"
-    fallback = "python:unspoken.sensors.asr_local:FasterWhisperASR"
-    assert fallback in (ROOT / "docs" / "HACKDAY.md").read_text()      # the CPU ASR fallback is documented
-    for prov in list(providers.values()) + [fallback]:
+    assert mac["asd"]["options"]["device"] == "cpu"
+    for prov in list(providers.values()) + [mac["asr"]["provider"]]:
         mod, _, cls = prov.removeprefix("python:").partition(":")
         assert f"class {cls}" in (ROOT / (mod.replace(".", "/") + ".py")).read_text(), prov
 

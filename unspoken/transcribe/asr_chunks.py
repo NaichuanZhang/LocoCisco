@@ -12,7 +12,7 @@ import numpy as np
 from ..sensors.audio import SAMPLE_RATE, float_to_pcm16
 from ..sensors.vad import WINDOW, SileroVAD
 
-# The live pipeline's VAD settings (config/models.toml dev-sensors / gb10 profiles + vad.py defaults).
+# The live pipeline's VAD settings (config/models.toml dev-sensors / mac profiles + vad.py defaults).
 LIVE_VAD = {"threshold": 0.5, "hysteresis": 0.15, "min_speech_ms": 250, "min_silence_ms": 500, "pad_ms": 200,
             "max_segment_s": 20.0}
 

@@ -33,9 +33,9 @@
     { id: 'transcription', key: 't', label: 'Transcription', icon: 'wave', title: 'Speech to text, a moment behind the room',
       desc: 'Silero VAD finds speech, Parakeet streams partial text and fixes it, and CAM++ tells the voices apart.' },
     { id: 'decisions', key: 'd', label: 'Decisions', icon: 'route', title: 'What to do with what was said',
-      desc: 'Rules run first. The 12B Decider proposes an action; Qwen 35B is asked only when the Decider is unsure.' },
+      desc: 'Rules run first. The 2B Decider proposes an action; Qwen3-8B is asked only when the Decider is unsure.' },
     { id: 'pipeline', key: 'p', label: 'Pipeline', icon: 'chip', title: 'Everything runs on one machine in the room',
-      desc: 'One media clock drives every model on the GB10. Only an approved Discord post ever leaves the room.' },
+      desc: 'One media clock drives every model on the Mac Studio. Only an approved Discord post ever leaves the room.' },
   ];
 
   // ---- one outline icon family (24 px grid, 1.8 stroke) — same paths as the dashboard ----
@@ -342,7 +342,7 @@
   }
   function renderVision() {
     const t = st.t, f = Math.floor(t * CFG.frameRate), off = offAt(t), L = st.layers;
-    put($('#head-vision'), headHtml(VIEWS[0], [['YuNet', 'CPU · every frame'], ['Light-ASD', 'GPU · 25 fps'], ['Tracked', '4 faces · 5 seats']]));
+    put($('#head-vision'), headHtml(VIEWS[0], [['YuNet', 'CPU · every frame'], ['Light-ASD', 'CPU · 25 fps'], ['Tracked', '4 faces · 5 seats']]));
     $('#seatLayer').classList.toggle('is-hidden', !L.seats || off);
     $('#lmLayer').classList.toggle('is-hidden', !L.landmarks || off);
     const det = $('#detLayer');
@@ -450,7 +450,7 @@
       }).join('');
       revs = rows;
     }
-    put($('#transcriptCard'), `<div class="card-h">${head('Live transcript', 'Parakeet TDT 0.6B · local GPU')}</div><div class="card-b"><div class="now">${now}</div>` +
+    put($('#transcriptCard'), `<div class="card-h">${head('Live transcript', 'Parakeet TDT 0.6B · local CPU')}</div><div class="card-b"><div class="now">${now}</div>` +
       `<div class="revs-h">How the line was refined<span>partials every ${X.asr.chunk} s · final ${X.asr.lag} s after speech</span></div><div class="revs">${revs || '<div class="rev"><span class="at"></span><span class="kind faint">—</span><span class="txt faint">Partial guesses appear while someone speaks</span></div>'}</div></div>`);
 
     // voice map readout
@@ -585,7 +585,7 @@
   function renderDecisions() {
     const t = st.t, d = decAt(t), R = d ? replayOf(d, t) : null, route = d ? routeOf(d) : null;
     const n = S.decisions.filter((x) => x.t <= t).length;
-    put($('#head-decisions'), headHtml(VIEWS[2], [['Decider 12B', '~390 ms'], ['Thresholds', '0.40 / 0.60'], ['Decisions', String(n)]]));
+    put($('#head-decisions'), headHtml(VIEWS[2], [['Decider 2B', '~390 ms'], ['Thresholds', '0.40 / 0.60'], ['Decisions', String(n)]]));
     put($('#cascadeHead'), head('Decision cascade', d ? `${esc(d.title)} · replayed slowly · real time ${d.total} ms` : 'every final caption is checked here'));
     const S_ = (k) => stateIn(R, k);
     for (const k of Object.keys(CAS.nodes)) $('#n-' + k).className = 'node' + (k === 'ignore' ? ' node--pill' : '') + ' is-' + S_(k);
@@ -613,11 +613,11 @@
       json = `<span class="json">${jsonHtml(lines, ds === 'done' ? total : Math.floor(R.decider * total))}${ds === 'active' ? '<span class="cur"></span>' : ''}</span>`;
     }
     const tools = d && d.action === 'recap';
-    put($('#n-decider'), `<div class="node-h"><h3>${tools ? 'Room tools' : 'Strands Decider 12B'}</h3>${ms('decider')}</div><span class="sub">${tools ? 'list_items · recap' : 'Gemma 4 12B · structured output'}</span>${json}`, 'n-decider');
+    put($('#n-decider'), `<div class="node-h"><h3>${tools ? 'Room tools' : 'Strands Decider 2B'}</h3>${ms('decider')}</div><span class="sub">${tools ? 'list_items · recap' : 'Gemma 2B · structured output'}</span>${json}`, 'n-decider');
     put($('#n-ignore'), '&lt; 0.40 · ignore', 'n-ignore');
     // escalation
     const qs = S_('qwen'), qw = step('escalate');
-    put($('#n-qwen'), `<div class="node-h"><h3>Qwen3.6 35B</h3>${qs === 'done' && qw && qw.ms ? `<span class="ms">${qw.ms} ms</span>` : ''}</div><span class="sub">${tools ? 'writes the answer' : 'only for 0.40–0.60'}</span>` +
+    put($('#n-qwen'), `<div class="node-h"><h3>Qwen3-8B</h3>${qs === 'done' && qw && qw.ms ? `<span class="ms">${qw.ms} ms</span>` : ''}</div><span class="sub">${tools ? 'writes the answer' : 'only for 0.40–0.60'}</span>` +
       `<span class="res res--2">${qs === 'done' ? esc(qw.result) : qs === 'active' ? 'Taking a second look…' : qs === 'skip' ? 'Not needed' : 'A second look when unsure'}</span>`, 'n-qwen');
     // policy
     const ps = S_('policy'), pol = step('policy');
@@ -634,16 +634,16 @@
     let sent;
     if (!d) sent = 'Waiting for the first request.';
     else if (route === 'rule') sent = 'Not scored. A privacy phrase is matched by the rules before any model runs.';
-    else if (tools) sent = 'Not scored. A typed question goes to the room tools, and Qwen 35B writes the answer from the meeting notes.';
+    else if (tools) sent = 'Not scored. A typed question goes to the room tools, and Qwen3-8B writes the answer from the meeting notes.';
     else if (!shown) sent = 'The Decider is reading the line…';
     else if (route === 'act') sent = `<b>${dec.conf.toFixed(2)}</b> is above 0.60, so the proposed action goes straight to policy.`;
-    else if (route === 'escalate') sent = `<b>${dec.conf.toFixed(2)}</b> is between 0.40 and 0.60, so Qwen 35B takes a second look.`;
+    else if (route === 'escalate') sent = `<b>${dec.conf.toFixed(2)}</b> is between 0.40 and 0.60, so Qwen3-8B takes a second look.`;
     else sent = `<b>${dec.conf.toFixed(2)}</b> is below 0.40. No action, nothing sent.`;
     put($('#confCard'), `<div class="card-h">${head('Confidence', d ? esc(d.title) : '')}</div><div class="card-b">` +
       `<div class="gauge-wrap"><div class="gauge"><span class="z1"></span><span class="z2"></span><span class="z3"></span></div>` +
       `<span class="gauge-marker" style="left:${shown ? dec.conf * 100 : 0}%;opacity:${shown ? 1 : 0}"><span class="gauge-val">${shown ? dec.conf.toFixed(2) : ''}</span></span></div>` +
       `<div class="gauge-axis"><span>Ignore</span><span>Escalate</span><span>Act</span></div><div class="gauge-ticks"><span>0</span><span>0.40</span><span>0.60</span><span>1</span></div>` +
-      `<span class="gauge-sent">${sent}</span><span class="foot">0.40 and 0.60 are the prototype’s starting thresholds, not values calibrated for the 12B model.</span></div>`);
+      `<span class="gauge-sent">${sent}</span><span class="foot">0.40 and 0.60 are the prototype’s starting thresholds, not values calibrated for the 2B model.</span></div>`);
 
     // decision stream
     put($('#streamHead'), head('Every decision so far', `<span class="dotk" style="background:${C.green}"></span>act <span class="dotk" style="background:${C.warn}"></span>escalated <span class="dotk" style="background:${C.neutral}"></span>ignored`));
@@ -653,7 +653,7 @@
     let lat;
     if (!d) lat = '<span class="wf-empty">Latency for each decision appears here.</span>';
     else {
-      const parts = [['rules', 'Rules', C.t3], ['decider', tools ? 'Room tools' : 'Decider 12B', C.blue], ['escalate', 'Qwen 35B', C.warn], ['policy', 'Policy', C.green]];
+      const parts = [['rules', 'Rules', C.t3], ['decider', tools ? 'Room tools' : 'Decider 2B', C.blue], ['escalate', 'Qwen3-8B', C.warn], ['policy', 'Policy', C.green]];
       const bar = parts.map(([k, , col]) => { const s = step(k); return s && !s.skipped && s.ms ? `<i style="width:${(s.ms / d.total) * 100}%;background:${col}"></i>` : ''; }).join('');
       const rows = parts.map(([k, label]) => { const s = step(k); const skip = !s || s.skipped || !s.ms; return `<div class="lat-row${skip ? ' is-skip' : ''}"><b>${label}</b><span>${skip ? 'skipped' : s.ms + ' ms'}</span></div>`; }).join('');
       let sum = '';
@@ -754,12 +754,12 @@
     const d = decAt(t), R = d ? replayOf(d, t) : null, rs = (k) => stateIn(R, k);
     const row = (k, label, val) => { const s = rs(k); return `<div class="step-row${s === 'active' ? ' is-on' : s === 'skip' ? ' is-skip' : ''}"><b>${label}</b><span>${s === 'skip' ? 'skipped' : s === 'done' || s === 'active' ? val : '—'}</span></div>`; };
     let decH = '<h3>Decide</h3><span class="sub">rules first, then models</span>';
-    if (!d) decH += '<span class="dec-title faint">Waiting for a request</span>' + ['Rules', 'Decider 12B', 'Qwen 35B', 'Policy'].map((l) => `<div class="step-row"><b>${l}</b><span>—</span></div>`).join('');
+    if (!d) decH += '<span class="dec-title faint">Waiting for a request</span>' + ['Rules', 'Decider 2B', 'Qwen3-8B', 'Policy'].map((l) => `<div class="step-row"><b>${l}</b><span>—</span></div>`).join('');
     else {
       const ds = stepOf(d, 'decider'), es = stepOf(d, 'escalate'), po = stepOf(d, 'policy');
       decH += `<span class="dec-title">${esc(d.title)}</span>` + row('rules', 'Rules', stepOf(d, 'rules').ms + ' ms') +
-        row('decider', d.action === 'recap' ? 'Room tools' : 'Decider 12B', ds.conf !== undefined ? ds.conf.toFixed(2) + ' · ' + ds.ms + ' ms' : (ds.ms || 0) + ' ms') +
-        row('qwen', 'Qwen 35B', (es.ms || 0) + ' ms') + row('policy', 'Policy', esc(po.result));
+        row('decider', d.action === 'recap' ? 'Room tools' : 'Decider 2B', ds.conf !== undefined ? ds.conf.toFixed(2) + ' · ' + ds.ms + ' ms' : (ds.ms || 0) + ' ms') +
+        row('qwen', 'Qwen3-8B', (es.ms || 0) + ' ms') + row('policy', 'Policy', esc(po.result));
     }
     put($('#sb-dec'), decH, 'sb-dec');
     // act
@@ -798,7 +798,7 @@
       else if (feed) out = wrow('Discord post', 0, null, '', 0, '', feed.status === 'approval' ? 'awaits approval' : 'sending');
       else if (dev && dev.t <= t) out = wrow('Device confirmed', onScreen, dev.t - end, C.neutral, 0, '', (dev.t - end).toFixed(1) + ' s');
       wf = '<div class="wf">' + wrow('Speech end → final caption', 0, X.asr.lag, C.blue, X.targets.caption, 'p95 ≤ 2 s', X.asr.lag.toFixed(1) + ' s') +
-        wrow('Rules + Decider 12B', X.asr.lag, onScreen, C.purple, 0, '', cm.total + ' ms') +
+        wrow('Rules + Decider 2B', X.asr.lag, onScreen, C.purple, 0, '', cm.total + ' ms') +
         wrow(cm.action === 'create_task' ? 'Task card on screen' : cm.action === 'record_decision' ? 'Decision in the notes' : 'Result on screen', onScreen - 0.03, onScreen, C.green, cm.action === 'create_task' ? X.targets.card : 0, '≤ 3 s', onScreen.toFixed(1) + ' s') +
         out + `<div class="wf-axis"><span></span><div class="wf-ticks">${[0, 1, 2, 3].map((v) => `<span style="left:${pc(v)}%">${v} s</span>`).join('')}</div><span></span></div></div>`;
       const pr = S.decisions.find((x) => x.action === 'off_record' && x.t <= t);
@@ -810,7 +810,7 @@
     const segs = M.parts.map((p) => `<i style="width:${(p.gb / M.total) * 100}%;background:${C[p.tone]}" title="${esc(p.label)}"></i>`).join('') + '<i class="unk" style="width:12%"></i>';
     const leg = M.parts.map((p) => `<span><i class="dotk" style="background:${C[p.tone]}"></i><b>${esc(p.label)}</b><em>≈ ${p.gb} ${p.unit}</em></span>`).join('') +
       `<span><i class="dotk" style="background:${C.s3}"></i><b>OS, perception, browser</b><em>measure</em></span>`;
-    put($('#memCard'), `<div class="card-h">${head('Memory budget', `GB10 · ${M.total} GB unified · planning estimates`)}</div><div class="card-b"><div class="mem-bar">${segs}</div><div class="mem-legend">${leg}</div>` +
+    put($('#memCard'), `<div class="card-h">${head('Memory budget', `Mac Studio · ${M.total} GB unified · planning estimates`)}</div><div class="card-b"><div class="mem-bar">${segs}</div><div class="mem-legend">${leg}</div>` +
       '<span class="foot">Estimates from the build spec, not measurements. Measure peak use with recording active before a take.</span></div>');
   }
 

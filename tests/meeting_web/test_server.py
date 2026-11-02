@@ -70,7 +70,7 @@ async def test_models_marks_local_targets(client: httpx.AsyncClient):
 
 def test_target_is_local():
     for t in ("in-process", "", "http://127.0.0.1:8765", "http://localhost:8000/v1", "http://[::1]:8000",
-              "http://192.168.1.20:8000/v1", "http://10.0.0.5:8000", "http://172.16.0.9:11434", "http://gb10.local:8000",
+              "http://192.168.1.20:8000/v1", "http://10.0.0.5:8000", "http://172.16.0.9:11434", "http://mac.local:8000",
               "/models/whisper-large-v3-turbo", "disabled"):
         assert web.target_is_local(t), t
     for t in ("https://bedrock-runtime.us-east-1.amazonaws.com", "https://api.openai.com/v1", "http://8.8.8.8:80",

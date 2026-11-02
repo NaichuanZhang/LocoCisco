@@ -1,7 +1,7 @@
 """FastAPI app for the room screen: the static page, a JSON API and a WebSocket stream of the bus.
 
 There is NO authentication on purpose: serve() refuses to bind to anything but a loopback address, so
-only processes on this machine (the kiosk browser on the GB10's HDMI out, or an ssh -L tunnel the user
+only processes on this machine (the kiosk browser on the Mac Studio's HDMI out, or an ssh -L tunnel the user
 opened) can reach it. The page itself makes no network request except to this server.
 
 The stream hub subscribes to the bus when the app is created, so call create_app() BEFORE the runtime
@@ -53,7 +53,7 @@ SNAPSHOT_MIN_INTERVAL = 0.2         # seconds -> at most 5 snapshots per second
 TELEMETRY_MIN_INTERVAL = 0.2        # video telemetry at most 5 Hz; completed segments send immediately
 HEARTBEAT_SECONDS = 15.0
 CLIENT_QUEUE_SIZE = 500
-DEFAULT_PORT = 8780                 # docs/PLAN.md: room screen + API on the GB10
+DEFAULT_PORT = 8780                 # docs/PLAN.md: room screen + API on the Mac Studio
 
 # Everything else on the meeting stream can contain speech, model requests/replies, notification
 # bodies or free-text diagnostics. Bus.retain controls history, NOT delivery to this subscriber.

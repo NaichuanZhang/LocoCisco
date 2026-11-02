@@ -3,7 +3,7 @@ PROFILE; code asks the registry for a role and never names a vendor. See docs/MO
 
     from unspoken.models import load_registry
     reg = load_registry()                        # profile: arg > UNSPOKEN_PROFILE > "dev"
-    reg = load_registry("gb10", overrides={"llm.url": "http://127.0.0.1:8000/v1"})
+    reg = load_registry("mac", overrides={"llm.url": "http://localhost:1234/v1"})
 
 Check every role from the shell:  python -m unspoken.models check [--profile P] [--roles a,b] [--json]
 """

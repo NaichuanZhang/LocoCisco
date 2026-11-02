@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Legacy — NVIDIA GB10 only. The Mac Studio path is deploy/mac/. Retained for reference.
 # Shared helpers for deploy/gb10/*.sh. Source it; do not run it.
 #
 #   source "$(dirname "$0")/lib.sh"

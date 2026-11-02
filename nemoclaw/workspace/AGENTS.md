@@ -1,5 +1,7 @@
 # AGENTS.md — how LocoCisco works a Discord channel
 
+> Legacy — NVIDIA NemoClaw tooling; not used on the Mac Studio target.
+
 Loaded every session. SOUL.md is who you are; this is what you do.
 
 ## Every turn

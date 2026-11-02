@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Legacy — NVIDIA GB10 only. The Mac Studio path is deploy/mac/. Retained for reference.
 # deploy/gb10/check.sh [--dry-run] [--roles decider,llm,asr] [--no-sensors]
 #
 # The one check command of the day: raw HTTP probes of every server, then

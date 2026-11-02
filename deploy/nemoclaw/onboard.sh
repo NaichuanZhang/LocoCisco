@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Legacy — NVIDIA GB10 only. The Mac Studio path is deploy/mac/. Retained for reference.
 # onboard.sh [--dry-run] [--profile <nemoclaw-profile-id>] [--model <slug>] [--tier restricted|balanced|open]
 #
 # Day-of step 1 on the GB10: create the NemoClaw sandbox "unspoken" with Discord enabled and inference on the

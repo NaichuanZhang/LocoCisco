@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Legacy — NVIDIA GB10 only. The Mac Studio path is deploy/mac/. Retained for reference.
 # deploy/gb10/vllm.sh [--dry-run] [--stop] [--status]
 #
 # Standalone vLLM for nvidia/Qwen3.6-35B-A3B-NVFP4 on 127.0.0.1:8000. Use it ONLY when the NemoClaw-managed

@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Legacy — NVIDIA GB10 only. The Mac Studio path is deploy/mac/. Retained for reference.
 """USB packing list for the LocoCisco GB10 deploy, and its size planner. Standard library only (runs on the
 laptop's stock python3, macOS or Linux, 3.9+).
 

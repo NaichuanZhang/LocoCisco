@@ -81,7 +81,7 @@ def build_parser() -> argparse.ArgumentParser:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--audio", required=True, help="WAV (16 kHz mono PCM16 preferred; others decoded via PyAV)")
     ap.add_argument("--video", help="MP4 (or anything OpenCV opens)")
-    ap.add_argument("--profile", default=None, help="registry profile (dev | gb10 | fake)")
+    ap.add_argument("--profile", default=None, help="registry profile (dev | mac | fake)")
     ap.add_argument("--local", action="store_true", help="force the in-process providers (no unspoken.models)")
     ap.add_argument("--config", default=None, help="config/sensors.toml path")
     ap.add_argument("--fast", action="store_true", help="do not pace to real time")

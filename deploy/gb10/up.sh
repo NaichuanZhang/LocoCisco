@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Legacy — NVIDIA GB10 only. The Mac Studio path is deploy/mac/. Retained for reference.
 # deploy/gb10/up.sh [--dry-run] [--no-vllm] [--no-tts] [--with-2b] [--no-check]
 #
 # Bring every model server up, in memory order, waiting for each health check:

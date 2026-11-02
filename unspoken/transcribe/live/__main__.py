@@ -54,7 +54,7 @@ def build_parser() -> argparse.ArgumentParser:
     knobs = ap.add_argument_group("engine")
     knobs.add_argument("--config", default=None, help="sensors.toml (seat zones, video size)")
     knobs.add_argument("--profile", default=None,
-                       help="config/models.toml profile via unspoken.models (gb10, dev-sensors); default: the "
+                       help="config/models.toml profile via unspoken.models (mac, dev-sensors); default: the "
                             "in-process sensors providers (unspoken.sensors.local_registry)")
     knobs.add_argument("--set", action="append", default=[], metavar="ROLE.KEY=VALUE", help="registry override")
     knobs.add_argument("--no-partials", action="store_true")
@@ -90,7 +90,7 @@ def make_registry(args: argparse.Namespace) -> Any:
     if args.no_video:
         disabled |= {"faces", "asd"}
     if args.profile:
-        from ...models import load_registry          # the real registry: GB10 speech server etc.
+        from ...models import load_registry          # the real registry: LM Studio, in-process CPU sensing, etc.
 
         for role in disabled:
             overrides[f"{role}.provider"] = "none"

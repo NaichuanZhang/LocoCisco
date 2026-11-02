@@ -1,11 +1,11 @@
 """One command: video in, per-person transcript out (the winners of the AMI real test, see docs/TRANSCRIBE.md).
 
-    python -m unspoken.transcribe --video meeting.mp4 --out DIR [--profile cpu|gb10] [--ref CASE_DIR]
+    python -m unspoken.transcribe --video meeting.mp4 --out DIR [--profile cpu|mac] [--ref CASE_DIR]
 
 Stages (each writes its JSON into DIR; asr, diar and asd run in parallel):
-  asr.json         Parakeet TDT 0.6B v3 with word timings (cpu: fp32 ONNX via onnx-asr; gb10: NeMo-Speech.cpp on :8770)
-  diar.json        WeSpeaker CAM++ on 1.5 s windows over Silero speech + spectral clustering (CPU on both)
-  asd.json         YuNet faces + Light-ASD (AVA weights, 6-duration ensemble; gb10: on the GPU)
+  asr.json         Parakeet TDT 0.6B v3 with word timings (fp32 ONNX via onnx-asr, CPU)
+  diar.json        WeSpeaker CAM++ on 1.5 s windows over Silero speech + spectral clustering (CPU)
+  asd.json         YuNet faces + Light-ASD (AVA weights, 6-duration ensemble, CPU)
   transcript.json  fuse `bind`: words -> voice turns, voices <-> seats on whole-session evidence
   transcript.txt / .srt / .md  readable renderings
 With --ref, scores.json is written too (eval.transcribe.score). Audio is read from the video's own track.
@@ -24,9 +24,9 @@ PROFILES = {
     "cpu": {"asr": ["--method", "parakeet-tdt-0.6b-v3"],
             "diar": ["--method", "window"],
             "asd": ["--method", "lightasd", "--device", "cpu"]},
-    "gb10": {"asr": ["--method", "server", "--opt", "url=http://127.0.0.1:8770/v1"],
-             "diar": ["--method", "window"],
-             "asd": ["--method", "lightasd", "--device", "cuda"]},
+    "mac": {"asr": ["--method", "parakeet-tdt-0.6b-v3"],
+            "diar": ["--method", "window"],
+            "asd": ["--method", "lightasd", "--device", "cpu"]},
 }
 
 

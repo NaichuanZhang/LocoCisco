@@ -1,4 +1,9 @@
-"""Command-line options shared by `python -m homedemo` and `python -m homedemo.play`."""
+"""Command-line options shared by `python -m homedemo` and `python -m homedemo.play`.
+
+Legacy / separate app: homedemo is a standalone smart-home demo with its own dev/Bedrock
+story; it is not the Mac Studio meeting-room target. The `gb10` profile was renamed `mac`
+in config/models.toml for consistency.
+"""
 from __future__ import annotations
 
 import argparse
@@ -10,7 +15,7 @@ def add_decider_args(ap: argparse.ArgumentParser) -> None:
     """Shared by python -m homedemo and homedemo.play."""
     defaults = Settings()
     ap.add_argument("--profile", default=defaults.profile,
-                    help="config/models.toml profile the deciders and the llm come from (dev, dev-local, gb10, fake)")
+                    help="config/models.toml profile the deciders and the llm come from (dev, dev-local, mac, fake)")
     ap.add_argument("--escalate", default=defaults.escalate_to, choices=["bedrock", "12b", "llm"],
                     help="who decides when the 2B is unsure (cascade mode): Claude on Bedrock, the 12B, or the "
                          "profile's llm role (local Qwen on vLLM / llama.cpp)")

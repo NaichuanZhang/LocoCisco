@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Legacy — NVIDIA GB10 only. The Mac Studio path is deploy/mac/. Retained for reference.
 # deploy/gb10/00-preflight.sh [--dry-run] [--verify] [--cap-clocks] [--reset-clocks]
 #
 # First thing on the box. Read-only unless you pass a --cap/--reset flag. Prints one line per check:

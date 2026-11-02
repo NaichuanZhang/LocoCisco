@@ -6,6 +6,8 @@ user-invocable: true
 
 # unspoken-room
 
+> Legacy — NVIDIA NemoClaw tooling; not used on the Mac Studio target.
+
 Use this skill whenever a message concerns the meeting room: participants, the transcript, decisions, tasks,
 notes being on or off the record, lights, the recap, or a reaction on a task or approval message.
 

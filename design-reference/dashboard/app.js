@@ -389,7 +389,7 @@
       const q = quoteOf(d);
       const dec = d.steps.find((s) => s.k === 'decider');
       const chips = d.steps.filter((s) => s.k === 'rules' || s.k === 'decider' || s.k === 'escalate').map((s) => {
-        const name = { rules: 'Rules', decider: s.label.includes('Room') ? 'Room tools' : 'Decider 12B', escalate: s.label.includes('summary') ? 'Qwen 35B' : 'Qwen 35B' }[s.k];
+        const name = { rules: 'Rules', decider: s.label.includes('Room') ? 'Room tools' : 'Decider 2B', escalate: s.label.includes('summary') ? 'Qwen3-8B' : 'Qwen3-8B' }[s.k];
         const cls = s.skipped ? ' is-skip' : s.k === 'rules' ? (s.result.startsWith('No') ? '' : ' chip--warn') : ' chip--accent';
         return `<span class="chip${cls}">${name}${s.conf ? ' · ' + s.conf.toFixed(2) : ''}</span>`;
       }).join(`<span class="arrow">${ic('arrow')}</span>`);
@@ -453,18 +453,18 @@
     const sw = (key, on, label, sub) => `<div class="toggle-row"><span class="lbl"><b>${label}</b><span>${sub}</span></span><button class="switch" type="button" role="switch" aria-checked="${on}" aria-label="${label}" data-switch="${key}"></button></div>`;
     const models = [
       ['Voice activity', 'Silero VAD', 'Offline kit', 'CPU · in process'],
-      ['Speech', 'Parakeet TDT 0.6B v3 · Q8', 'Offline kit', 'GPU · :8770'],
+      ['Speech', 'Parakeet TDT 0.6B v3 · Q8', 'Offline kit', 'CPU · onnx-asr'],
       ['Voices', 'WeSpeaker CAM++', 'Local cache', 'CPU · in process'],
       ['Faces', 'YuNet', 'Local cache', 'CPU · in process'],
-      ['Active speaker', 'Light-ASD · AVA', 'Offline kit', 'GPU · in process'],
-      ['Decider', 'Strands Decider 12B', 'Offline kit', 'GPU · :8765'],
-      ['Escalation', 'Qwen3.6 35B-A3B NVFP4', 'Existing vLLM', ':8000 · auth'],
-      ['Speech out', 'MagpieTTS', 'Optional', 'Off'],
+      ['Active speaker', 'Light-ASD · AVA', 'Offline kit', 'CPU · in process'],
+      ['Decider', 'Strands Decider 2B', 'Offline kit', 'CPU · :8765'],
+      ['Escalation', 'Qwen3-8B · 4-bit', 'LM Studio', ':1234 · OpenAI API'],
+      ['Speech out', 'TTS (disabled)', 'Optional', 'Off'],
       ['Retrieval', 'Bag-of-words index', 'In process', 'CPU'],
     ];
     const rows = models.map((m) => `<tr><td>${m[0]}</td><td class="model">${m[1]}</td><td class="src">${m[2]}</td><td class="src">${m[3]}</td>` +
       `<td>${m[2] === 'Optional' ? '<span class="chip">Disabled</span>' : '<span class="chip chip--ok">' + ic('check') + 'Warm</span>'}</td></tr>`).join('');
-    const svc = [['Main vLLM API', '8000', 'Existing service · authenticated'], ['Decider 12B', '8765', 'Loopback'], ['Speech', '8770', 'Loopback'], ['Browser demo', '8780', 'Loopback'], ['Room MCP', '8791', 'Bearer token'], ['MCP TLS proxy', '8443', 'Sandbox bridge only']]
+    const svc = [['LM Studio API', '1234', 'OpenAI-compatible · local'], ['Decider 2B', '8765', 'Loopback'], ['Browser demo', '8780', 'Loopback'], ['Room MCP', '8791', 'Bearer token'], ['MCP TLS proxy', '8443', 'Sandbox bridge only']]
       .map((s) => `<div class="svc"><span class="port">:${s[1]}</span><b>${s[0]}</b><span class="muted">${s[2]}</span></div>`).join('');
     put($('#setup'), `<div class="setup-head"><div class="big">${ic('checkCircle')}<div><h2>Core demo ready</h2><span class="sub">Fixture loaded · required models verified and warm · audio track found · works with internet off</span></div></div>` +
       `<div class="grow"></div><span class="state ${st.offline ? 'state--warn' : 'state--ok'}">${st.offline ? ic('wifiOff') + 'Discord offline — posts will queue' : ic('chat') + 'Discord connected'}</span>` +
@@ -477,7 +477,7 @@
       sw('countdown', st.countdownOn, 'Countdown before playback', '3 seconds, then capture and the video start together') + `</div></div></div>` +
       `<div class="setup-col"><div class="card fill"><div class="card-h"><h2>Local models</h2><span class="meta">Resolved from local files · no downloads</span></div><div class="card-b">` +
       `<table class="mtable"><thead><tr><th>Role</th><th>Model</th><th>Source</th><th>Runs on</th><th>Status</th></tr></thead><tbody>${rows}</tbody></table>` +
-      `<span class="foot-note">Checksums match the offline kit manifest. Hosted inference providers are rejected by the GB10 profile; a missing file stops startup with a named error instead of downloading.</span></div></div></div>` +
+      `<span class="foot-note">Checksums match the offline kit manifest. Hosted inference providers are rejected by the Mac profile; a missing file stops startup with a named error instead of downloading.</span></div></div></div>` +
       `<div class="setup-col"><div class="card"><div class="card-h"><h2>Services</h2><span class="meta">Host loopback</span></div><div class="card-b">${svc}</div></div>` +
       `<div class="card"><div class="card-h"><h2>Room and Discord</h2></div><div class="card-b"><div class="checks"><div class="check">${ic('checkCircle')}WiZ lamp<span>Reachable · room LAN</span></div><div class="check">${ic('checkCircle')}Kasa fan plug<span>Reachable · room LAN</span></div>` +
       `<div class="check ${st.offline ? 'is-warn' : ''}">${st.offline ? ic('wifiOff') : ic('checkCircle')}Discord bot<span>${st.offline ? 'Offline · separate from core' : 'Connected · separate from core'}</span></div></div>` +

@@ -8,10 +8,10 @@ from unspoken.models.__main__ import main
 
 
 def test_show_prints_a_table_with_every_role(capsys):
-    assert main(["show", "--profile", "gb10"]) == 0
+    assert main(["show", "--profile", "mac"]) == 0
     out = capsys.readouterr().out
-    assert out.startswith("profile gb10  local_only=yes")
-    assert all(role in out for role in ROLES) and "nvidia/Qwen3.6-35B-A3B-NVFP4" in out and "python:unspoken.sensors.vad:SileroVAD" in out
+    assert out.startswith("profile mac  local_only=yes")
+    assert all(role in out for role in ROLES) and "qwen3-8b" in out and "python:unspoken.sensors.vad:SileroVAD" in out
 
 
 def test_show_json_and_role_subset(capsys, monkeypatch):

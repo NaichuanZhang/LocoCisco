@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Legacy — NVIDIA GB10 only. The Mac Studio path is deploy/mac/. Retained for reference.
 # make-ca.sh [--dry-run] [--force] [--ip <bridge-ip>] [--dir <cert-dir>] [--extra-ip <ip>]...
 #
 # Creates the private CA and the server certificate the TLS proxy presents to the NemoClaw sandbox:

@@ -1,8 +1,8 @@
 """ModelRegistry: the one object code asks for models by ROLE (implements unspoken.contracts.Registry).
 
-    reg = load_registry("gb10")
+    reg = load_registry("mac")
     reg.decider()                 # unspoken.core.decider.Decider for role "decider"
-    reg.strands_model("llm")      # strands Model (OpenAIModel on vLLM / llama.cpp; BedrockModel in dev)
+    reg.strands_model("llm")      # strands Model (OpenAIModel on LM Studio / llama.cpp; BedrockModel in dev)
     reg.asr(), reg.vad(), reg.diarizer(), reg.faces(), reg.asd(), reg.tts(), reg.embedder(), reg.pii()
     await reg.check()             # one RoleHealth per role
     await reg.aclose()            # closes every HTTP client the built providers opened

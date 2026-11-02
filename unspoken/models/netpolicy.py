@@ -1,4 +1,4 @@
-"""local_only profiles (the GB10): nothing may call a model outside this box or its LAN.
+"""local_only profiles (the Mac Studio): nothing may call a model outside this box or its LAN.
 
 A URL is allowed when its host is loopback (127/8, ::1, "localhost"), an RFC 1918 address (10/8,
 172.16/12, 192.168/16) or its IPv6 private counterpart (fc00::/7, RFC 4193), a *.local mDNS name, or the

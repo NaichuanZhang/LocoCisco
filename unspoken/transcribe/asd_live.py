@@ -1,10 +1,10 @@
 """Light-ASD for the LIVE sensors pipeline: an ActiveSpeaker provider (unspoken.contracts.ASDSession) that
 scores each tracked face from a sliding window of its recent crops and the recent audio.
 
-    [profiles.gb10.asd]
+    [profiles.mac.asd]
     provider = "python:unspoken.transcribe.asd_live:LightASDLive"
-    label = "Light-ASD (AVA, CUDA)"
-    options = { device = "cuda", window_s = 1.0, every_s = 0.2, weights = "lightasd_pretrain_AVA_CVPR.model" }
+    label = "Light-ASD (AVA, MIT), 1 s window, CPU"
+    options = { device = "cpu", window_s = 1.0, every_s = 0.2, threads = 4 }
 
 How it works: every pipeline frame (`update(frame, t, faces, audio_since_last_call)`) each visible face is
 cropped (faces.crop_square, 112x112 grey) and appended to its own buffer on the model's 25 fps grid (a frame
@@ -16,8 +16,8 @@ last value is held. The pipeline must deliver frames at ~25 fps ([video] fps = 2
 (the MotionASD default) the model sees 5 real crops per second repeated 5x and is much weaker.
 
 Cost per scoring (1 s clip, one face): ~55 ms on the shared x86 CPU at 6 threads under load ~50 (measured in
-asd_lightasd benchmarks), so 2 faces at 5 Hz is ~0.55 s compute per second on CPU; on the GB10 GPU it is a
-few ms. Nothing here writes audio or video to disk.
+asd_lightasd benchmarks), so 2 faces at 5 Hz is ~0.55 s compute per second on CPU. Nothing here writes
+audio or video to disk.
 """
 from __future__ import annotations
 

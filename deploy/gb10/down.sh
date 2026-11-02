@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Legacy — NVIDIA GB10 only. The Mac Studio path is deploy/mac/. Retained for reference.
 # deploy/gb10/down.sh [--dry-run] [--all]
 #
 # Stop the servers up.sh started: unspoken-decider-12b, unspoken-decider-2b, unspoken-asr, unspoken-tts,

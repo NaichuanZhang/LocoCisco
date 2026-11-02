@@ -8,8 +8,8 @@ Methods (CPU int8 for whisper; Parakeet fp32 because its int8 ONNX export loses 
   vad-fw-<size>      our Silero VAD chunks (the live pipeline's settings) + faster-whisper per chunk
                      sizes: base.en, small.en, large-v3-turbo, distil-large-v3.5
   parakeet-tdt-0.6b-v3[-int8]   NVIDIA Parakeet TDT 0.6B v3 via onnx-asr, Silero VAD windows, token timings
-  server             the same Silero windows posted to an OpenAI-compatible speech server (GB10: NeMo-Speech.cpp
-                     Parakeet on the GPU, --opt url=http://127.0.0.1:8770/v1), words from verbose_json
+  server             the same Silero windows posted to an OpenAI-compatible speech server (optional; e.g.
+                     --opt url=http://127.0.0.1:8770/v1), words from verbose_json
 
 Python API: transcribe(audio_f32_16k, method, threads=6, **options) -> AsrResult. `timing` carries wall_s,
 audio_s, rtf (= wall / audio, model load excluded and reported separately), threads and the 1-minute load

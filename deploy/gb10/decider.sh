@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Legacy — NVIDIA GB10 only. The Mac Studio path is deploy/mac/. Retained for reference.
 # deploy/gb10/decider.sh 12b|2b [--dry-run] [--stop] [--status]
 #
 # Strands Decider on the GB10 GPU, loopback only.

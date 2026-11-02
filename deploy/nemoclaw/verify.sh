@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Legacy — NVIDIA GB10 only. The Mac Studio path is deploy/mac/. Retained for reference.
 # verify.sh [--dry-run] [--post] [--agent]
 #
 # Day-of step 3: prove the plug-in works, in the order that matters.

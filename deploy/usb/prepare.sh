@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Legacy — NVIDIA GB10 only. The Mac Studio path is deploy/mac/. Retained for reference.
 # deploy/usb/prepare.sh USB_DIR [--dry-run] [--offline] [--group=core,speech,sensors,fallback,extras] [--only=key,key] [--skip-optional] [--no-zstd]
 #
 # Run on your laptop (macOS Apple silicon or Linux) WITH internet, the night before. Fills USB_DIR with everything

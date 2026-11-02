@@ -1,12 +1,12 @@
-"""The meeting room as ONE Strands agent: the local LLM (registry.strands_model("llm"), Qwen on vLLM on the
-GB10, llama.cpp on the dev box) with one tool per contracts.ACTIONS, and the DeciderToolRouter in front
+"""The meeting room as ONE Strands agent: the local LLM (registry.strands_model("llm"), Qwen on LM Studio on
+the Mac, llama.cpp on the dev box) with one tool per contracts.ACTIONS, and the DeciderToolRouter in front
 so the Strands Decider picks first and the LLM is only called when it is unsure.
 
     out = await room.decide(decider, query, utterance, accept=..., on_decision=...)
 
 Tool bodies only RECORD what the LLM asked for; the policy and actuator agents decide and act. The
 conversation is fresh on every call. Nothing here ever points at a remote model: the model object comes
-from the registry, and the gb10 profile refuses non-local providers.
+from the registry, and the mac profile refuses non-local providers.
 """
 from __future__ import annotations
 

@@ -101,7 +101,7 @@ def test_python_factory_gets_the_spec_and_must_implement_the_protocol(tmp_path, 
 # --------------------------------------------------------------------------- local_only
 @pytest.mark.parametrize("host,ok", [
     ("127.0.0.1", True), ("localhost", True), ("::1", True), ("10.1.2.3", True), ("172.16.0.9", True),
-    ("172.31.255.1", True), ("192.168.1.20", True), ("gb10.local", True), ("inference.local", True),
+    ("172.31.255.1", True), ("192.168.1.20", True), ("mac.local", True), ("inference.local", True),
     ("fd00::1", True), ("::ffff:192.168.0.2", True),
     ("172.32.0.1", False), ("8.8.8.8", False), ("api.openai.com", False), ("bedrock-runtime.us-west-2.amazonaws.com", False),
     ("169.254.1.1", False), ("100.64.0.1", False), ("", False), (None, False),
@@ -149,8 +149,8 @@ def test_local_only_allows_lan_loopback_and_mdns_and_disabled_roles(tmp_path):
     assert reg.local_only and not reg.enabled("tts")
 
 
-def test_gb10_profile_is_local_only_and_dev_is_not():
-    assert load_registry("gb10").local_only is True
+def test_mac_profile_is_local_only_and_dev_is_not():
+    assert load_registry("mac").local_only is True
     assert load_registry("dev").local_only is False
     assert load_registry("dev-local").local_only is True
 

@@ -1,6 +1,6 @@
 """Play library scenarios through the FULL runtime and print pass/fail per expect.
 
-    python -m unspoken.meeting.play [ids...] [--profile fake|dev|dev-local|gb10] [--speed N] [--tag demo]
+    python -m unspoken.meeting.play [ids...] [--profile fake|dev|dev-local|mac] [--speed N] [--tag demo]
                                     [--no-escalate] [--out results.json] [--real-io]
 
 Prints one line per scenario, every decider / LLM decision (by, route, action, confidence, latency, tokens)

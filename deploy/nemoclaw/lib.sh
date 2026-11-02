@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Legacy — NVIDIA GB10 only. The Mac Studio path is deploy/mac/. Retained for reference.
 # Shared helpers for deploy/nemoclaw/*.sh. Source it; do not run it.
 #   run <cmd...>      run a command, or print it when DRY_RUN=1 (every state-changing command goes through run)
 #   need <bin>...     fail unless each binary is on PATH (in dry-run: warn)

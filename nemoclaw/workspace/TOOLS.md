@@ -1,5 +1,7 @@
 # TOOLS.md — the room's tools (MCP server `unspoken`)
 
+> Legacy — NVIDIA NemoClaw tooling; not used on the Mac Studio target.
+
 All tools run on the room's box. They never return off-record content because it was never stored.
 
 | Tool | Use for | Notes |

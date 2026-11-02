@@ -1,10 +1,10 @@
-"""The GPU path: our Silero windows posted to an OpenAI-compatible speech server, words from verbose_json.
+"""The server path: our Silero windows posted to an OpenAI-compatible speech server, words from verbose_json.
 
-On the GB10 the asr role is NeMo-Speech.cpp serving Parakeet TDT 0.6B v3 Q8 on the GPU (deploy/gb10/speech.sh,
-127.0.0.1:8770, `POST /v1/audio/transcriptions`, `response_format=verbose_json` adds `words` with start/end).
-This method keeps the windowing of asr_parakeet (so the offline transcript on the GB10 is cut the same way as
-the CPU reference run here) and only swaps the decoder for the HTTP call. Any server speaking that route works
-(whisper.cpp server, vLLM audio, ...). Words come back as {word, start, end[, probability]} relative to the
+On the Mac the asr role runs in process on the CPU (asr_parakeet via onnx-asr); this module is the optional
+server path for any OpenAI-compatible speech server (`POST /v1/audio/transcriptions`,
+`response_format=verbose_json` adds `words` with start/end). It keeps the windowing of asr_parakeet (so the
+offline transcript is cut the same way as the CPU reference run here) and only swaps the decoder for the HTTP
+call. Any server speaking that route works (whisper.cpp server, ...). Words come back as {word, start, end[, probability]} relative to the
 posted clip; they are shifted onto the recording clock. No model files, no torch; httpx only.
 """
 from __future__ import annotations
@@ -19,7 +19,7 @@ from ..sensors.audio import float_to_pcm16
 from .asr_chunks import cut, merge_chunks, speech_chunks
 from .contracts import AsrResult, AsrSegment, Word
 
-DEFAULT_URL = "http://127.0.0.1:8770/v1"       # config/models.toml [profiles.gb10.asr] url
+DEFAULT_URL = "http://127.0.0.1:8770/v1"       # default for the optional openai-audio speech-server path
 
 
 def words_from_body(body: dict[str, Any], offset: float, min_word_s: float = 0.02) -> list[Word]:

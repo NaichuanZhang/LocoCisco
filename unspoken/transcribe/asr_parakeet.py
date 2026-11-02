@@ -10,8 +10,8 @@ emission frames (80 ms) become word timings: a word starts at its first token's 
 token's frame (or +160 ms at a gap). Words are regrouped into segments at pauses > 0.6 s (`split_gap_s`). `offset_s` shifts every time by a constant measured on the -dev cases
 (TDT emits a token a frame or two after the sound starts).
 
-GB10: the same model id runs on the GPU through NeMo-Speech.cpp (config/models.toml gb10.asr); this module
-is the CPU reference path and the dev-box fallback. onnx-asr also runs it on CUDA/TensorRT providers.
+Mac: this module is the asr role (config/models.toml mac.asr), in process on the CPU, and also the dev-box
+fallback. onnx-asr can also run the same model id on CUDA/TensorRT providers on other hardware.
 """
 from __future__ import annotations
 
@@ -148,7 +148,7 @@ __all__ = ["MODEL_NAME", "FRAME_S", "models_root", "model_dir", "load", "words_f
 class ParakeetASR:
     """Registry ASR provider (unspoken.contracts.ASR) for the live path: one closed VAD segment per call, Parakeet
     fp32 on the CPU via onnx-asr. Config: provider = "python:unspoken.transcribe.asr_parakeet:ParakeetASR",
-    options = { threads = 4, quantization = "" }. On the GB10 use the speech server (openai-audio) instead."""
+    options = { threads = 4, quantization = "" }. For a GPU speech server use the openai-audio path instead."""
 
     def __init__(self, spec: Any = None, **options: Any) -> None:
         from ..sensors.config import merge_options

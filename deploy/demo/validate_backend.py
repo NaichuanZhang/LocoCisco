@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Offline, backend-only validation using installed gb10 models and local AMI files.
+"""Offline, backend-only validation using the installed mac models and local AMI files.
 
-Run in the existing image (does not start/restart a service or contact its browser API):
-  docker exec lococisco-demo python /app/deploy/demo/validate_backend.py
+Run natively from the repo venv (does not start/restart a service or contact its browser API):
+  UNSPOKEN_PROFILE=mac .venv/bin/python deploy/demo/validate_backend.py
 
 Default: two complete 1x media runs, a 60 s reset/replay, then separate controlled
 text cases. Reports go outside Git, to /runtime/validation. No full real transcript,
@@ -675,12 +675,15 @@ async def validate(args, report, gate, save):
     from unspoken.meeting.fakes import FakeNotifier
     from unspoken.models.probes import probe_chat
 
-    registry = load_registry(profile="gb10", overrides={
-        "llm.options.api_key_file": str(args.api_key_file), "llm.options.stream": "false",
+    # The mac profile's LLM is LM Studio (OpenAI server at http://localhost:1234/v1, model qwen3-8b); its
+    # api_key ("lm-studio") is in config/models.toml, so there is no credential file to inject. ASR is the
+    # in-process onnx-asr Parakeet provider (no :8770 server), and TTS is disabled on the Mac target.
+    registry = load_registry(profile="mac", overrides={
+        "llm.options.stream": "false",
         "tts.provider": "none", "vlm.provider": "none", "decider_big.provider": "none",
     })
     if not registry.local_only:
-        raise AssertionError("gb10 registry must be local-only")
+        raise AssertionError("mac registry must be local-only")
     report["providers"] = {}
     for role in REQUIRED:
         spec = registry.spec(role)
@@ -700,7 +703,7 @@ async def validate(args, report, gate, save):
             documents.mkdir()
             cfg = load_config(args.meeting_config)
             cfg["meeting"].update(title="LocoCisco meeting replay", owner=None, agenda=[], docs_dir=str(documents))
-            runtime = DemoRuntime(profile="gb10", registry=registry, config=cfg, notifier=FakeNotifier(echo=False), echo=False)
+            runtime = DemoRuntime(profile="mac", registry=registry, config=cfg, notifier=FakeNotifier(echo=False), echo=False)
             controller = ReplayController(runtime, Path(tmp) / "uploads")
             runtime.bus.subscribe("*", recorder.on_event, name="backend-validation-aggregates")
             warm = recorder.begin("warmup")
@@ -717,7 +720,7 @@ async def validate(args, report, gate, save):
             invariant(report["warmup"], "empty_documents_and_agenda", not runtime.docs.chunks and not runtime.state.agenda)
             phase_invariants(report["warmup"], warm)
             report["configuration"] = {
-                "profile": "gb10", "act_threshold": runtime.settings.act_threshold,
+                "profile": "mac", "act_threshold": runtime.settings.act_threshold,
                 "ask_threshold": runtime.settings.ask_threshold, "owner_threshold": cfg["meeting"]["owner_threshold"],
                 "question_version": cfg["questions"]["version"], "escalate": runtime.settings.escalate,
                 "llm_stream": registry.spec("llm").options["stream"], "docs_empty": True, "agenda": [],
@@ -771,7 +774,8 @@ def main(argv=None):
     parser.add_argument("--runtime-dir", type=Path, default=Path("/runtime"))
     parser.add_argument("--media", action="append", type=Path, help="repeatable; defaults to both installed 180 s fixtures")
     parser.add_argument("--output", type=Path, help="new JSON path outside Git (never overwrites an existing report)")
-    parser.add_argument("--api-key-file", type=Path, default=Path("/run/secrets/vllm-api-key"))
+    parser.add_argument("--api-key-file", type=Path, default=None,
+                        help="unused on the Mac/LM Studio target (LM Studio's api_key is in config/models.toml)")
     parser.add_argument("--meeting-config", type=Path, help="optional existing settings file; no threshold overrides")
     parser.add_argument("--replay-seconds", type=float, default=60)
     parser.add_argument("--media-limit-seconds", type=float, help="diagnostic partial runs; explicitly NOT complete playback")
@@ -803,8 +807,8 @@ def main(argv=None):
         args.runtime_dir / "media/ami-meeting-highlights.mp4",
         args.runtime_dir / "media/ami-design-decisions.mp4",
     ])]
-    if not args.runtime_dir.is_dir() or any(not p.is_file() for p in args.media) or not args.api_key_file.is_file():
-        parser.error("Existing runtime directory, local media, and credential file are required; nothing is downloaded")
+    if not args.runtime_dir.is_dir() or any(not p.is_file() for p in args.media):
+        parser.error("Existing runtime directory and local media are required; nothing is downloaded")
     if args.meeting_config and not args.meeting_config.is_file():
         parser.error("--meeting-config must already exist")
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")

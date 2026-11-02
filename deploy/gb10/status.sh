@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Legacy — NVIDIA GB10 only. The Mac Studio path is deploy/mac/. Retained for reference.
 # deploy/gb10/status.sh [--dry-run] [--logs]
 #
 # One line per server: port, container/pid state, health, probe latency. --logs tails the last 15 lines of each.

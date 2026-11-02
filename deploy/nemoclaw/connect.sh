@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Legacy — NVIDIA GB10 only. The Mac Studio path is deploy/mac/. Retained for reference.
 # connect.sh [--dry-run] [--runtime fake|sim] [--firewall] [--fallback-rest] [--hooks] [--skip-persona]
 #
 # Day-of step 2: plug the running room into the NemoClaw sandbox.

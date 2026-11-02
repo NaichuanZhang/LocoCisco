@@ -1,9 +1,11 @@
 // LocoCisco intro — the two collab avatars, drawn once and shared by the film (../index.html)
 // and the standalone SVGs (../../tools/export-avatars.mjs → avatars/*.svg).
-// Both are original characters in brand colours, not brand artwork:
-//   dell   a squat graphite mini-desktop standing in for the Dell Pro Max with GB10
-//   nemo   NVIDIA NemoClaw: a chubby green lobster (OpenClaw's claw) in a clear sandbox dome (OpenShell)
-// The Dell box wears the real Dell logo as a badge (assets/brand-logos.js must load first).
+// FLAG (legacy brand art): these shapes still depict the original Dell box + NVIDIA NemoClaw
+// mascots and the Dell badge. Embedded text labels were neutralized, but the vector shapes
+// (and the Dell mark pulled from brand-logos.js) should be redrawn/retired for the Mac target.
+//   dell   a squat graphite mini-desktop (was: standing in for the Dell Pro Max with GB10)
+//   nemo   the legacy NemoClaw lobster in a clear sandbox dome
+// The box wears the real Dell logo as a badge (assets/brand-logos.js must load first).
 // Local coordinates: (0, 0) is the point between the feet; up is negative y. Parts the film
 // animates have ids (arms, eyes, pupils, claws, antennae) and pivots listed in `rig`.
 (function (root) {
@@ -43,7 +45,7 @@
       '<circle cx="52" cy="-70" r="10" fill="url(#dl-led)"/><circle cx="52" cy="-70" r="3.6" fill="#CDEBFF"/>' +
       dellBadge +
       '<g transform="translate(-64 -188) rotate(-10)"><rect x="0" y="0" width="52" height="21" rx="6" fill="#76B900"/>' +
-      '<text x="26" y="15.5" text-anchor="middle" font-family="Figtree, system-ui, sans-serif" font-weight="800" font-size="13" fill="#173300">GB10</text></g>',
+      '<text x="26" y="15.5" text-anchor="middle" font-family="Figtree, system-ui, sans-serif" font-weight="800" font-size="13" fill="#173300"></text></g>',
     eyes: { l: [-30, -108], r: [30, -108] },
     rig: { shoulder: { l: [-86, -96], r: [86, -96] }, armLen: Math.hypot(22, 32), fistR: 12 },
     box: [-132, -204, 264, 224],

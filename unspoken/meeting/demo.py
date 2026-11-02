@@ -840,7 +840,7 @@ def main(argv: list[str] | None = None) -> None:
                  "decider_big.provider": "none", "llm.options.stream": "false"}
     if args.api_key_file is not None:
         overrides["llm.options.api_key_file"] = str(args.api_key_file)
-    registry = load_registry(profile="gb10", overrides=overrides)
+    registry = load_registry(profile="mac", overrides=overrides)
     config = load_config()
     documents = args.media_dir.resolve() / "documents"
     documents.mkdir(parents=True, exist_ok=True)
@@ -848,7 +848,7 @@ def main(argv: list[str] | None = None) -> None:
         parser.error("The replay documents directory must be empty; example/company docs are not replay evidence.")
     config["meeting"].update(title="LocoCisco meeting replay", owner="Demo operator",
                              docs_dir=str(documents), agenda=[])
-    runtime = DemoRuntime(profile="gb10", mode="sim", registry=registry, config=config,
+    runtime = DemoRuntime(profile="mac", mode="sim", registry=registry, config=config,
                           fake_io=True, notifier=FakeNotifier(echo=False), echo=False)
     app = create_demo_app(runtime, args.media_dir, initial_media=args.video, attribution=args.attribution)
     import uvicorn

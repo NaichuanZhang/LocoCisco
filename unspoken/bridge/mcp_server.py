@@ -30,7 +30,7 @@ from .config import ENV_MCP_TOKEN, BridgeConfigError
 log = logging.getLogger("unspoken.bridge.mcp")
 
 SERVER_NAME = "unspoken-room"
-DEFAULT_PORT = 8791            # GB10; the dev desktop uses 8792 (config/bridge.toml, UNSPOKEN_MCP_PORT)
+DEFAULT_PORT = 8791            # the Mac; the dev desktop uses 8792 (config/bridge.toml, UNSPOKEN_MCP_PORT)
 MIN_TOKEN_CHARS = 16
 OFF_RECORD = ("Off-record content never exists: anything said while notes were paused or after someone said "
               "'off the record' was never stored, so it cannot be returned by any tool.")

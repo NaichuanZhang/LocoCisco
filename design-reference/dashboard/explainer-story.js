@@ -68,10 +68,10 @@
     targets: { caption: 2.0, card: 3.0, privacy: 0.5 },
     // Planning estimates from BUILD_SPEC §5 (resource budget) — not measured.
     memory: {
-      total: 128,
+      total: 32,
       parts: [
-        { label: 'Qwen3.6 35B · vLLM', gb: 48, unit: 'GiB', tone: 'blue' },
-        { label: 'Decider 12B', gb: 27, unit: 'GB', tone: 'purple' },
+        { label: 'Qwen3-8B · LM Studio', gb: 6, unit: 'GiB', tone: 'blue' },
+        { label: 'Decider 2B', gb: 5, unit: 'GB', tone: 'purple' },
         { label: 'Speech', gb: 3, unit: 'GB', tone: 'green' },
       ],
     },
