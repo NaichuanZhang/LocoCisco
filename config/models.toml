@@ -1,8 +1,8 @@
 # LocoCisco model registry: which model serves which ROLE, per PROFILE.
 #
-# Pick a profile with UNSPOKEN_PROFILE=gb10 (or --profile gb10 on the CLIs). Change a model by editing ONE
+# Pick a profile with UNSPOKEN_PROFILE=mac (or --profile mac on the CLIs). Change a model by editing ONE
 # block below, or override one key without editing: UNSPOKEN_LLM_URL=... UNSPOKEN_LLM_MODEL=... (any role,
-# keys PROVIDER / URL / MODEL / LABEL). Check every role: python -m unspoken.models check --profile gb10
+# keys PROVIDER / URL / MODEL / LABEL). Check every role: python -m unspoken.models check --profile mac
 #
 # Roles (unspoken/contracts.py): decider, decider_big, llm, vlm, asr, vad, diarization, faces, asd, tts,
 # embed, pii. A role missing from a profile is disabled (provider "none"). Keys of a role block:
@@ -69,13 +69,13 @@ provider = "regex"
 # ---------------------------------------------------------------------------------------------- dev-local
 # Same desktop, nothing remote: the chat model is a small Qwen3 on a local llama.cpp server
 # (scripts/dev-llm.sh starts it on :8010). This is the profile that proves the OpenAI tool-calling path
-# works before we point it at vLLM on the GB10.
+# works before we point it at LM Studio on the Mac.
 [profiles.dev-local]
 extends = "dev"
 local_only = true
 
 [profiles.dev-local.llm]
-provider = "openai"                          # any OpenAI-compatible server: llama.cpp here, vLLM on the GB10
+provider = "openai"                          # any OpenAI-compatible server: llama.cpp here, LM Studio on the Mac
 url = "http://127.0.0.1:8010/v1"
 model = "qwen3-4b"                           # the --alias scripts/dev-llm.sh gives llama-server
 label = "Qwen3 4B on llama.cpp (CPU)"
@@ -118,7 +118,7 @@ label = "MotionASD (heuristic)"
 # ---------------------------------------------------------------------------------------------- dev-best
 # The winners of the per-person transcriber real test (docs/TRANSCRIBE.md), on this CPU: Parakeet for words,
 # causal CAM++ window labels for voices, Light-ASD for who is talking on camera. Live: python -m
-# unspoken.transcribe.live --profile dev-best ...  (the gb10 profile carries the same choices on the GPU).
+# unspoken.transcribe.live --profile dev-best ...  (the mac profile carries the same choices, CPU on the Mac).
 [profiles.dev-best]
 extends = "dev-sensors"
 local_only = true
@@ -143,83 +143,67 @@ provider = "python:unspoken.transcribe.asd_live:LightASDLive"
 label = "Light-ASD (AVA, MIT), 1 s window, CPU"
 options = { device = "cpu", window_s = 1.0, every_s = 0.2, threads = 4 }
 
-# --------------------------------------------------------------------------------------------------- gb10
-# The Dell Pro Max with GB10 on the day. ALL inference local; local_only makes the registry refuse anything
-# else. Ports follow docs/PLAN.md s4. The sensing roles are in-process providers from the sensors
-# workstream (torch / onnxruntime are imported only when the role is first used).
-[profiles.gb10]
+# --------------------------------------------------------------------------------------------------- mac
+# The Mac Studio (Apple M1 Max, 32 GB unified memory). ALL inference local; local_only makes the registry
+# refuse anything else. The LLM is a small Qwen served by LM Studio (OpenAI-compatible, Metal); the decider
+# runs via `strands-decider serve`; the sensing roles are in-process providers from the sensors workstream
+# (torch / onnxruntime are imported only when the role is first used, and run on the CPU / Apple Silicon).
+[profiles.mac]
 local_only = true
 
-[profiles.gb10.decider]                      # the 12B is fast on the GPU, so it is the FIRST opinion here
-provider = "strands-decider"                 # (deploy/gb10/up.sh starts it on :8765; health GET /health)
+[profiles.mac.decider]                       # the 2B is the FIRST opinion on the Mac (no 12B at 32 GB)
+provider = "strands-decider"                 # (`strands-decider serve` on :8765; health GET /health)
 url = "http://127.0.0.1:8765"
-model = "decider-12b"                        # the name the decider client reports in its answers
-label = "Strands Decider 12B (GPU)"
-options = { max_concurrency = 4 }
+model = "decider-2b"                         # the name the decider client reports in its answers
+label = "Strands Decider 2B (CPU/Metal)"
+options = { max_concurrency = 2 }
 
-[profiles.gb10.decider_big]                  # OPTIONAL second decider: off by default (the 12B already is the
-provider = "none"                            # big one). To run the 2B on :8766 as the fallback, use instead:
-# provider = "strands-decider"
-# url = "http://127.0.0.1:8766"
-# model = "decider-2b"
-# label = "Strands Decider 2B (GPU)"
-# options = { max_concurrency = 4 }
+[profiles.mac.decider_big]                   # no second decider on 32 GB (the 2B is the only decider here)
+provider = "none"
 
-[profiles.gb10.llm]                          # Qwen3.6 on the NemoClaw-managed vLLM, Chat Completions + tools
-provider = "openai"                          # (tool parser qwen3_xml is server-side; health GET /v1/models)
-url = "http://127.0.0.1:8000/v1"
-model = "nvidia/Qwen3.6-35B-A3B-NVFP4"
-label = "Qwen3.6 35B-A3B NVFP4 on vLLM (GPU)"
-# vLLM uses the chat template option to disable thinking; 400 tokens caps the tool call or reply.
-options = { api_key = "none", max_tokens = 400, temperature = 0, timeout_s = 120, tool_choice = "auto", chat_template_kwargs = { enable_thinking = false } }
+[profiles.mac.llm]                           # small Qwen on LM Studio, Chat Completions + tools
+provider = "openai"                          # (LM Studio's OpenAI server; enable tool/function calling)
+url = "http://localhost:1234/v1"
+model = "qwen3-8b"                           # the model id LM Studio serves (Qwen3-8B 4-bit; or qwen3-4b)
+label = "Qwen3-8B (4-bit) on LM Studio (Metal)"
+# disable thinking for fast escalations; 400 tokens caps the tool call or reply.
+options = { api_key = "lm-studio", max_tokens = 400, temperature = 0, timeout_s = 120, tool_choice = "auto", chat_template_kwargs = { enable_thinking = false } }
 
-[profiles.gb10.vlm]                          # same server, same model: Qwen3.6 reads the whiteboard too
-provider = "openai"
-url = "http://127.0.0.1:8000/v1"
-model = "nvidia/Qwen3.6-35B-A3B-NVFP4"
-label = "Qwen3.6 35B-A3B NVFP4 on vLLM (vision, GPU)"
-options = { api_key = "none", max_tokens = 400, temperature = 0, timeout_s = 120 }
+[profiles.mac.vlm]                           # no whiteboard VLM on the Mac target (text-only small Qwen)
+provider = "none"
 
-[profiles.gb10.asr]                          # NeMo-Speech.cpp speech server: POST /v1/audio/transcriptions
-provider = "openai-audio"                    # (multipart WAV, verbose_json gives words + timestamps);
-url = "http://127.0.0.1:8770/v1"             # health GET /ready (200 loaded, 503 loading)
-model = "parakeet-tdt-0.6b-v3"               # accepted for compatibility; the server uses its one loaded model
-label = "Parakeet TDT 0.6B v3 (GPU, NeMo-Speech.cpp)"
-# diarization = true would tag words with the server's Nemotron speaker ids; off: the sensors workstream's own
-# session-only voice labels are used instead
-options = { response_format = "verbose_json", language = "en", diarization = false, timeout_s = 20, health = "/ready" }
+[profiles.mac.asr]                           # Parakeet via onnx-asr, in process on the CPU (no GPU speech server)
+provider = "python:unspoken.transcribe.asr_parakeet:ParakeetASR"
+label = "Parakeet TDT 0.6B v3 (onnx-asr, CPU)"
+options = { threads = 4 }
 
-[profiles.gb10.tts]                          # NeMo-Speech.cpp TTS: POST /v1/audio/speech -> WAV
-provider = "openai-speech"                   # (health GET /ready)
-url = "http://127.0.0.1:8771/v1"
-model = "magpie-tts-multilingual-357m"
-label = "MagpieTTS Multilingual 357M (GPU, NeMo-Speech.cpp)"
-options = { voice = "default", response_format = "wav", timeout_s = 10, health = "/ready" }
+[profiles.mac.tts]                           # no TTS on the Mac target
+provider = "none"
 
-[profiles.gb10.vad]                          # in-process Silero VAD v5 (ONNX, CPU); live cut at pauses, 8 s cap
+[profiles.mac.vad]                           # in-process Silero VAD v5 (ONNX, CPU); live cut at pauses, 8 s cap
 provider = "python:unspoken.sensors.vad:SileroVAD"   # (the transcriber test: 400 ms / 8 s beat 500 ms / 20 s)
 label = "Silero VAD v5 (ONNX, CPU)"
 options = { threshold = 0.5, min_silence_ms = 400, max_segment_s = 8 }
 
-[profiles.gb10.diarization]                  # WeSpeaker CAM++ on 1.5 s windows, causal labels (session-only), CPU
+[profiles.mac.diarization]                   # WeSpeaker CAM++ on 1.5 s windows, causal labels (session-only), CPU
 provider = "python:unspoken.transcribe.diar:OnlineWindowDiarizer"   # DER 0.185 vs 0.204 per-segment (AMI test)
 label = "WeSpeaker CAM++ (ONNX, CPU) + online window labelling"
 options = { embedder = "campp", join = 0.6, mint = 0.4, max_voices = 4, win_s = 1.5, hop_s = 0.75, threads = 2 }
 
-[profiles.gb10.faces]                        # in-process YuNet face detector (OpenCV), no recognition
+[profiles.mac.faces]                         # in-process YuNet face detector (OpenCV), no recognition
 provider = "python:unspoken.sensors.faces:YuNetFaces"
 label = "YuNet 2023mar (OpenCV)"
 
-[profiles.gb10.asd]                          # Light-ASD (AVA-ActiveSpeaker weights, MIT) on the GPU, 1 s window,
+[profiles.mac.asd]                           # Light-ASD (AVA-ActiveSpeaker weights, MIT) on the CPU, 1 s window,
 provider = "python:unspoken.transcribe.asd_live:LightASDLive"   # 5 Hz updates. MotionASD was at chance on AMI
-label = "Light-ASD (AVA, MIT), 1 s window, GPU"                    # (which-seat 0.47-0.56 vs 0.72-0.95)
-options = { device = "cuda", window_s = 1.0, every_s = 0.2, threads = 4 }
+label = "Light-ASD (AVA, MIT), 1 s window, CPU"                    # (which-seat 0.47-0.56 vs 0.72-0.95)
+options = { device = "cpu", window_s = 1.0, every_s = 0.2, threads = 4 }
 
-[profiles.gb10.embed]                        # fake until deploy picks an embedding server; swap to
-provider = "fake"                            # provider = "openai", url = "http://127.0.0.1:8000/v1", model = "..."
+[profiles.mac.embed]                         # fake until deploy picks an embedding server; swap to
+provider = "fake"                            # provider = "openai", url = "http://localhost:1234/v1", model = "..."
 label = "Hashed bag-of-words embeddings (fake, CPU)"
 
-[profiles.gb10.pii]                          # regex personal-detail spans, in-process
+[profiles.mac.pii]                           # regex personal-detail spans, in-process
 provider = "regex"
 label = "Regex PII spans (CPU)"
 

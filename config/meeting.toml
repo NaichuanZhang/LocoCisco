@@ -32,7 +32,7 @@ break = "break"
 off_record = "off_record"
 paused = "privacy"
 
-[screen]                         # the room screen (unspoken/meeting/web); loopback only, 8780 on the GB10, 8781 on the dev box
+[screen]                         # the room screen (unspoken/meeting/web); loopback only, 8780 on the Mac, 8781 on the dev box
 host = "127.0.0.1"
 port = 8780
 

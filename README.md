@@ -1,10 +1,10 @@
 <p align="center">
-  <img src="docs/assets/readme-hero.svg" alt="LocoCisco — Private intelligence, wherever people talk. The Dell box and NVIDIA NemoClaw avatars, seven local model roles, and 128 GB unified memory." width="100%">
+  <img src="docs/assets/readme-hero.svg" alt="LocoCisco — Private intelligence, wherever people talk. A Mac Studio, seven local model roles, and 32 GB unified memory." width="100%">
 </p>
 
 <p align="center">
   <strong>Local first. Privacy driven. No wake word.</strong><br>
-  Conversation intelligence on a Dell Pro Max with NVIDIA GB10.
+  Conversation intelligence on a Mac Studio (Apple M1 Max).
 </p>
 
 <p align="center">
@@ -31,7 +31,7 @@ place where people talk and confidentiality matters.
 
 | Keep it local | Make conversation useful | See how it works |
 | :--- | :--- | :--- |
-| Audio, video, and model inference stay on the prepared Dell box. No cloud inference or cloud fallback in the meeting demo. | Capture who said what, propose follow-ups, and ask questions against retained meeting context. | Inspect model observations, decision routes, and policy outcomes. Switch off-record when a conversation becomes private. |
+| Audio, video, and model inference stay on the Mac Studio. No cloud inference or cloud fallback in the meeting demo. | Capture who said what, propose follow-ups, and ask questions against retained meeting context. | Inspect model observations, decision routes, and policy outcomes. Switch off-record when a conversation becomes private. |
 
 ## Where it fits
 
@@ -65,8 +65,8 @@ flowchart TB
     Vision["Visual specialists<br/>YuNet · Light-ASD"]
     Fusion["Speaker fusion<br/>Who said what, when"]
     Captions["Local captions"]
-    Decider["Strands Decider 12B<br/>Bounded choices"]
-    Qwen["Local Qwen3.6<br/>Conditional reasoning + proposals"]
+    Decider["Strands Decider 2B<br/>Bounded choices"]
+    Qwen["Local Qwen (LM Studio)<br/>Conditional reasoning + proposals"]
     Policy["Code policy<br/>Privacy · ownership · risk"]
     Output["Meeting items · screen state<br/>Local output previews"]
 
@@ -94,22 +94,22 @@ flowchart TB
 Captions follow perception directly; they do not wait for a language-model decision.
 All inference in this demo runs locally.
 
-## Seven model roles. One Dell box.
+## Seven model roles. One Mac Studio.
 
-The **Dell Pro Max with NVIDIA GB10 and 128 GB unified memory** hosts the stack.
-Small sensing models use the CPU; speech recognition, audiovisual scoring, and
-language models use the GPU. Qwen is called conditionally, so every utterance
-does not require a full generative response.
+The **Mac Studio (Apple M1 Max) with 32 GB unified memory** hosts the stack.
+The sensing models run on the CPU; the language model runs on LM Studio (Metal),
+and the decider on a local service. Qwen is called conditionally, so every
+utterance does not require a full generative response.
 
 | Model | Placement | Job and reason for the choice |
 | :--- | :--- | :--- |
 | **Silero VAD v5** | CPU · ONNX | Finds speech and cuts at pauses, giving downstream models bounded audio segments. |
-| **Parakeet TDT 0.6B v3 · Q8** | GPU · NeMo-Speech.cpp | Produces words and timestamps. Parakeet was selected through the project's transcription comparison; this deployment uses the local Q8 speech service. |
+| **Parakeet TDT 0.6B v3** | CPU · onnx-asr | Produces words and timestamps. Parakeet was selected through the project's transcription comparison; on the Mac it runs in process on the CPU. |
 | **WeSpeaker CAM++** | CPU · ONNX | Produces voice embeddings for session-only anonymous labels. Windowed labeling performed better than the earlier per-segment approach in the project evaluation. |
 | **YuNet 2023mar** | CPU · OpenCV | Detects and tracks faces, giving active-speaker analysis face regions to inspect. It does not recognize identities. |
-| **Light-ASD · AVA** | GPU · PyTorch | Combines audio with face motion to score who appears to be speaking. It replaced a motion-only heuristic after evaluation. |
-| **Strands Decider 12B** | Local GPU service | Answers bounded questions about intent, owner, and sensitivity. Structured choices make the initial decision route inspectable. |
-| **Qwen3.6 35B-A3B · NVFP4** | GPU · vLLM | Reuses the box's local language-model service for uncertain cases, tool proposals, and grounded answers to local questions. |
+| **Light-ASD · AVA** | CPU · PyTorch | Combines audio with face motion to score who appears to be speaking. It replaced a motion-only heuristic after evaluation. |
+| **Strands Decider 2B** | Local service (CPU/Metal) | Answers bounded questions about intent, owner, and sensitivity. Structured choices make the initial decision route inspectable. |
+| **Qwen3-8B · 4-bit** | LM Studio (Metal) | A small Qwen on LM Studio handles uncertain cases, tool proposals, and grounded answers to local questions. |
 
 See the [model registry](config/models.toml),
 [model-selection experiments](docs/TRANSCRIBE.md), and
@@ -148,22 +148,25 @@ Open **http://127.0.0.1:8890/Presentation/**. The
 [presentation guide](Presentation/README.md) covers controls and video setup;
 [presenter notes](Presentation/PRESENTER_NOTES.md) explain each build.
 
-### The working demo · prepared Dell hardware
+### The working demo · Mac Studio
 
 The recording view puts video, captions, model activity, decision scores, and
 meeting items on one canvas. It processes a local video through the real models;
 no USB microphone or webcam is needed for this demo.
 
 ```bash
-export UNSPOKEN_LOCAL_API_KEY_FILE="$HOME/.nemoclaw/dual-station-vllm-api-key"
+# 1. In LM Studio, load Qwen3-8B (4-bit) and start its local server (http://localhost:1234).
+# 2. Start the decider:  strands-decider serve --model decider-2b --port 8765
+export UNSPOKEN_PROFILE=mac
 deploy/demo/up.sh
 ```
 
 Open **http://127.0.0.1:8780/**, or append `?autoplay=0` to prepare an idle take.
-The environment variable points to a credential file. Startup reuses the staged
-offline model kit and existing local services; it does not install packages or
-download weights. Follow the [browser demo guide](docs/BROWSER_DEMO.md) for
-preparation, recording, and privacy controls.
+The LLM is served by LM Studio and the decider by a local service; the sensing
+models run in process on the CPU. Startup reuses already-loaded local services;
+it does not install packages or download weights. Follow the
+[browser demo guide](docs/BROWSER_DEMO.md) for preparation, recording, and privacy
+controls.
 
 <details>
 <summary><strong>What the current demo demonstrates</strong></summary>
@@ -191,7 +194,7 @@ completed validation, and remaining acceptance criteria.
 | Path | What's inside |
 | :--- | :--- |
 | [unspoken/](unspoken/) | Application, meeting runtime, perception, policy, and browser UI. `unspoken` remains the package and deployment compatibility name. |
-| [deploy/demo/](deploy/demo/) | Prepared Dell demo launcher and local media tooling. |
+| [deploy/demo/](deploy/demo/) | Mac Studio demo launcher and local media tooling. |
 | [config/models.toml](config/models.toml) | Central model-role and deployment-profile registry. |
 | [Presentation/](Presentation/) | Animated HTML deck, presenter notes, video input, and logo/avatars. |
 | [docs/](docs/) | Setup guides, evaluation reports, and architecture notes. |
@@ -206,7 +209,7 @@ Small licensed model assets and test fixtures are included; see
 ---
 
 <p align="center">
-  Built with curiosity, a Dell box, and a lot of local inference.<br>
-  <strong>Thanks to Dell, NVIDIA, and the hackathon sponsors for making it possible.</strong><br><br>
+  Built with curiosity, a Mac Studio, and a lot of local inference.<br>
+  <strong>Thanks to everyone who helped make it possible.</strong><br><br>
   <em>At work. In public service. Eventually, at home.</em>
 </p>

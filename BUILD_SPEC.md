@@ -3,7 +3,7 @@
 - **Version:** 0.4
 - **Date:** 2026-10-25
 - **Status:** recording frontend, official-video replay and privacy export verified; final native capture and semantic-quality evaluation remain open
-- **Target:** Dell Pro Max with NVIDIA GB10, ARM64 Linux, 128 GB unified memory
+- **Target:** Mac Studio (Apple M1 Max), macOS (Apple Silicon), 32 GB unified memory
 - **Official demo input:** [`Presentation/Demo.mp4`](Presentation/Demo.mp4)
 
 This is the technical reference for building the demo and preparing slides.
@@ -91,8 +91,8 @@ Its optional Bedrock path is not part of this meeting demo.
 
 | Resource | Current requirement |
 |---|---|
-| Compute | NVIDIA GB10 with CUDA and NVIDIA container support |
-| Operating system | ARM64 Ubuntu 24.04-compatible environment |
+| Compute | Apple M1 Max GPU via Metal; no CUDA, Docker, or NVIDIA container runtime |
+| Operating system | macOS (Apple Silicon, arm64) |
 | Python | Python 3.12 for the staged application dependencies |
 | Display | Browser viewport targeting 1920×1080; no scrolling during a normal take |
 | Input | A local video with audio; no USB microphone or webcam required |
@@ -162,7 +162,7 @@ Official local video -> ReplayClock
                             |
            privacy/reflex rules + bounded Decider query
                             |
-                 Strands Decider 12B
+                 Strands Decider 2B
                  /          |            \
           confident     uncertain      very unsure
              |              |               |
@@ -189,11 +189,11 @@ Operator setup and shortcuts -> replay, privacy, questions, recording
 |---|---|
 | Application process | Replay decoding, sensor workers, event bus, meeting state, fusion, cascade, policy, preview adapters, FastAPI and WebSocket stream |
 | Browser | Synchronized presentation of the same video; captions, model graph, decisions, notes, privacy, and recording/export |
-| Local model services | Decider, Qwen/vLLM, and Parakeet/NeMo-Speech endpoints |
+| Local model services | Decider (local service) and the Qwen LLM on LM Studio; Parakeet ASR runs in process on the CPU |
 | Optional integration deployment | MCP, private TLS proxy, OpenClaw/NemoClaw, real Discord and LAN devices |
 
-The application runs in the prepared GPU container, outside the OpenClaw
-sandbox. Its small “agents” are Python coroutines sharing one in-memory state,
+The application runs as a native macOS Python process (no container), outside the
+OpenClaw sandbox. Its small “agents” are Python coroutines sharing one in-memory state,
 not independent model processes or a distributed agent cluster. Every browser
 client controls the same room, replay clock, media, and privacy state.
 
@@ -209,17 +209,17 @@ do not automatically inherit every replay-specific behavior.
 | Role | Current model/provider | Placement |
 |---|---|---|
 | Speech detection | Silero VAD v5 | CPU, in process |
-| Speech recognition | Parakeet TDT 0.6B v3, Q8, NeMo-Speech.cpp | Local GPU service |
+| Speech recognition | Parakeet TDT 0.6B v3, onnx-asr | CPU, in process |
 | Anonymous voice labels | WeSpeaker CAM++ with online window labeling | CPU, in process |
 | Face tracks | YuNet 2023mar | CPU, in process; no face recognition |
-| Active speaker scores | Light-ASD, AVA weights | GPU, in process |
-| Bounded decisions | Strands Decider **12B**, Gemma 4 base/adapter | Local GPU service; first opinion |
-| Language-model escalation | Qwen3.6 35B-A3B NVFP4, vLLM | Existing local GPU service |
-| VLM, TTS, second Decider | Disabled by the demo entry point | Optional future roles |
+| Active speaker scores | Light-ASD, AVA weights | CPU, in process |
+| Bounded decisions | Strands Decider **2B**, Gemma 4 base/adapter | Local service (CPU/Metal); first opinion |
+| Language-model escalation | Qwen3-8B (4-bit), LM Studio | Local LLM service (Metal) |
+| VLM, TTS, second Decider | Disabled on the Mac target | Optional future roles |
 | Document embeddings | Hashed bag-of-words baseline | Not a deployed neural embedding service |
 
 Role/provider selection is centralized in `config/models.toml` and the model
-registry. Heavy providers are constructed lazily and reused. The GB10 profile
+registry. Heavy providers are constructed lazily and reused. The `mac` profile
 rejects hosted inference providers. Its locality checks accept configured
 loopback/private-network endpoints; they are not a whole-machine firewall.
 The current demo's inference endpoints are loopback.
@@ -276,11 +276,11 @@ outputs; broader outbound screening needs its own verified integration.
 
 | Service | Port | Current recording build |
 |---|---|---|
-| Qwen/vLLM | 8000 | Authenticated local chat/tool calls; reuse existing service |
-| Decider 12B | 8765 | Local bounded-question API |
-| Parakeet ASR | 8770 | Local audio transcription API |
+| Qwen LLM (LM Studio) | 1234 | Local OpenAI-compatible chat/tool calls |
+| Decider 2B | 8765 | Local bounded-question API (`strands-decider serve`) |
+| Parakeet ASR | in process | CPU transcription via onnx-asr (no server) |
 | Browser, local media, API | 8780 | Loopback FastAPI application |
-| Second Decider / TTS | 8766 / 8771 | Disabled; not readiness prerequisites |
+| Second Decider / TTS | — | Disabled; not readiness prerequisites |
 | MCP / private TLS proxy | 8791 / 8443 | Separate integration; not started by demo CLI |
 
 The browser application intentionally has no per-user authentication. It is
@@ -467,10 +467,11 @@ earlier complete review take, not a new performance benchmark for this update.
 ## 9. Deployment and remaining integration checks
 
 The prepared startup is `deploy/demo/up.sh` → `deploy/demo/run.sh` →
-`python -m unspoken.meeting.demo`. It reuses existing Qwen/vLLM and staged
-Torch/CUDA, starts or reuses local Decider and Parakeet, then runs the application.
-Startup uses the cached GPU image with `--pull=never` and offline model settings.
-Missing prerequisites fail with a preparation error instead of a download.
+`python -m unspoken.meeting.demo`. It uses the Qwen LLM served by LM Studio and a
+local Decider service, runs Parakeet and the other sensing models in process on
+the CPU, then runs the application. Startup reuses already-running local services
+and offline model settings. Missing prerequisites fail with a preparation error
+instead of a download.
 
 `deploy/demo/run.sh` defaults to the staged official video.
 `LOCOCISCO_VIDEO` can explicitly select another local source and
@@ -492,8 +493,8 @@ Before accepting a recording:
   long utterances, absent tasks, provider failure and privacy transitions.
 - Exercise reset during in-flight inference and privacy changes during pending
   questions, telemetry and queued WebSocket messages.
-- Verify offline dependencies and frontend fonts/assets. Existing loaded image
-  CUDA/PyTorch is reused; incomplete standalone GPU wheels are not a reason to
+- Verify offline dependencies and frontend fonts/assets. The macOS Python venv
+  (PyTorch for Apple Silicon) is reused; incomplete wheels are not a reason to
   install packages during the take.
 - Treat real WiZ/Kasa, OpenClaw/MCP/TLS and Discord as separate deployment tests.
   The current demo's fake adapters cannot prove their success.
@@ -684,7 +685,7 @@ The reference dashboards have scripted sample data. Presentation narrative and
 source-video effects are not evidence that a corresponding feature is enabled
 or validated in the local application.
 
-The active Dell deployment still mounts the separate `lococisco/` checkout; its
+The active Mac Studio deployment still uses the separate `lococisco/` checkout; its
 reviewed source snapshot is also published here. Large downloaded models,
 dependency caches, generated recordings and runtime media copies remain outside
 Git. Small licensed Silero/YuNet models, synthetic test fixtures and written
