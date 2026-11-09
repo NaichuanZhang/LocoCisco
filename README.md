@@ -189,6 +189,23 @@ completed validation, and remaining acceptance criteria.
 
 </details>
 
+### Develop and test · any machine
+
+The code is a Python 3.11+ package (`unspoken`, with the separate legacy
+`homedemo` app). Create a virtualenv and install the dev dependencies, then run
+the test suite — neither needs the local models, GPU, or Mac Studio:
+
+```bash
+scripts/dev-venv.sh          # uv venv (.venv, Python 3.12) + pip install -r requirements-dev.txt
+.venv/bin/python -m pytest   # or: pytest   (testpaths = tests/)
+```
+
+Per-workstream runtime pins (speech, vision, devices, etc.) live in
+[requirements/](requirements/) and are merged in by the integrator; the
+meeting brain itself only needs the dev dependencies above. The legacy
+smart-home demo runs with `python -m homedemo` (see
+[DESCRIPTION.md](DESCRIPTION.md)).
+
 ## Explore the project
 
 | Path | What's inside |
